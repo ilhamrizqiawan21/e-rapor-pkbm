@@ -21,7 +21,7 @@
                     class="inline-flex shrink-0 items-center justify-center rounded-lg bg-brand-900 px-3 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-800 focus:outline-hidden focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2"
                     data-description-snippet-select
                     data-selection-target="{{ json_encode($target, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) }}"
-                    @click="$dispatch('description-snippet-selected', @js($target))"
+                    @click="window.opener && window.opener !== window ? (window.opener.postMessage({ type: 'description-snippet-selected', payload: @js($target) }, window.location.origin), window.close()) : $dispatch('description-snippet-selected', @js($target))"
                     role="option"
                     aria-label="Gunakan {{ $snippet->title }}"
                 >
