@@ -88,8 +88,8 @@ class DashboardRoleTest extends TestCase
 
         $this->actingAs($admin)->get(route('dashboard.admin'))
             ->assertOk()
-            ->assertSee('Periode belum siap digunakan')
-            ->assertSee('Belum ada kelas atau data nilai pada periode aktif.');
+            ->assertSee('Langkah berikutnya: Aktifkan periode')
+            ->assertSee('Aktifkan periode untuk melihat progres nilai per kelas.');
     }
 
     /** @return array{0: Institution, 1: AcademicYear, 2: Semester, 3: AcademicClass, 4: SubjectAssignment} */

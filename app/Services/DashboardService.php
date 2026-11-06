@@ -72,8 +72,46 @@ final class DashboardService
             ->where('enrollment_status', 'ACTIVE')
             ->whereHas('academicClass', fn (Builder $query) => $query->where('status', 'ACTIVE')->whereHas('program', fn (Builder $program) => $program->where('institution_id', $institutionId)))
             ->distinct('student_id')->count('student_id') : 0;
+        $assignmentCount = $hasPeriod ? SubjectAssignment::query()
+            ->where('active', true)
+            ->whereHas('academicClass', fn (Builder $query) => $query->where('academic_year_id', $year->getKey())->whereHas('program', fn (Builder $program) => $program->where('institution_id', $institutionId)))
+            ->count() : 0;
         $teacherCount = User::query()->where('institution_id', $institutionId)->where('status', 'ACTIVE')->whereHas('roles', fn (Builder $query) => $query->where('code', RoleCode::Guru->value))->count();
         $statusCounts = $this->reportStatusCounts($user, $period);
+        $setupSteps = [
+            [
+                'key' => 'period',
+                'label' => 'Aktifkan periode',
+                'detail' => $hasPeriod ? $period['label'] : 'Tahun pelajaran dan semester belum aktif.',
+                'done' => $hasPeriod,
+                'route' => 'admin.academic-years.index',
+                'action' => 'Kelola periode',
+            ],
+            [
+                'key' => 'classes',
+                'label' => 'Siapkan kelas / rombel',
+                'detail' => $hasPeriod ? $classCount.' kelas aktif' : 'Menunggu periode aktif.',
+                'done' => $hasPeriod && $classCount > 0,
+                'route' => 'admin.academic-classes.index',
+                'action' => 'Kelola kelas',
+            ],
+            [
+                'key' => 'students',
+                'label' => 'Masukkan peserta didik',
+                'detail' => $hasPeriod ? $studentCount.' peserta didik aktif' : 'Menunggu kelas aktif.',
+                'done' => $hasPeriod && $studentCount > 0,
+                'route' => 'admin.students.index',
+                'action' => 'Kelola peserta didik',
+            ],
+            [
+                'key' => 'assignments',
+                'label' => 'Petakan mapel dan guru',
+                'detail' => $hasPeriod ? $assignmentCount.' penugasan aktif' : 'Menunggu peserta didik dan kelas.',
+                'done' => $hasPeriod && $assignmentCount > 0,
+                'route' => 'admin.academic-classes.subject-assignments.bulk-create',
+                'action' => 'Petakan mapel',
+            ],
+        ];
 
         return [
             'role' => RoleCode::Admin->value,
@@ -81,11 +119,13 @@ final class DashboardService
             'period' => $period,
             'hasPeriod' => $hasPeriod,
             'stats' => [
-                ['label' => 'Kelas aktif', 'value' => $classCount, 'detail' => 'Pada periode aktif'],
-                ['label' => 'Peserta didik', 'value' => $studentCount, 'detail' => 'Enrollment aktif'],
-                ['label' => 'Guru aktif', 'value' => $teacherCount, 'detail' => 'Dalam institusi'],
-                ['label' => 'Menunggu review', 'value' => $statusCounts['waiting_review'], 'detail' => 'SUBMITTED + IN_REVIEW'],
+                ['label' => 'Kelas aktif', 'value' => $classCount, 'detail' => 'Pada periode aktif', 'periodScoped' => true],
+                ['label' => 'Peserta didik', 'value' => $studentCount, 'detail' => 'Enrollment aktif', 'periodScoped' => true],
+                ['label' => 'Guru aktif', 'value' => $teacherCount, 'detail' => 'Dalam institusi', 'periodScoped' => false],
+                ['label' => 'Menunggu review', 'value' => $statusCounts['waiting_review'], 'detail' => 'SUBMITTED + IN_REVIEW', 'periodScoped' => true],
             ],
+            'setupSteps' => $setupSteps,
+            'setupCompleted' => collect($setupSteps)->where('done', true)->count(),
             'statusCounts' => $statusCounts,
             'progressByClass' => $hasPeriod ? $this->adminClassProgress($user, $period) : collect(),
             'recentTransfers' => $hasPeriod ? $this->recentTransfers($user, $period) : collect(),

@@ -63,10 +63,12 @@ test.describe('UI regressions', () => {
 
         if (test.info().project.name === 'mobile-chrome') {
             await expect(page.locator('table:visible')).toHaveCount(0);
-            await expect(page.getByRole('link', { name: 'Siapkan periode' })).toBeVisible();
-            await expect(page.getByRole('link', { name: 'Atur kelas' })).toBeVisible();
+            await expect(page.getByRole('link', { name: 'Kelola periode' }).first()).toBeVisible();
+            await expect(page.getByText('Siapkan kelas / rombel')).toBeVisible();
         }
 
-        await expect(page.getByText('Periode belum siap digunakan')).toBeVisible();
+        await expect(page.getByText('Langkah berikutnya: Aktifkan periode')).toBeVisible();
+        await expect(page.getByText('0/4 selesai')).toBeVisible();
+        await expect(page.getByRole('link', { name: 'Kelola periode' }).first()).toBeVisible();
     });
 });
