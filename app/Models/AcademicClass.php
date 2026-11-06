@@ -10,6 +10,21 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 #[Fillable(['academic_year_id', 'program_id', 'level_id', 'homeroom_teacher_id', 'code', 'name', 'status'])]
 class AcademicClass extends Model
 {
+    public function academicYear(): BelongsTo
+    {
+        return $this->belongsTo(AcademicYear::class);
+    }
+
+    public function program(): BelongsTo
+    {
+        return $this->belongsTo(Program::class);
+    }
+
+    public function level(): BelongsTo
+    {
+        return $this->belongsTo(Level::class);
+    }
+
     public function enrollments(): HasMany
     {
         return $this->hasMany(Enrollment::class, 'class_id');
