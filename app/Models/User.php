@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -51,6 +52,21 @@ class User extends Authenticatable implements CanResetPasswordContract
     public function staffProfile(): HasOne
     {
         return $this->hasOne(StaffProfile::class);
+    }
+
+    public function subjectAssignments(): HasMany
+    {
+        return $this->hasMany(SubjectAssignment::class, 'teacher_id');
+    }
+
+    public function homeroomClasses(): HasMany
+    {
+        return $this->hasMany(AcademicClass::class, 'homeroom_teacher_id');
+    }
+
+    public function reportSignatures(): HasMany
+    {
+        return $this->hasMany(ReportSignature::class);
     }
 
     public function hasRole(RoleCode|string $role): bool
