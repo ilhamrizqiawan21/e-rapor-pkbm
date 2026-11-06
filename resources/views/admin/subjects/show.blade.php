@@ -21,9 +21,9 @@
                     <div class="flex justify-between gap-4 py-3"><dt class="text-slate-500">Penugasan kelas</dt><dd class="text-slate-900">{{ $subject->assignments_count }}</dd></div>
                 </dl>
                 @can('delete', $subject)
-                    <form method="POST" action="{{ route('admin.subjects.destroy', $subject) }}" class="mt-5 border-t border-slate-100 pt-5" onsubmit="return confirm('Hapus mata pelajaran ini?')">
+                    <form method="POST" action="{{ route('admin.subjects.destroy', $subject) }}" class="mt-5 border-t border-slate-100 pt-5">
                         @csrf @method('DELETE')
-                        <x-button type="submit" variant="danger" size="sm" icon="trash">Hapus mata pelajaran</x-button>
+                        <x-button type="submit" variant="danger" size="sm" icon="trash" confirm="Hapus mata pelajaran ini?">Hapus mata pelajaran</x-button>
                     </form>
                 @else
                     @if ($subject->assignments_count > 0)<p class="mt-5 border-t border-slate-100 pt-5 text-xs text-slate-500">Mata pelajaran tidak dapat dihapus karena sudah dipakai pada penugasan kelas.</p>@endif

@@ -88,6 +88,41 @@ window.mobileNavigation = () => ({
     },
 });
 
+window.confirmDialog = () => ({
+    isOpen: false,
+    message: '',
+    trigger: null,
+
+    openDialog(event) {
+        this.message = event.detail.message;
+        this.trigger = event.detail.trigger;
+        this.isOpen = true;
+        this.$nextTick(() => this.$refs.cancel?.focus());
+    },
+
+    cancel() {
+        this.isOpen = false;
+        this.message = '';
+        this.trigger = null;
+    },
+
+    approve() {
+        const trigger = this.trigger;
+        this.cancel();
+
+        if (! trigger) {
+            return;
+        }
+
+        if (trigger.form) {
+            trigger.form.requestSubmit(trigger);
+            return;
+        }
+
+        trigger.click();
+    },
+});
+
 window.Alpine = Alpine;
 
 Alpine.start();

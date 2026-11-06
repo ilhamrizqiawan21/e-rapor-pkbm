@@ -45,9 +45,9 @@
                                             <x-button size="sm" variant="edit" icon="edit" href="{{ route('admin.academic-classes.subject-assignments.edit', [$academicClass, $assignment]) }}">Edit</x-button>
                                         @endcan
                                         @can('delete', $assignment)
-                                            <form class="mt-2 sm:mt-0 sm:ml-1 inline-block" method="POST" action="{{ route('admin.academic-classes.subject-assignments.destroy', [$academicClass, $assignment]) }}" onsubmit="return confirm('Hapus penugasan mata pelajaran ini?');">
+                                            <form class="mt-2 sm:mt-0 sm:ml-1 inline-block" method="POST" action="{{ route('admin.academic-classes.subject-assignments.destroy', [$academicClass, $assignment]) }}">
                                                 @csrf @method('DELETE')
-                                                <x-button type="submit" size="sm" variant="danger" icon="trash">Hapus</x-button>
+                                                <x-button type="submit" size="sm" variant="danger" icon="trash" confirm="Hapus penugasan mata pelajaran ini?">Hapus</x-button>
                                             </form>
                                         @endcan
                                     </x-table.td>

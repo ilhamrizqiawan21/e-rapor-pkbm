@@ -133,6 +133,8 @@
         </main>
     </div>
 
+    <x-confirm-dialog />
+
     <!-- Global Toast Container -->
     <x-toast />
 </body>

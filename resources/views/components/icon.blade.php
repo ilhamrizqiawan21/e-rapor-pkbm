@@ -6,6 +6,7 @@
 @php
     $icons = [
         'add' => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 5v14M5 12h14" />',
+        'alert' => '<circle cx="12" cy="12" r="8.5" stroke-width="1.8" /><path stroke-linecap="round" stroke-width="1.8" d="M12 8v5m0 3h.01" />',
         'arrow-left' => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="m15 18-6-6 6-6M9 12h10" />',
         'audit' => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M7 4h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Zm3 4h5M8 12h8M8 16h5" />',
         'check' => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="m5 12 4 4L19 6" />',

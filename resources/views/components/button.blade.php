@@ -42,7 +42,7 @@
         {{ $slot }}
     </a>
 @else
-    <button type="{{ $type }}" {{ $disabled ? 'disabled' : '' }} @if ($confirm) onclick='return confirm(@js($confirm));' @endif {{ $attributes->merge(['class' => $classes]) }}>
+    <button type="{{ $type }}" {{ $disabled ? 'disabled' : '' }} @if ($confirm) data-confirm-message="{{ $confirm }}" @click.prevent="$dispatch('confirm-action', { message: $el.dataset.confirmMessage, trigger: $el })" @endif {{ $attributes->merge(['class' => $classes]) }}>
         @if ($icon)<x-icon :name="$icon" />@endif
         {{ $slot }}
     </button>

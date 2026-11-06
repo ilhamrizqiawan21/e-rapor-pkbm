@@ -26,9 +26,9 @@
                     <div class="flex justify-between gap-4 py-3"><dt class="text-slate-500">Status</dt><dd><x-badge :variant="$snippet->active ? 'ACTIVE' : 'INACTIVE'" dot>{{ $snippet->active ? 'Aktif' : 'Nonaktif' }}</x-badge></dd></div>
                 </dl>
                 @can('delete', $snippet)
-                    <form method="POST" action="{{ route('admin.description-snippets.destroy', $snippet) }}" class="mt-5 border-t border-slate-100 pt-5" onsubmit="return confirm('Hapus snippet ini?')">
+                    <form method="POST" action="{{ route('admin.description-snippets.destroy', $snippet) }}" class="mt-5 border-t border-slate-100 pt-5">
                         @csrf @method('DELETE')
-                        <x-button type="submit" variant="danger" size="sm" icon="trash">Hapus snippet</x-button>
+                        <x-button type="submit" variant="danger" size="sm" icon="trash" confirm="Hapus snippet ini?">Hapus snippet</x-button>
                     </form>
                 @endcan
             </section>
