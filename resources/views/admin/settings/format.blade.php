@@ -87,7 +87,7 @@
             </section>
 
             <div class="flex justify-end">
-                <x-button type="submit" size="lg">Simpan pengaturan format</x-button>
+                <x-button type="submit" size="lg" icon="save">Simpan pengaturan format</x-button>
             </div>
         </form>
     </div>

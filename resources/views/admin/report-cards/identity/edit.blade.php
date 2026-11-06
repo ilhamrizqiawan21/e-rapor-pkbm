@@ -44,7 +44,7 @@
                 @error('document_number')<p class="mt-1 text-sm text-rose-700" role="alert">{{ $message }}</p>@enderror
             </div>
             @unless ($context['is_locked'])
-                <div class="mt-5 flex justify-end border-t border-slate-100 pt-5"><button type="submit" class="rounded-lg bg-brand-700 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-brand-800 focus:outline-hidden focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2">Simpan nomor dokumen</button></div>
+                <div class="mt-5 flex justify-end border-t border-slate-100 pt-5"><x-button type="submit" icon="save">Simpan nomor dokumen</x-button></div>
             @endunless
         </form>
     </div>

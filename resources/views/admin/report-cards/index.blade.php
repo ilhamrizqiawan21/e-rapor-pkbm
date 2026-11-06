@@ -15,8 +15,8 @@
                 <x-select name="semester_id" label="Semester" :selected="$filters['semester_id'] ?? ''" :options="$semesters->mapWithKeys(fn ($semester) => [$semester->id => $semester->academicYear->name.' · '.$semester->name])->all()" placeholder="Semua semester" />
                 <x-select name="class_id" label="Kelas" :selected="$filters['class_id'] ?? ''" :options="$classes->mapWithKeys(fn ($class) => [$class->id => $class->name])->all()" placeholder="Semua kelas" />
                 <x-select name="status" label="Status" :selected="$filters['status'] ?? ''" :options="$statusLabels" placeholder="Semua status" />
-                <x-button type="submit" variant="secondary">Terapkan filter</x-button>
-                @if ($hasFilters)<x-button href="{{ route('admin.report-cards.index') }}" variant="ghost">Reset</x-button>@else<span class="hidden xl:block"></span>@endif
+                <x-button type="submit" variant="secondary" icon="filter">Terapkan filter</x-button>
+                @if ($hasFilters)<x-button href="{{ route('admin.report-cards.index') }}" variant="ghost" icon="x">Reset</x-button>@else<span class="hidden xl:block"></span>@endif
             </form>
             <div class="mt-4 flex flex-wrap gap-2 text-xs">
                 @foreach ($statusLabels as $status => $label)

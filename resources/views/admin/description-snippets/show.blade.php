@@ -3,7 +3,7 @@
 @section('content')
     <div class="mx-auto max-w-5xl space-y-6">
         <x-page-header eyebrow="Bank deskripsi" title="{{ $snippet->title }}" description="{{ $snippet->subject?->name ?? 'Semua mata pelajaran' }}" back-href="{{ route('admin.description-snippets.index') }}" back-text="Kembali ke bank deskripsi">
-            @can('update', $snippet)<x-button href="{{ route('admin.description-snippets.edit', $snippet) }}">Edit</x-button>@endcan
+            @can('update', $snippet)<x-button href="{{ route('admin.description-snippets.edit', $snippet) }}" variant="edit" icon="edit">Edit</x-button>@endcan
         </x-page-header>
 
         @if (session('status'))
@@ -28,7 +28,7 @@
                 @can('delete', $snippet)
                     <form method="POST" action="{{ route('admin.description-snippets.destroy', $snippet) }}" class="mt-5 border-t border-slate-100 pt-5" onsubmit="return confirm('Hapus snippet ini?')">
                         @csrf @method('DELETE')
-                        <x-button type="submit" variant="danger" size="sm">Hapus snippet</x-button>
+                        <x-button type="submit" variant="danger" size="sm" icon="trash">Hapus snippet</x-button>
                     </form>
                 @endcan
             </section>

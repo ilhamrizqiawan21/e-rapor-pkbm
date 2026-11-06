@@ -81,8 +81,8 @@
                     <input id="date_to" name="date_to" type="date" value="{{ $filters['date_to'] ?? '' }}" class="mt-2 block w-full rounded-lg border-slate-300 text-sm shadow-sm focus:border-brand-500 focus:ring-brand-500">
                 </div>
                 <div class="flex items-end gap-2 md:col-span-2 xl:col-span-6">
-                    <x-button type="submit">Terapkan filter</x-button>
-                    <x-button href="{{ route('admin.audit-logs.index') }}" variant="secondary">Reset</x-button>
+                    <x-button type="submit" icon="filter">Terapkan filter</x-button>
+                    <x-button href="{{ route('admin.audit-logs.index') }}" variant="secondary" icon="x">Reset</x-button>
                 </div>
             </form>
         </section>

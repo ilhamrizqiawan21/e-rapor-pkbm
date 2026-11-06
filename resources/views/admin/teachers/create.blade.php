@@ -8,8 +8,8 @@
             @csrf
             @include('admin.teachers.form')
             <div class="flex justify-end gap-3">
-                <x-button href="{{ route('admin.teachers.index') }}" variant="secondary">Batal</x-button>
-                <x-button type="submit" x-bind:disabled="isSubmitting"><span x-show="!isSubmitting">Simpan Guru</span><span x-cloak x-show="isSubmitting">Memproses…</span></x-button>
+                <x-button href="{{ route('admin.teachers.index') }}" variant="cancel" icon="x">Batal</x-button>
+                <x-button type="submit" icon="save" x-bind:disabled="isSubmitting"><span x-show="!isSubmitting">Simpan Guru</span><span x-cloak x-show="isSubmitting">Memproses…</span></x-button>
             </div>
         </form>
     </div>

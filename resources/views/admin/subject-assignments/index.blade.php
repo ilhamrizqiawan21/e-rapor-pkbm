@@ -4,9 +4,9 @@
     <div class="mx-auto max-w-7xl">
         <x-page-header eyebrow="Master akademik" title="Penugasan mata pelajaran" description="{{ $academicClass->name }} · {{ $academicClass->program->name }} · {{ $academicClass->level->name }} · {{ $academicClass->academicYear->name }}" back-href="{{ route('admin.academic-classes.show', $academicClass) }}" back-text="Kembali ke detail kelas">
                 @can('create', App\Models\SubjectAssignment::class)
-                    <x-button href="{{ route('admin.academic-classes.subject-assignments.copy-create', $academicClass) }}" variant="secondary">Salin konfigurasi</x-button>
-                    <x-button href="{{ route('admin.academic-classes.subject-assignments.reorder-create', $academicClass) }}" variant="secondary">Atur urutan</x-button>
-                    <x-button href="{{ route('admin.academic-classes.subject-assignments.create', $academicClass) }}">Tambah penugasan</x-button>
+                    <x-button href="{{ route('admin.academic-classes.subject-assignments.copy-create', $academicClass) }}" variant="secondary" icon="copy">Salin konfigurasi</x-button>
+                    <x-button href="{{ route('admin.academic-classes.subject-assignments.reorder-create', $academicClass) }}" variant="secondary" icon="audit">Atur urutan</x-button>
+                    <x-button href="{{ route('admin.academic-classes.subject-assignments.create', $academicClass) }}" icon="add">Tambah penugasan</x-button>
                 @endcan
         </x-page-header>
 
@@ -17,7 +17,7 @@
         @if ($assignments->isEmpty())
             <x-empty-state title="Belum ada penugasan mapel" description="Admin dapat menambahkan mata pelajaran dan guru pengampu untuk kelas ini.">
                 @can('create', App\Models\SubjectAssignment::class)
-                    <x-slot:actions><x-button href="{{ route('admin.academic-classes.subject-assignments.create', $academicClass) }}">Buat penugasan pertama</x-button></x-slot:actions>
+                    <x-slot:actions><x-button href="{{ route('admin.academic-classes.subject-assignments.create', $academicClass) }}" icon="add">Buat penugasan pertama</x-button></x-slot:actions>
                 @endcan
             </x-empty-state>
         @else
@@ -42,12 +42,12 @@
                                     <x-table.td><x-badge :variant="$assignment->active ? 'ACTIVE' : 'INACTIVE'" dot>{{ $assignment->active ? 'Aktif' : 'Nonaktif' }}</x-badge></x-table.td>
                                     <x-table.td align="right">
                                         @can('update', $assignment)
-                                            <x-button size="sm" variant="secondary" href="{{ route('admin.academic-classes.subject-assignments.edit', [$academicClass, $assignment]) }}">Edit</x-button>
+                                            <x-button size="sm" variant="edit" icon="edit" href="{{ route('admin.academic-classes.subject-assignments.edit', [$academicClass, $assignment]) }}">Edit</x-button>
                                         @endcan
                                         @can('delete', $assignment)
                                             <form class="mt-2 sm:mt-0 sm:ml-1 inline-block" method="POST" action="{{ route('admin.academic-classes.subject-assignments.destroy', [$academicClass, $assignment]) }}" onsubmit="return confirm('Hapus penugasan mata pelajaran ini?');">
                                                 @csrf @method('DELETE')
-                                                <x-button type="submit" size="sm" variant="danger">Hapus</x-button>
+                                                <x-button type="submit" size="sm" variant="danger" icon="trash">Hapus</x-button>
                                             </form>
                                         @endcan
                                     </x-table.td>

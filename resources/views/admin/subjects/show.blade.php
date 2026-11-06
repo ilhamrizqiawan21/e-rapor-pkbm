@@ -4,7 +4,7 @@
     <div class="mx-auto max-w-6xl space-y-6">
         <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             <x-page-header eyebrow="Mata pelajaran {{ $subject->code }}" title="{{ $subject->name }}" description="Singkatan leger: {{ $subject->short_name }}" back-href="{{ route('admin.subjects.index') }}" back-text="Kembali ke mata pelajaran">
-                @can('update', $subject)<x-button href="{{ route('admin.subjects.edit', $subject) }}">Edit</x-button>@endcan
+                @can('update', $subject)<x-button href="{{ route('admin.subjects.edit', $subject) }}" variant="edit" icon="edit">Edit</x-button>@endcan
             </x-page-header>
         </div>
 
@@ -23,7 +23,7 @@
                 @can('delete', $subject)
                     <form method="POST" action="{{ route('admin.subjects.destroy', $subject) }}" class="mt-5 border-t border-slate-100 pt-5" onsubmit="return confirm('Hapus mata pelajaran ini?')">
                         @csrf @method('DELETE')
-                        <x-button type="submit" variant="danger" size="sm">Hapus mata pelajaran</x-button>
+                        <x-button type="submit" variant="danger" size="sm" icon="trash">Hapus mata pelajaran</x-button>
                     </form>
                 @else
                     @if ($subject->assignments_count > 0)<p class="mt-5 border-t border-slate-100 pt-5 text-xs text-slate-500">Mata pelajaran tidak dapat dihapus karena sudah dipakai pada penugasan kelas.</p>@endif

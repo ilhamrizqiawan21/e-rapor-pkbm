@@ -7,8 +7,8 @@
             @csrf @method('PUT')
             @include('admin.description-snippets._form')
             <div class="flex justify-end gap-3 border-t border-slate-100 pt-5">
-                <x-button href="{{ route('admin.description-snippets.show', $snippet) }}" variant="secondary">Batal</x-button>
-                <x-button type="submit">Simpan perubahan</x-button>
+                <x-button href="{{ route('admin.description-snippets.show', $snippet) }}" variant="cancel" icon="x">Batal</x-button>
+                <x-button type="submit" icon="save">Simpan perubahan</x-button>
             </div>
         </form>
     </div>

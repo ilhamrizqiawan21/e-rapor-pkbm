@@ -110,7 +110,7 @@
 
                 @if ($editable)
                     <div class="flex justify-end border-t border-slate-100 pt-4">
-                        <x-button type="submit" variant="success">Simpan ekstrakurikuler</x-button>
+                        <x-button type="submit" variant="success" icon="save">Simpan ekstrakurikuler</x-button>
                     </div>
                 @endif
             </form>
@@ -139,7 +139,7 @@
                 </div>
                 @if ($editable)
                     <div class="flex justify-end border-t border-slate-100 pt-4">
-                        <x-button type="submit" variant="success">Simpan catatan</x-button>
+                        <x-button type="submit" variant="success" icon="save">Simpan catatan</x-button>
                     </div>
                 @endif
             </form>

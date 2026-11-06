@@ -9,7 +9,7 @@
                 <h1 class="mt-3 text-3xl font-semibold tracking-tight text-slate-950 sm:text-4xl">Tinjau hasil import</h1>
                 <p class="mt-3 max-w-2xl text-sm leading-6 text-slate-600">Periksa baris yang akan masuk ke master peserta didik. Hanya baris valid yang dapat disimpan.</p>
             </div>
-            @if ($preview['errors'] !== [])<x-button href="{{ route('admin.students.import.errors') }}" variant="secondary">Download error report</x-button>@endif
+            @if ($preview['errors'] !== [])<x-button href="{{ route('admin.students.import.errors') }}" variant="excel" icon="download">Download error report</x-button>@endif
         </header>
 
         <nav aria-label="Tahapan import" class="overflow-x-auto rounded-2xl border border-slate-200 bg-white px-4 py-4 shadow-sm sm:px-6">
@@ -33,7 +33,7 @@
         @endif
 
         <section class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm" aria-labelledby="preview-table-heading">
-            <div class="flex flex-col gap-3 border-b border-slate-100 px-5 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-6"><div><h2 id="preview-table-heading" class="text-lg font-semibold text-slate-950">Preview baris data</h2><p class="mt-1 text-sm text-slate-500">Baris merah memiliki kesalahan dan akan dilewati saat import.</p></div><form method="POST" action="{{ route('admin.students.import.store') }}" class="shrink-0">@csrf<input type="hidden" name="preview_token" value="{{ $token }}"><x-button type="submit" :disabled="$preview['valid_count'] === 0">Simpan {{ $preview['valid_count'] }} baris valid</x-button></form></div>
+            <div class="flex flex-col gap-3 border-b border-slate-100 px-5 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-6"><div><h2 id="preview-table-heading" class="text-lg font-semibold text-slate-950">Preview baris data</h2><p class="mt-1 text-sm text-slate-500">Baris merah memiliki kesalahan dan akan dilewati saat import.</p></div><form method="POST" action="{{ route('admin.students.import.store') }}" class="shrink-0">@csrf<input type="hidden" name="preview_token" value="{{ $token }}"><x-button type="submit" :disabled="$preview['valid_count'] === 0" icon="save">Simpan {{ $preview['valid_count'] }} baris valid</x-button></form></div>
             <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-slate-200 text-sm"><caption class="sr-only">Preview data peserta didik yang akan diimport</caption><thead class="bg-slate-50"><tr><th scope="col" class="whitespace-nowrap px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">Baris</th>@foreach($preview['headers'] as $header)<th scope="col" class="whitespace-nowrap px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">{{ $header }}</th>@endforeach<th scope="col" class="whitespace-nowrap px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">Status</th></tr></thead><tbody class="divide-y divide-slate-100">
                     @foreach($preview['rows'] as $row)

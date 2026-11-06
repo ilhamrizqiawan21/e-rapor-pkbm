@@ -19,38 +19,38 @@
             <p class="mt-2 text-sm text-slate-600">Setiap perubahan status dicatat dengan actor, waktu, dan alasan bila diperlukan.</p>
         </div>
         @if (app('router')->has('admin.audit-logs.index'))
-            <x-button href="{{ route('admin.audit-logs.index', ['entity_type' => 'report_card', 'entity_id' => $reportCard->id]) }}" size="sm" variant="secondary">Lihat histori audit</x-button>
+            <x-button href="{{ route('admin.audit-logs.index', ['entity_type' => 'report_card', 'entity_id' => $reportCard->id]) }}" size="sm" variant="secondary" icon="audit">Lihat histori audit</x-button>
         @endif
     </div>
 
     <div class="mt-5 flex flex-wrap gap-2">
         @if (app('router')->has('admin.report-cards.pdf.preview') && in_array($reportCard->status, ['APPROVED', 'LOCKED'], true))
-            <x-button href="{{ route('admin.report-cards.pdf.preview', $reportCard) }}" size="sm" variant="secondary" target="_blank" rel="noopener">Preview PDF</x-button>
-            <x-button href="{{ route('admin.report-cards.pdf.download', $reportCard) }}" size="sm" variant="secondary">Download PDF</x-button>
-            <x-button href="{{ route('admin.report-cards.pdf.print', $reportCard) }}" size="sm" variant="secondary" target="_blank" rel="noopener">Cetak PDF</x-button>
+            <x-button href="{{ route('admin.report-cards.pdf.preview', $reportCard) }}" size="sm" variant="pdf" icon="eye" target="_blank" rel="noopener">Preview PDF</x-button>
+            <x-button href="{{ route('admin.report-cards.pdf.download', $reportCard) }}" size="sm" variant="pdf" icon="pdf">Download PDF</x-button>
+            <x-button href="{{ route('admin.report-cards.pdf.print', $reportCard) }}" size="sm" variant="pdf" icon="print" target="_blank" rel="noopener">Cetak PDF</x-button>
         @endif
         @if ($canSubmit)
-            <form method="POST" action="{{ route('admin.report-cards.submit', $reportCard) }}">@csrf <x-button type="submit" variant="success">Ajukan untuk ditinjau</x-button></form>
+            <form method="POST" action="{{ route('admin.report-cards.submit', $reportCard) }}">@csrf <x-button type="submit" variant="success" icon="check">Ajukan untuk ditinjau</x-button></form>
         @endif
         @if ($canReview)
-            <form method="POST" action="{{ route('admin.report-cards.review', $reportCard) }}">@csrf <x-button type="submit">Mulai review kelengkapan</x-button></form>
+            <form method="POST" action="{{ route('admin.report-cards.review', $reportCard) }}">@csrf <x-button type="submit" icon="eye">Mulai review kelengkapan</x-button></form>
         @endif
         @if ($canApprove)
-            <form method="POST" action="{{ route('admin.report-cards.approve', $reportCard) }}">@csrf <x-button type="submit" variant="success">Setujui rapor</x-button></form>
+            <form method="POST" action="{{ route('admin.report-cards.approve', $reportCard) }}">@csrf <x-button type="submit" variant="success" icon="check">Setujui rapor</x-button></form>
         @endif
         @if ($canLock)
-            <form method="POST" action="{{ route('admin.report-cards.lock', $reportCard) }}">@csrf <x-button type="submit">Kunci rapor</x-button></form>
+            <form method="POST" action="{{ route('admin.report-cards.lock', $reportCard) }}">@csrf <x-button type="submit" icon="lock">Kunci rapor</x-button></form>
         @endif
         @if ($canReject)
             <form method="POST" action="{{ route('admin.report-cards.reject', $reportCard) }}" class="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:items-end">
                 @csrf
                 <label class="sr-only" for="reject-reason-{{ $reportCard->id }}">Alasan penolakan</label>
                 <input id="reject-reason-{{ $reportCard->id }}" name="reason" required minlength="3" maxlength="2000" placeholder="Alasan penolakan" class="w-full rounded-lg border-slate-300 text-sm shadow-sm sm:w-64">
-                <x-button type="submit" variant="danger">Kembalikan untuk revisi</x-button>
+                <x-button type="submit" variant="danger" icon="arrow-left">Kembalikan untuk revisi</x-button>
             </form>
         @endif
         @if ($canUnlock)
-            <button type="button" @click="unlockOpen = true" class="inline-flex items-center justify-center rounded-lg border border-amber-300 bg-amber-50 px-3 py-2 text-sm font-semibold text-amber-900 shadow-sm transition hover:bg-amber-100 focus:outline-hidden focus-visible:ring-2 focus-visible:ring-amber-500">Buka kunci</button>
+            <button type="button" @click="unlockOpen = true" class="inline-flex min-h-10 items-center justify-center gap-2 rounded-lg border border-amber-300 bg-amber-50 px-3 py-2 text-sm font-semibold text-amber-900 shadow-sm transition-colors hover:bg-amber-100 focus:outline-hidden focus-visible:ring-2 focus-visible:ring-amber-500"><x-icon name="unlock" />Buka kunci</button>
         @endif
         @if (! $canSubmit && ! $canReview && ! $canReject && ! $canApprove && ! $canLock && ! $canUnlock)
             <p class="text-sm text-slate-500">Tidak ada tindakan yang tersedia untuk role dan status ini.</p>
@@ -81,7 +81,7 @@
                 <form method="POST" action="{{ route('admin.report-cards.unlock', $reportCard) }}" class="mt-5 space-y-4">
                     @csrf
                     <div><label for="unlock-reason-{{ $reportCard->id }}" class="block text-sm font-semibold text-slate-800">Alasan unlock</label><textarea id="unlock-reason-{{ $reportCard->id }}" name="reason" required minlength="3" maxlength="2000" rows="4" class="mt-2 block w-full rounded-lg border-slate-300 text-sm shadow-sm focus:border-brand-500 focus:ring-brand-500" placeholder="Contoh: Koreksi nomor dokumen sebelum penerbitan."></textarea></div>
-                    <div class="flex justify-end gap-2"><button type="button" @click="unlockOpen = false" class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-semibold text-slate-700">Batal</button><x-button type="submit" variant="warning">Buka kunci dan kembali ke Draft</x-button></div>
+                    <div class="flex justify-end gap-2"><x-button type="button" @click="unlockOpen = false" variant="cancel" icon="x">Batal</x-button><x-button type="submit" variant="warning" icon="unlock">Buka kunci dan kembali ke Draft</x-button></div>
                 </form>
             </div>
         </div>

@@ -11,7 +11,7 @@
                 <h1 class="mt-3 text-3xl font-semibold tracking-tight text-slate-950 sm:text-4xl">Guru</h1>
                 <p class="mt-3 text-sm leading-6 text-slate-600">Kelola akun tutor, identitas NIP/NIY, kontak, dan kesiapan penugasan untuk periode yang sedang berjalan.</p>
             </div>
-            <x-button href="{{ route('admin.teachers.create') }}">Tambah Guru</x-button>
+            <x-button href="{{ route('admin.teachers.create') }}" icon="add">Tambah Guru</x-button>
         </header>
 
         @if (session('status'))
@@ -46,8 +46,8 @@
             <form method="GET" action="{{ route('admin.teachers.index') }}" class="grid gap-4 border-b border-slate-100 bg-slate-50/70 px-5 py-4 md:grid-cols-[minmax(0,1fr)_12rem_auto_auto] md:items-end sm:px-6">
                 <x-input name="search" label="Cari Guru" :value="request('search')" placeholder="Nama, username, email, atau NIP/NIY" autocomplete="off" />
                 <x-select name="status" label="Status" :selected="request('status')" :options="['ACTIVE' => 'Aktif', 'INACTIVE' => 'Nonaktif']" placeholder="Semua status" />
-                <x-button type="submit" variant="secondary">Terapkan filter</x-button>
-                @if ($hasFilters)<x-button href="{{ route('admin.teachers.index') }}" variant="ghost">Reset</x-button>@else<span class="hidden md:block"></span>@endif
+                <x-button type="submit" variant="secondary" icon="filter">Terapkan filter</x-button>
+                @if ($hasFilters)<x-button href="{{ route('admin.teachers.index') }}" variant="ghost" icon="x">Reset</x-button>@else<span class="hidden md:block"></span>@endif
             </form>
             <div class="flex items-center justify-between gap-3 px-5 py-3 text-xs text-slate-500 sm:px-6"><p>Penugasan periode: <span class="font-semibold text-slate-700">{{ $activePeriodLabel }}</span></p>@if ($hasFilters)<p class="font-medium text-accent-700">Filter sedang aktif</p>@endif</div>
 
@@ -64,10 +64,10 @@
                                 <x-table.td>@if ($activeAcademicYear)<p class="font-medium text-slate-800">{{ $teacher->active_subject_assignments_count }} mapel aktif</p><p class="mt-1 text-xs text-slate-500">{{ $teacher->active_homeroom_classes_count }} wali kelas</p>@else<p class="text-sm text-slate-500">Menunggu periode aktif</p>@endif</x-table.td>
                                 <x-table.td><p>{{ $teacher->staffProfile?->phone ?? '—' }}</p><p class="mt-1 max-w-48 truncate text-xs text-slate-500">{{ $teacher->email ?? 'Email belum diisi' }}</p></x-table.td>
                                 <x-table.td><x-badge :variant="$teacher->status->value" dot>{{ $teacher->status->label() }}</x-badge></x-table.td>
-                                <x-table.td align="right"><div class="flex flex-wrap justify-end gap-2"><x-button href="{{ route('admin.teachers.show', $teacher) }}" variant="secondary" size="sm">Detail</x-button><x-button href="{{ route('admin.teachers.edit', $teacher) }}" variant="ghost" size="sm">Edit</x-button></div></x-table.td>
+                                <x-table.td align="right"><div class="flex flex-wrap justify-end gap-2"><x-button href="{{ route('admin.teachers.show', $teacher) }}" variant="secondary" size="sm" icon="eye">Detail</x-button><x-button href="{{ route('admin.teachers.edit', $teacher) }}" variant="edit" size="sm" icon="edit">Edit</x-button></div></x-table.td>
                             </tr>
                         @empty
-                            <tr><td colspan="6" class="px-6 py-16"><div class="mx-auto max-w-md text-center"><span class="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-50 text-brand-700"><x-nav-icon name="teachers" /></span><h3 class="mt-4 font-semibold text-slate-900">{{ $hasFilters ? 'Tidak ada Guru yang cocok' : 'Belum ada akun Guru' }}</h3><p class="mt-2 text-sm leading-6 text-slate-500">{{ $hasFilters ? 'Coba ubah kata kunci atau reset filter untuk melihat akun lain.' : 'Tambahkan akun Guru agar penugasan mapel dan wali kelas dapat dikelola.' }}</p>@if ($hasFilters)<x-button class="mt-5" href="{{ route('admin.teachers.index') }}" variant="secondary" size="sm">Reset filter</x-button>@else<x-button class="mt-5" href="{{ route('admin.teachers.create') }}" size="sm">Tambah Guru</x-button>@endif</div></td></tr>
+                            <tr><td colspan="6" class="px-6 py-16"><div class="mx-auto max-w-md text-center"><span class="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-50 text-brand-700"><x-nav-icon name="teachers" /></span><h3 class="mt-4 font-semibold text-slate-900">{{ $hasFilters ? 'Tidak ada Guru yang cocok' : 'Belum ada akun Guru' }}</h3><p class="mt-2 text-sm leading-6 text-slate-500">{{ $hasFilters ? 'Coba ubah kata kunci atau reset filter untuk melihat akun lain.' : 'Tambahkan akun Guru agar penugasan mapel dan wali kelas dapat dikelola.' }}</p>@if ($hasFilters)<x-button class="mt-5" href="{{ route('admin.teachers.index') }}" variant="secondary" size="sm" icon="x">Reset filter</x-button>@else<x-button class="mt-5" href="{{ route('admin.teachers.create') }}" size="sm" icon="add">Tambah Guru</x-button>@endif</div></td></tr>
                         @endforelse
                     </tbody>
                 </table>
@@ -78,7 +78,7 @@
                     <article class="rounded-2xl border border-slate-200 p-4" data-responsive-card>
                         <div class="flex items-start justify-between gap-3"><div><a href="{{ route('admin.teachers.show', $teacher) }}" class="font-semibold text-brand-900">{{ $teacher->name }}</a><p class="mt-1 text-xs text-slate-500">{{ $teacher->username }}{{ $teacher->email ? ' · '.$teacher->email : '' }}</p></div><x-badge :variant="$teacher->status->value" dot>{{ $teacher->status->label() }}</x-badge></div>
                         <dl class="mt-4 grid grid-cols-2 gap-3 text-sm"><div><dt class="text-xs text-slate-500">NIP / NIY</dt><dd class="mt-1 font-medium text-slate-800">{{ $teacher->staffProfile?->employee_number ?? 'Belum diisi' }}</dd></div><div><dt class="text-xs text-slate-500">Jabatan</dt><dd class="mt-1 font-medium text-slate-800">{{ $teacher->staffProfile?->title ?? 'Belum diisi' }}</dd></div><div><dt class="text-xs text-slate-500">Penugasan</dt><dd class="mt-1 font-medium text-slate-800">{{ $activeAcademicYear ? $teacher->active_subject_assignments_count.' mapel · '.$teacher->active_homeroom_classes_count.' wali' : 'Periode belum aktif' }}</dd></div><div><dt class="text-xs text-slate-500">Kelengkapan</dt><dd class="mt-1 font-medium text-slate-800">{{ $profileCompletion }}/3 data pendukung</dd></div></dl>
-                        <div class="mt-4 flex flex-wrap gap-2"><x-button href="{{ route('admin.teachers.show', $teacher) }}" variant="secondary" size="sm">Lihat detail</x-button><x-button href="{{ route('admin.teachers.edit', $teacher) }}" variant="ghost" size="sm">Edit</x-button></div>
+                        <div class="mt-4 flex flex-wrap gap-2"><x-button href="{{ route('admin.teachers.show', $teacher) }}" variant="secondary" size="sm" icon="eye">Lihat detail</x-button><x-button href="{{ route('admin.teachers.edit', $teacher) }}" variant="edit" size="sm" icon="edit">Edit</x-button></div>
                     </article>
                 @empty
                     <div class="px-2 py-10 text-center"><span class="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-50 text-brand-700"><x-nav-icon name="teachers" /></span><h3 class="mt-4 font-semibold text-slate-900">{{ $hasFilters ? 'Tidak ada Guru yang cocok' : 'Belum ada akun Guru' }}</h3><p class="mt-2 text-sm leading-6 text-slate-500">{{ $hasFilters ? 'Coba ubah kata kunci atau reset filter.' : 'Tambahkan akun Guru untuk mulai mengatur penugasan.' }}</p></div>

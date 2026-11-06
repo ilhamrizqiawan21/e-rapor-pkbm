@@ -4,7 +4,7 @@
     <div class="mx-auto max-w-5xl space-y-6">
         <x-page-header eyebrow="Pengaturan PKBM / identitas" title="Identitas PKBM" description="Kelola identitas yang digunakan pada rapor, leger, dan dokumen resmi.">
             @can('create', App\Models\Institution::class)
-                <x-button href="{{ route('admin.institutions.create') }}">Tambah PKBM</x-button>
+                <x-button href="{{ route('admin.institutions.create') }}" icon="add">Tambah PKBM</x-button>
             @endcan
         </x-page-header>
 
@@ -34,9 +34,9 @@
                     </div>
                 </div>
                 <div class="flex flex-wrap gap-3 border-t border-slate-100 bg-slate-50 px-6 py-4 sm:px-8">
-                    <x-button href="{{ route('admin.institutions.show', $institution) }}" variant="secondary">Lihat detail</x-button>
+                    <x-button href="{{ route('admin.institutions.show', $institution) }}" variant="secondary" icon="eye">Lihat detail</x-button>
                     @can('update', $institution)
-                        <x-button href="{{ route('admin.institutions.edit', $institution) }}">Edit identitas</x-button>
+                        <x-button href="{{ route('admin.institutions.edit', $institution) }}" variant="edit" icon="edit">Edit identitas</x-button>
                     @endcan
                 </div>
             </section>
@@ -44,7 +44,7 @@
             <x-empty-state title="Identitas PKBM belum tersedia" description="Buat identitas PKBM terlebih dahulu agar dapat digunakan pada dokumen rapor dan leger.">
                 @can('create', App\Models\Institution::class)
                     <x-slot:actions>
-                        <x-button href="{{ route('admin.institutions.create') }}">Buat identitas PKBM</x-button>
+                        <x-button href="{{ route('admin.institutions.create') }}" icon="add">Buat identitas PKBM</x-button>
                     </x-slot:actions>
                 @endcan
             </x-empty-state>

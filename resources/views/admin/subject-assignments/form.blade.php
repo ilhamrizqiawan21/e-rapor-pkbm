@@ -23,4 +23,4 @@
         <span><span class="font-semibold text-slate-900">Penugasan aktif</span><span class="mt-1 block text-xs text-slate-500">Penugasan nonaktif tidak digunakan untuk pengisian nilai baru.</span></span>
     </label>
 </section>
-<div class="flex flex-wrap justify-end gap-3"><x-button type="submit" :disabled="$subjects->isEmpty()">Simpan penugasan</x-button><x-button href="{{ route('admin.academic-classes.subject-assignments.index', $academicClass) }}" variant="secondary">Batal</x-button></div>
+<div class="flex flex-wrap justify-end gap-3"><x-button type="submit" :disabled="$subjects->isEmpty()" icon="save">Simpan penugasan</x-button><x-button href="{{ route('admin.academic-classes.subject-assignments.index', $academicClass) }}" variant="cancel" icon="x">Batal</x-button></div>

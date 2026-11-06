@@ -61,7 +61,7 @@
                 @endif
                 <input type="hidden" name="remove_logo" :value="removeLogo ? '1' : '0'">
                 <div class="flex flex-wrap gap-2">
-                    <x-button type="button" variant="secondary" size="sm" @click="clearLogo()">Hapus / bersihkan logo</x-button>
+                    <x-button type="button" variant="cancel" size="sm" icon="trash" @click="clearLogo()">Hapus / bersihkan logo</x-button>
                     <p class="self-center text-xs text-slate-500">Pilih file baru untuk mengganti logo yang tersimpan.</p>
                 </div>
             </div>
@@ -69,7 +69,7 @@
     </section>
 
     <div class="flex flex-wrap items-center justify-end gap-3">
-        <x-button href="{{ $isEdit ? route('admin.institutions.show', $institution) : route('admin.institutions.index') }}" variant="secondary">Batal</x-button>
-        <x-button type="submit">{{ $isEdit ? 'Simpan perubahan' : 'Simpan identitas' }}</x-button>
+        <x-button href="{{ $isEdit ? route('admin.institutions.show', $institution) : route('admin.institutions.index') }}" variant="cancel" icon="x">Batal</x-button>
+        <x-button type="submit" icon="save">{{ $isEdit ? 'Simpan perubahan' : 'Simpan identitas' }}</x-button>
     </div>
 </form>

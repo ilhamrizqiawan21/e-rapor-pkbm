@@ -9,9 +9,9 @@
             @method('PUT')
             @include('admin.teachers.form')
             <div class="flex flex-wrap justify-end gap-3">
-                <x-button href="{{ route('admin.users.password.edit', $teacher) }}" variant="warning">Reset password</x-button>
-                <x-button href="{{ route('admin.teachers.show', $teacher) }}" variant="secondary">Batal</x-button>
-                <x-button type="submit" x-bind:disabled="isSubmitting"><span x-show="!isSubmitting">Simpan perubahan</span><span x-cloak x-show="isSubmitting">Memproses…</span></x-button>
+                <x-button href="{{ route('admin.users.password.edit', $teacher) }}" variant="warning" icon="lock">Reset password</x-button>
+                <x-button href="{{ route('admin.teachers.show', $teacher) }}" variant="cancel" icon="x">Batal</x-button>
+                <x-button type="submit" icon="save" x-bind:disabled="isSubmitting"><span x-show="!isSubmitting">Simpan perubahan</span><span x-cloak x-show="isSubmitting">Memproses…</span></x-button>
             </div>
         </form>
     </div>

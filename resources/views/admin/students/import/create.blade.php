@@ -12,7 +12,7 @@
                 <h1 class="mt-3 text-3xl font-semibold tracking-tight text-slate-950 sm:text-4xl">Import peserta didik</h1>
                 <p class="mt-3 max-w-2xl text-sm leading-6 text-slate-600">Tambahkan banyak data sekaligus dengan template yang konsisten. Data baru akan divalidasi dulu sebelum disimpan ke master peserta didik.</p>
             </div>
-            <x-button href="{{ route('admin.students.import.template') }}" variant="secondary">Download template XLSX</x-button>
+            <x-button href="{{ route('admin.students.import.template') }}" variant="excel" icon="excel">Download template XLSX</x-button>
         </header>
 
         <nav aria-label="Tahapan import" class="overflow-x-auto rounded-2xl border border-slate-200 bg-white px-4 py-4 shadow-sm sm:px-6">

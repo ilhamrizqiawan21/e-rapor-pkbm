@@ -6,7 +6,7 @@
             @csrf
             @method('PUT')
             @include('admin.students.form')
-            <div class="flex justify-end gap-3"><x-button href="{{ route('admin.students.show', $student) }}" variant="secondary">Batal</x-button><x-button type="submit">Simpan perubahan</x-button></div>
+            <div class="flex justify-end gap-3"><x-button href="{{ route('admin.students.show', $student) }}" variant="cancel" icon="x">Batal</x-button><x-button type="submit" icon="save">Simpan perubahan</x-button></div>
         </form>
     </div>
 @endsection

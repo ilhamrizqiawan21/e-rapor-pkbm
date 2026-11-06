@@ -42,7 +42,7 @@
                             </div>
                             <textarea id="description-{{ strtolower($type) }}" name="description" rows="4" maxlength="10000" class="mt-3 block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-brand-600 focus:ring-2 focus:ring-brand-500/20" placeholder="Ketik deskripsi {{ strtolower($label) }}..." @disabled(! $editable)>{{ old('description', $assessment?->description) }}</textarea>
                             @error('description')<p class="mt-1 text-xs text-rose-600">{{ $message }}</p>@enderror
-                            @if ($editable)<div class="mt-3 flex justify-end"><x-button type="submit" size="sm">Simpan {{ strtolower($label) }}</x-button></div>@endif
+                            @if ($editable)<div class="mt-3 flex justify-end"><x-button type="submit" size="sm" icon="save">Simpan {{ strtolower($label) }}</x-button></div>@endif
                         </form>
                     @endforeach
                 </div>
@@ -55,7 +55,7 @@
                     @foreach ([['sick_days', 'Sakit'], ['leave_days', 'Izin'], ['unexcused_days', 'Tanpa keterangan']] as [$name, $label])
                         <x-input :name="$name" type="number" min="0" max="366" step="1" :label="$label.' (hari)'" :value="old($name, $attendance->{$name})" :disabled="!$editable" required />
                     @endforeach
-                    @if ($editable)<div class="flex justify-end pt-2"><x-button type="submit" variant="success">Simpan absensi</x-button></div>@endif
+                    @if ($editable)<div class="flex justify-end pt-2"><x-button type="submit" variant="success" icon="save">Simpan absensi</x-button></div>@endif
                 </form>
             </section>
         </div>

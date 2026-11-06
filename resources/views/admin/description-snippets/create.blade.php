@@ -7,8 +7,8 @@
             @csrf
             @include('admin.description-snippets._form')
             <div class="flex justify-end gap-3 border-t border-slate-100 pt-5">
-                <x-button href="{{ route('admin.description-snippets.index') }}" variant="secondary">Batal</x-button>
-                <x-button type="submit">Simpan snippet</x-button>
+                <x-button href="{{ route('admin.description-snippets.index') }}" variant="cancel" icon="x">Batal</x-button>
+                <x-button type="submit" icon="save">Simpan snippet</x-button>
             </div>
         </form>
     </div>

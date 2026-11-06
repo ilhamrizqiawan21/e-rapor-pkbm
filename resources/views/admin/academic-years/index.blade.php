@@ -3,13 +3,13 @@
 @section('content')
     <div class="mx-auto max-w-7xl space-y-6">
         <x-page-header eyebrow="Data inti / periode akademik" title="Tahun Pelajaran" description="Kelola periode akademik dan semester PKBM sebagai dasar kelas, nilai, dan rapor.">
-            @can('create', App\Models\AcademicYear::class)<x-button href="{{ route('admin.academic-years.create') }}">Tambah tahun pelajaran</x-button>@endcan
+            @can('create', App\Models\AcademicYear::class)<x-button href="{{ route('admin.academic-years.create') }}" icon="add">Tambah tahun pelajaran</x-button>@endcan
         </x-page-header>
 
         @if ($academicYears->isEmpty())
             @can('create', App\Models\AcademicYear::class)
                 <x-empty-state title="Belum ada tahun pelajaran" description="Buat tahun pelajaran pertama untuk mulai mengelola semester dan kelas.">
-                    <x-slot:actions><x-button href="{{ route('admin.academic-years.create') }}" size="sm">Tambah tahun pelajaran</x-button></x-slot:actions>
+                    <x-slot:actions><x-button href="{{ route('admin.academic-years.create') }}" size="sm" icon="add">Tambah tahun pelajaran</x-button></x-slot:actions>
                 </x-empty-state>
             @else
                 <x-empty-state title="Belum ada tahun pelajaran" description="Belum ada periode akademik pada institusi ini." />
@@ -30,7 +30,7 @@
                             <div class="flex flex-wrap gap-2">
                                 <x-button size="sm" variant="secondary" href="{{ route('admin.academic-years.show', $academicYear) }}">Detail semester</x-button>
                                 @can('update', $academicYear)
-                                    <x-button size="sm" href="{{ route('admin.academic-years.edit', $academicYear) }}">Edit</x-button>
+                                    <x-button size="sm" href="{{ route('admin.academic-years.edit', $academicYear) }}" variant="edit" icon="edit">Edit</x-button>
                                 @endcan
                             </div>
                         </div>

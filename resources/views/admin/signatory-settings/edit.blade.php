@@ -44,7 +44,7 @@
 
             <div class="flex items-center justify-end gap-3 border-t border-slate-100 pt-5">
                 <p class="mr-auto text-xs text-slate-500">Wali kelas diambil dari akun Guru pada kelas peserta didik. Orang tua/wali diambil dari data peserta didik.</p>
-                <x-button type="submit">Simpan pengaturan</x-button>
+                <x-button type="submit" icon="save">Simpan pengaturan</x-button>
             </div>
         </form>
     </div>

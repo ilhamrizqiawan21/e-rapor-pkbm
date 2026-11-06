@@ -7,7 +7,7 @@
         @endif
 
         <x-page-header eyebrow="Master SDM" title="{{ $teacher->name }}" description="{{ $teacher->username }}{{ $teacher->email ? ' · '.$teacher->email : '' }}" back-href="{{ route('admin.teachers.index') }}" back-text="Kembali ke direktori Guru">
-            <x-button href="{{ route('admin.teachers.edit', $teacher) }}">Edit data</x-button>
+            <x-button href="{{ route('admin.teachers.edit', $teacher) }}" variant="edit" icon="edit">Edit data</x-button>
         </x-page-header>
 
         <section class="grid gap-4 sm:grid-cols-3">
@@ -24,7 +24,7 @@
         <section class="rounded-2xl border border-rose-200 bg-rose-50 p-6">
             <h3 class="font-semibold text-rose-950">Zona akun</h3>
             <p class="mt-1 text-sm text-rose-800">Reset password memakai alur Admin yang sudah ada. Jika Guru memiliki histori penugasan, penghapusan otomatis berubah menjadi penonaktifan.</p>
-            <div class="mt-4 flex flex-wrap gap-3"><x-button href="{{ route('admin.users.password.edit', $teacher) }}" variant="warning">Reset password</x-button><form method="POST" action="{{ route('admin.teachers.destroy', $teacher) }}" onsubmit="return confirm('Lanjutkan penghapusan akun Guru ini? Jika memiliki histori penugasan, akun akan dinonaktifkan.')">@csrf @method('DELETE')<x-button type="submit" variant="danger">Hapus / nonaktifkan</x-button></form></div>
+            <div class="mt-4 flex flex-wrap gap-3"><x-button href="{{ route('admin.users.password.edit', $teacher) }}" variant="warning" icon="lock">Reset password</x-button><form method="POST" action="{{ route('admin.teachers.destroy', $teacher) }}" onsubmit="return confirm('Lanjutkan penghapusan akun Guru ini? Jika memiliki histori penugasan, akun akan dinonaktifkan.')">@csrf @method('DELETE')<x-button type="submit" variant="danger" icon="trash">Hapus / nonaktifkan</x-button></form></div>
         </section>
     </div>
 @endsection

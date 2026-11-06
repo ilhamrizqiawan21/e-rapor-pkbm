@@ -10,7 +10,7 @@
                 <x-select name="teacher_id" label="Guru pengampu awal" :selected="old('teacher_id')" placeholder="Pilih guru" required>@foreach ($teachers as $teacher)<option value="{{ $teacher->id }}">{{ $teacher->name }}{{ $teacher->staffProfile?->employee_number ? ' · '.$teacher->staffProfile->employee_number : '' }}</option>@endforeach</x-select>
                 <x-input name="minimum_score" type="number" min="0" max="100" label="KKM" :value="old('minimum_score', 70)" required />
             </section>
-            <div class="flex justify-end gap-3"><x-button href="{{ route('admin.academic-classes.index') }}" variant="secondary">Batal</x-button><x-button type="submit">Tambah mapping</x-button></div>
+            <div class="flex justify-end gap-3"><x-button href="{{ route('admin.academic-classes.index') }}" variant="cancel" icon="x">Batal</x-button><x-button type="submit" icon="add">Tambah mapping</x-button></div>
         </form>
     </div>
 @endsection

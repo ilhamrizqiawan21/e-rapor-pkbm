@@ -4,7 +4,7 @@
     <div class="mx-auto max-w-7xl space-y-6">
         <x-page-header eyebrow="Data inti / kelas & rombel" title="Kelas / Rombel" description="Atur kelas, wali kelas, peserta didik, dan penugasan mapel sesuai periode akademik.">
             @can('create', App\Models\SubjectAssignment::class)<x-button href="{{ route('admin.academic-classes.subject-assignments.bulk-create') }}" variant="secondary">Mapping beberapa kelas</x-button><x-button href="{{ route('admin.academic-classes.subject-assignments.bulk-assign-teacher.create') }}" variant="secondary">Bulk assign guru</x-button>@endcan
-            @can('create', App\Models\AcademicClass::class)<x-button href="{{ route('admin.academic-classes.create') }}">Tambah kelas</x-button>@endcan
+            @can('create', App\Models\AcademicClass::class)<x-button href="{{ route('admin.academic-classes.create') }}" icon="add">Tambah kelas</x-button>@endcan
         </x-page-header>
 
         @if (session('status'))<div class="flex items-start gap-3 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800" role="status"><svg class="mt-0.5 h-5 w-5 shrink-0 text-emerald-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="m5 12 4 4L19 6" /></svg><span>{{ session('status') }}</span></div>@endif
