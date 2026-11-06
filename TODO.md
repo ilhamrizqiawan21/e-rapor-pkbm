@@ -147,21 +147,21 @@ Sebuah fitur hanya boleh dianggap selesai jika semua hal berikut terpenuhi:
 - [x] Buat sidebar desktop.
 - [x] Buat header periode aktif.
 - [x] Buat dashboard placeholder.
-- [ ] Tetapkan token warna final.
-- [ ] Tetapkan tipografi final.
-- [ ] Buat komponen button.
-- [ ] Buat komponen input.
-- [ ] Buat komponen select.
-- [ ] Buat komponen textarea.
-- [ ] Buat komponen table.
-- [ ] Buat komponen badge status.
-- [ ] Buat komponen modal.
-- [ ] Buat komponen toast.
-- [ ] Buat komponen pagination.
-- [ ] Buat empty state.
-- [ ] Buat loading state.
-- [ ] Buat error state.
-- [ ] Buat responsive drawer untuk tablet.
+- [x] Tetapkan token warna final.
+- [x] Tetapkan tipografi final.
+- [x] Buat komponen button.
+- [x] Buat komponen input.
+- [x] Buat komponen select.
+- [x] Buat komponen textarea.
+- [x] Buat komponen table.
+- [x] Buat komponen badge status.
+- [x] Buat komponen modal.
+- [x] Buat komponen toast.
+- [x] Buat komponen pagination.
+- [x] Buat empty state.
+- [x] Buat loading state.
+- [x] Buat error state.
+- [x] Buat responsive drawer untuk tablet.
 
 ## 01.05 Quality gate fondasi
 

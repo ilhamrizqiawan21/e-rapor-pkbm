@@ -3,6 +3,8 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Enums\RoleCode;
+use App\Enums\UserStatus;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
@@ -13,7 +15,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-#[Fillable(['institution_id', 'name', 'email', 'password'])]
+#[Fillable(['institution_id', 'name', 'username', 'email', 'password', 'status'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
@@ -30,6 +32,7 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'status' => UserStatus::class,
         ];
     }
 
@@ -46,5 +49,30 @@ class User extends Authenticatable
     public function staffProfile(): HasOne
     {
         return $this->hasOne(StaffProfile::class);
+    }
+
+    public function hasRole(RoleCode|string $role): bool
+    {
+        $code = $role instanceof RoleCode ? $role->value : $role;
+
+        return $this->roles()->where('code', $code)->exists();
+    }
+
+    /**
+     * @param array<int, RoleCode|string> $roles
+     */
+    public function hasAnyRole(array $roles): bool
+    {
+        $codes = array_map(
+            static fn (RoleCode|string $role): string => $role instanceof RoleCode ? $role->value : $role,
+            $roles,
+        );
+
+        return $this->roles()->whereIn('code', $codes)->exists();
+    }
+
+    public function isActive(): bool
+    {
+        return $this->status === UserStatus::Active;
     }
 }
