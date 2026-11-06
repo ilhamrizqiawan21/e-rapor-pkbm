@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 #[Fillable([
     'enrollment_id',
@@ -58,6 +59,26 @@ class ReportCard extends Model
     public function grades(): HasMany
     {
         return $this->hasMany(ReportGrade::class);
+    }
+
+    public function attitudeAssessments(): HasMany
+    {
+        return $this->hasMany(AttitudeAssessment::class);
+    }
+
+    public function attendanceSummary(): HasOne
+    {
+        return $this->hasOne(AttendanceSummary::class);
+    }
+
+    public function extracurriculars(): HasMany
+    {
+        return $this->hasMany(ReportExtracurricular::class)->orderBy('display_order')->orderBy('id');
+    }
+
+    public function homeroomNote(): HasOne
+    {
+        return $this->hasOne(HomeroomNote::class);
     }
 
     public function signatures(): HasMany

@@ -42,6 +42,33 @@ class ReportCardPolicy
             && $this->hasClassAccess($user, $reportCard);
     }
 
+    public function updateAttitude(User $user, ReportCard $reportCard): bool
+    {
+        return in_array($reportCard->status, self::EDITABLE_STATUSES, true)
+            && $this->hasHomeroomSurfaceAccess($user, $reportCard);
+    }
+
+    public function updateAttendance(User $user, ReportCard $reportCard): bool
+    {
+        return in_array($reportCard->status, self::EDITABLE_STATUSES, true)
+            && $this->hasHomeroomSurfaceAccess($user, $reportCard);
+    }
+
+    public function manageCompleteness(User $user, ReportCard $reportCard): bool
+    {
+        if (! in_array($reportCard->status, self::EDITABLE_STATUSES, true)
+            || ! $this->belongsToInstitution($user, $reportCard)) {
+            return false;
+        }
+
+        if ($user->hasRole('ADMIN')) {
+            return true;
+        }
+
+        return $user->hasRole('GURU')
+            && $reportCard->enrollment?->academicClass?->homeroom_teacher_id === $user->getKey();
+    }
+
     /**
      * Determine whether the user can delete the model.
      */
@@ -125,6 +152,23 @@ class ReportCardPolicy
         return $academicClass !== null
             && ($academicClass->homeroom_teacher_id === $user->getKey()
                 || $academicClass->subjectAssignments()->where('teacher_id', $user->getKey())->exists());
+    }
+
+    private function hasHomeroomSurfaceAccess(User $user, ReportCard $reportCard): bool
+    {
+        if (! $this->belongsToInstitution($user, $reportCard)) {
+            return false;
+        }
+
+        if ($user->hasAnyRole(['ADMIN', 'KEPSEK'])) {
+            return true;
+        }
+
+        $academicClass = $reportCard->enrollment?->academicClass;
+
+        return $user->hasRole('GURU')
+            && $academicClass !== null
+            && $academicClass->homeroom_teacher_id === $user->getKey();
     }
 
     private function belongsToInstitution(User $user, ReportCard $reportCard): bool
