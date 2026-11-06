@@ -718,55 +718,57 @@ Sebuah fitur hanya boleh dianggap selesai jika semua hal berikut terpenuhi:
 
 ## 11.01 State machine
 
-- [ ] DRAFT.
-- [ ] SUBMITTED.
-- [ ] IN_REVIEW.
-- [ ] NEEDS_REVISION.
-- [ ] APPROVED.
-- [ ] LOCKED.
-- [ ] Unlock kembali ke DRAFT.
-- [ ] Semua transisi memiliki actor.
-- [ ] Semua transisi memiliki timestamp.
-- [ ] Reject memiliki alasan.
-- [ ] Unlock memiliki alasan.
+- [x] DRAFT.
+- [x] SUBMITTED.
+- [x] IN_REVIEW.
+- [x] NEEDS_REVISION.
+- [x] APPROVED.
+- [x] LOCKED.
+- [x] Unlock kembali ke DRAFT.
+- [x] Semua transisi memiliki actor.
+- [x] Semua transisi memiliki timestamp.
+- [x] Reject memiliki alasan.
+- [x] Unlock memiliki alasan.
 
 ## 11.02 Permission state
 
-- [ ] Guru dapat edit DRAFT miliknya.
-- [ ] Guru dapat submit.
-- [ ] Guru wali kelas dapat review kelengkapan.
-- [ ] Kepsek dapat approve/reject.
-- [ ] Admin dapat lock.
-- [ ] Admin dapat unlock.
-- [ ] Data LOCKED tidak dapat diedit oleh Guru.
-- [ ] Data LOCKED tidak dapat diedit oleh Kepsek.
-- [ ] Admin unlock harus melalui modal alasan.
+- [x] Guru dapat edit DRAFT miliknya.
+- [x] Guru dapat submit.
+- [x] Guru wali kelas dapat review kelengkapan.
+- [x] Kepsek dapat approve/reject.
+- [x] Admin dapat lock.
+- [x] Admin dapat unlock.
+- [x] Data LOCKED tidak dapat diedit oleh Guru.
+- [x] Data LOCKED tidak dapat diedit oleh Kepsek.
+- [x] Admin unlock harus melalui modal alasan.
 
 ## 11.03 Audit log
 
-- [ ] CREATE.
-- [ ] UPDATE.
-- [ ] SUBMIT.
-- [ ] REVIEW.
-- [ ] APPROVE.
-- [ ] REJECT.
-- [ ] LOCK.
-- [ ] UNLOCK.
-- [ ] TRANSFER.
-- [ ] Simpan actor.
-- [ ] Simpan entity.
-- [ ] Simpan nilai lama.
-- [ ] Simpan nilai baru.
-- [ ] Simpan alasan.
-- [ ] Halaman lihat histori.
-- [ ] Filter berdasarkan actor, action, tanggal, entity.
+- [x] CREATE.
+- [x] UPDATE.
+- [x] SUBMIT.
+- [x] REVIEW.
+- [x] APPROVE.
+- [x] REJECT.
+- [x] LOCK.
+- [x] UNLOCK.
+- [x] TRANSFER.
+- [x] Simpan actor.
+- [x] Simpan entity.
+- [x] Simpan nilai lama.
+- [x] Simpan nilai baru.
+- [x] Simpan alasan.
+- [x] Halaman lihat histori.
+- [x] Filter berdasarkan actor, action, tanggal, entity.
 
 ## 11.04 Gate workflow
 
-- [ ] Tidak ada transisi ilegal.
-- [ ] Unlock selalu tercatat.
-- [ ] Audit tidak dapat diubah melalui UI biasa.
-- [ ] Test seluruh transisi lulus.
+- [x] Tidak ada transisi ilegal.
+- [x] Unlock selalu tercatat.
+- [x] Audit tidak dapat diubah melalui UI biasa.
+- [x] Test seluruh transisi lulus.
+
+**Gate 11:** Lulus. State machine, permission state, audit immutable, histori dengan filter, dan modal unlock beralasan sudah tersedia.
 
 ---
 
@@ -774,53 +776,55 @@ Sebuah fitur hanya boleh dianggap selesai jika semua hal berikut terpenuhi:
 
 ## 12.01 Template
 
-- [ ] Pilih engine PDF.
-- [ ] Buat template halaman identitas.
-- [ ] Buat tabel capaian kompetensi.
-- [ ] Buat tabel sikap.
-- [ ] Buat tabel ekstrakurikuler.
-- [ ] Buat tabel absensi.
-- [ ] Buat catatan/saran.
-- [ ] Buat area tanda tangan.
-- [ ] Buat nomor dokumen.
-- [ ] Buat header/footer.
-- [ ] Buat halaman nomor jika diperlukan.
+- [x] Pilih engine PDF.
+- [x] Buat template halaman identitas.
+- [x] Buat tabel capaian kompetensi.
+- [x] Buat tabel sikap.
+- [x] Buat tabel ekstrakurikuler.
+- [x] Buat tabel absensi.
+- [x] Buat catatan/saran.
+- [x] Buat area tanda tangan.
+- [x] Buat nomor dokumen.
+- [x] Buat header/footer.
+- [x] Buat halaman nomor jika diperlukan.
 
 ## 12.02 Layout dan overflow
 
-- [ ] Deskripsi satu baris.
-- [ ] Deskripsi multi-baris.
-- [ ] Deskripsi sangat panjang.
-- [ ] Mapel sedikit.
-- [ ] Mapel banyak.
-- [ ] Ekstrakurikuler kosong.
-- [ ] Ekstrakurikuler banyak.
-- [ ] Catatan kosong.
-- [ ] Catatan panjang.
-- [ ] Nama siswa panjang.
-- [ ] Nama PKBM panjang.
-- [ ] Logo besar/kecil.
-- [ ] Halaman terpisah tidak memotong tabel.
+- [x] Deskripsi satu baris.
+- [x] Deskripsi multi-baris.
+- [x] Deskripsi sangat panjang.
+- [x] Mapel sedikit.
+- [x] Mapel banyak.
+- [x] Ekstrakurikuler kosong.
+- [x] Ekstrakurikuler banyak.
+- [x] Catatan kosong.
+- [x] Catatan panjang.
+- [x] Nama siswa panjang.
+- [x] Nama PKBM panjang.
+- [x] Logo besar/kecil.
+- [x] Halaman terpisah tidak memotong tabel.
 
 ## 12.03 Preview dan export
 
-- [ ] Preview browser.
-- [ ] Download satu rapor.
-- [ ] Cetak satu rapor.
-- [ ] Generate batch satu kelas.
-- [ ] Nama file konsisten.
-- [ ] PDF tidak dapat dibuat dari rapor belum lengkap.
-- [ ] PDF mengambil snapshot rapor terkunci.
-- [ ] Error export tampil ramah.
+- [x] Preview browser.
+- [x] Download satu rapor.
+- [x] Cetak satu rapor.
+- [x] Generate batch satu kelas.
+- [x] Nama file konsisten.
+- [x] PDF tidak dapat dibuat dari rapor belum lengkap.
+- [x] PDF mengambil snapshot rapor terkunci.
+- [x] Error export tampil ramah.
 
 ## 12.04 Gate PDF
 
-- [ ] Hasil PDF dibandingkan dengan DOCX referensi.
-- [ ] Tidak ada clipping.
-- [ ] Tidak ada overlap.
-- [ ] Tidak ada tabel keluar halaman.
-- [ ] Semua tanda tangan berada pada posisi benar.
-- [ ] PDF dapat dibuka pada browser dan PDF reader.
+- [x] Hasil PDF dibandingkan dengan DOCX referensi.
+- [x] Tidak ada clipping.
+- [x] Tidak ada overlap.
+- [x] Tidak ada tabel keluar halaman.
+- [x] Semua tanda tangan berada pada posisi benar.
+- [x] PDF dapat dibuka pada browser dan PDF reader.
+
+**Gate 12:** Lulus. Engine headless Chrome, preview/download/print, batch ZIP, snapshot rapor terkunci, proteksi kelengkapan, dan template A4 portrait sudah tersedia.
 
 ---
 

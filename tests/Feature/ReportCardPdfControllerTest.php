@@ -104,6 +104,16 @@ class ReportCardPdfControllerTest extends TestCase
         $zip->close();
     }
 
+    public function test_guru_cannot_batch_export_a_class_without_assignment_access(): void
+    {
+        $fixture = $this->fixture('APPROVED');
+        $guru = User::factory()->withRole(RoleCode::Guru)->create(['institution_id' => $fixture['institution']->id]);
+
+        $this->actingAs($guru)
+            ->get('/__test/classes/'.$fixture['class']->id.'/semesters/'.$fixture['semester']->id.'/pdf')
+            ->assertForbidden();
+    }
+
     /** @return array<string, mixed> */
     private function fixture(string $status): array
     {

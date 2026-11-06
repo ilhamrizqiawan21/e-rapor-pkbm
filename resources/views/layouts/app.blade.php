@@ -87,6 +87,9 @@
                     <a class="block rounded-lg {{ request()->routeIs('admin.grade-entry.*') ? 'bg-white/10 font-medium' : 'text-slate-300 hover:bg-white/5' }} px-3 py-2" href="{{ route('admin.grade-entry.index') }}">Input nilai</a>
                     <span class="block px-3 py-2 text-slate-300">Rapor dan Leger</span>
                     <a class="block rounded-lg {{ request()->routeIs('admin.report-cards.*') ? 'bg-white/10 font-medium' : 'text-slate-300 hover:bg-white/5' }} px-3 py-2" href="{{ route('admin.report-cards.index') }}">Kelengkapan rapor</a>
+                    @if (auth()->check() && auth()->user()->hasAnyRole(['ADMIN', 'KEPSEK']))
+                        <a class="block rounded-lg {{ request()->routeIs('admin.audit-logs.*') ? 'bg-white/10 font-medium' : 'text-slate-300 hover:bg-white/5' }} px-3 py-2" href="{{ route('admin.audit-logs.index') }}">Histori audit</a>
+                    @endif
                     <span class="block px-3 py-2 text-slate-300">Pengaturan</span>
                     @auth
                         @if (auth()->user()->hasRole('ADMIN'))
@@ -143,6 +146,9 @@
                 <a class="block rounded-lg {{ request()->routeIs('admin.grade-entry.*') ? 'bg-white/10 font-medium' : 'text-slate-300 hover:bg-white/5' }} px-3 py-2" href="{{ route('admin.grade-entry.index') }}">Input nilai</a>
                 <span class="block px-3 py-2 text-slate-300">Rapor dan Leger</span>
                 <a class="block rounded-lg {{ request()->routeIs('admin.report-cards.*') ? 'bg-white/10 font-medium' : 'text-slate-300 hover:bg-white/5' }} px-3 py-2" href="{{ route('admin.report-cards.index') }}">Kelengkapan rapor</a>
+                @if (auth()->check() && auth()->user()->hasAnyRole(['ADMIN', 'KEPSEK']))
+                    <a class="block rounded-lg {{ request()->routeIs('admin.audit-logs.*') ? 'bg-white/10 font-medium' : 'text-slate-300 hover:bg-white/5' }} px-3 py-2" href="{{ route('admin.audit-logs.index') }}">Histori audit</a>
+                @endif
                 <span class="block px-3 py-2 text-slate-300">Pengaturan</span>
                 @auth
                     @if (auth()->user()->hasRole('ADMIN'))

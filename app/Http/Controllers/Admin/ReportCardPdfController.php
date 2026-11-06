@@ -50,6 +50,13 @@ final class ReportCardPdfController extends Controller
         $academicClass->loadMissing('program');
         $semester->loadMissing('academicYear');
 
+        if ($request->user()->hasRole('GURU')) {
+            $hasClassAccess = $academicClass->homeroom_teacher_id === $request->user()->getKey()
+                || $academicClass->subjectAssignments()->where('teacher_id', $request->user()->getKey())->exists();
+
+            abort_unless($hasClassAccess, 403);
+        }
+
         abort_unless(
             $academicClass->program?->institution_id === $request->user()->institution_id
                 && $semester->academicYear?->institution_id === $request->user()->institution_id

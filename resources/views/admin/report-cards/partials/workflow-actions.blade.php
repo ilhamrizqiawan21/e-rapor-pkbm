@@ -24,6 +24,11 @@
     </div>
 
     <div class="mt-5 flex flex-wrap gap-2">
+        @if (app('router')->has('admin.report-cards.pdf.preview') && in_array($reportCard->status, ['APPROVED', 'LOCKED'], true))
+            <x-button href="{{ route('admin.report-cards.pdf.preview', $reportCard) }}" size="sm" variant="secondary" target="_blank" rel="noopener">Preview PDF</x-button>
+            <x-button href="{{ route('admin.report-cards.pdf.download', $reportCard) }}" size="sm" variant="secondary">Download PDF</x-button>
+            <x-button href="{{ route('admin.report-cards.pdf.print', $reportCard) }}" size="sm" variant="secondary" target="_blank" rel="noopener">Cetak PDF</x-button>
+        @endif
         @if ($canSubmit)
             <form method="POST" action="{{ route('admin.report-cards.submit', $reportCard) }}">@csrf <x-button type="submit" variant="success">Ajukan untuk ditinjau</x-button></form>
         @endif
