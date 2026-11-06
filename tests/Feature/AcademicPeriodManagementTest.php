@@ -59,6 +59,29 @@ class AcademicPeriodManagementTest extends TestCase
         ]);
     }
 
+    public function test_authenticated_layout_shows_active_period_on_admin_pages(): void
+    {
+        [$admin, $institution] = $this->adminContext();
+        $year = AcademicYear::query()->create([
+            'institution_id' => $institution->getKey(),
+            'name' => '2026/2027',
+            'status' => AcademicYearStatus::Active,
+        ]);
+        Semester::query()->create([
+            'academic_year_id' => $year->getKey(),
+            'code' => 'GANJIL',
+            'name' => 'Semester Ganjil',
+            'sequence' => 1,
+            'status' => 'ACTIVE',
+        ]);
+
+        $this->actingAs($admin)
+            ->get(route('admin.academic-years.index'))
+            ->assertOk()
+            ->assertSee('2026/2027 · Semester Ganjil')
+            ->assertSee('Siap digunakan');
+    }
+
     public function test_period_name_is_unique_per_institution_and_dates_are_ordered(): void
     {
         [$admin, $institution] = $this->adminContext();

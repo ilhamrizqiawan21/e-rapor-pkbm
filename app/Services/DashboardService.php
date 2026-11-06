@@ -21,12 +21,14 @@ use Illuminate\Support\Collection;
  */
 final class DashboardService
 {
+    public function __construct(private readonly AcademicPeriodContext $periodContext) {}
+
     /** @return array<string, mixed> */
     public function for(User $user, ?string $requestedRole = null): array
     {
         $user->loadMissing('roles');
         $role = $this->resolveRole($user, $requestedRole);
-        $period = $this->activePeriod($user->institution_id);
+        $period = $this->periodContext->forInstitution($user->institution_id);
 
         return match ($role) {
             RoleCode::Admin->value => $this->admin($user, $period),
@@ -34,29 +36,6 @@ final class DashboardService
             RoleCode::Kepsek->value => $this->kepsek($user, $period),
             default => $this->emptyDashboard($period),
         };
-    }
-
-    /** @return array{academicYear: ?AcademicYear, semester: ?Semester, label: string} */
-    private function activePeriod(?int $institutionId): array
-    {
-        if ($institutionId === null) {
-            return ['academicYear' => null, 'semester' => null, 'label' => 'Belum dikonfigurasi'];
-        }
-
-        $academicYear = AcademicYear::query()
-            ->where('institution_id', $institutionId)
-            ->where('status', 'ACTIVE')
-            ->with(['semesters' => fn ($query) => $query->where('status', 'ACTIVE')->orderBy('sequence')])
-            ->first();
-        $semester = $academicYear?->semesters->first();
-
-        return [
-            'academicYear' => $academicYear,
-            'semester' => $semester,
-            'label' => $academicYear === null
-                ? 'Belum ada tahun pelajaran aktif'
-                : ($semester === null ? $academicYear->name.' · semester belum aktif' : $academicYear->name.' · '.$semester->name),
-        ];
     }
 
     /** @param array{academicYear: ?AcademicYear, semester: ?Semester, label: string} $period */

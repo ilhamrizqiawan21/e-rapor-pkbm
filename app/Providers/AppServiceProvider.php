@@ -3,8 +3,10 @@
 namespace App\Providers;
 
 use App\Contracts\PdfEngine;
+use App\Services\AcademicPeriodContext;
 use App\Services\Reports\ChromePdfEngine;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -28,5 +30,15 @@ class AppServiceProvider extends ServiceProvider
         if (config('security.force_https')) {
             URL::forceScheme('https');
         }
+
+        View::composer('layouts.app', function ($view): void {
+            $user = request()->user();
+            $period = app(AcademicPeriodContext::class)->forInstitution($user?->institution_id);
+
+            $view->with([
+                'period' => $period,
+                'hasPeriod' => $period['academicYear'] !== null && $period['semester'] !== null,
+            ]);
+        });
     }
 }
