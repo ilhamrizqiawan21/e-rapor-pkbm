@@ -32,4 +32,10 @@ class Institution extends Model
     {
         return $this->hasMany(Subject::class);
     }
+
+    public function signatorySetting(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(InstitutionSignatorySetting::class);
+    }
+
 }
