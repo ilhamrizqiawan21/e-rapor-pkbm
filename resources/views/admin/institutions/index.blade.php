@@ -1,17 +1,12 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="mx-auto max-w-5xl">
-        <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-            <div>
-                <p class="text-sm font-semibold uppercase tracking-[0.18em] text-accent-700">Master data</p>
-                <h2 class="mt-2 text-3xl font-semibold tracking-tight text-slate-950">Identitas PKBM</h2>
-                <p class="mt-2 text-sm text-slate-600">Kelola identitas yang digunakan pada rapor, leger, dan dokumen resmi.</p>
-            </div>
+    <div class="mx-auto max-w-5xl space-y-6">
+        <x-page-header eyebrow="Pengaturan PKBM / identitas" title="Identitas PKBM" description="Kelola identitas yang digunakan pada rapor, leger, dan dokumen resmi.">
             @can('create', App\Models\Institution::class)
                 <x-button href="{{ route('admin.institutions.create') }}">Tambah PKBM</x-button>
             @endcan
-        </div>
+        </x-page-header>
 
         @if ($institution)
             <section class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">

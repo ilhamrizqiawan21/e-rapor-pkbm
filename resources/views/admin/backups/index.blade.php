@@ -2,11 +2,7 @@
 
 @section('content')
     <div class="mx-auto max-w-7xl space-y-6">
-        <div>
-            <p class="text-sm font-semibold uppercase tracking-[0.18em] text-accent-700">Operasional</p>
-            <h2 class="mt-2 text-3xl font-semibold tracking-tight text-slate-950">Backup dan restore</h2>
-            <p class="mt-2 max-w-3xl text-sm text-slate-600">Kelola salinan database secara aman. Restore mengganti database aktif dan selalu membuat safety backup terlebih dahulu.</p>
-        </div>
+        <x-page-header eyebrow="Pengaturan PKBM / operasional" title="Backup dan restore" description="Kelola salinan database secara aman. Restore mengganti database aktif dan selalu membuat safety backup terlebih dahulu." />
 
         @if (session('status'))
             <div class="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800" role="status">{{ session('status') }}</div>

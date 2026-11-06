@@ -10,19 +10,14 @@
 
 @section('content')
     <div class="mx-auto max-w-[1500px] space-y-6" x-data="{ dirty: false, picker: null }" @input="dirty = true" @beforeunload.window="if (dirty) $event.returnValue = 'Perubahan nilai belum disimpan.'" @description-snippet-selected.window="if (picker) { document.getElementById(picker).value = $event.detail.content; document.getElementById(picker + '-snippet').value = $event.detail.id; dirty = true; picker = null; }">
-        <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-            <div>
-                <p class="text-sm font-semibold uppercase tracking-[0.18em] text-accent-700">Penilaian</p>
-                <h2 class="mt-2 text-3xl font-semibold tracking-tight text-slate-950">Input nilai</h2>
-                <p class="mt-2 text-sm text-slate-600">Masukkan nilai per mata pelajaran. Perubahan yang belum disimpan akan ditandai sebelum Anda berpindah halaman.</p>
-            </div>
+        <x-page-header eyebrow="Penilaian / input nilai" title="Input nilai" description="Masukkan nilai per mata pelajaran. Perubahan yang belum disimpan akan ditandai sebelum Anda berpindah halaman.">
             @if ($hasAssignment)
                 <div class="flex flex-wrap gap-2 text-sm">
                     <span class="rounded-full bg-accent-50 px-3 py-2 font-semibold text-accent-800">KKM {{ $assignment->minimum_score }}</span>
                     <span class="rounded-full bg-slate-100 px-3 py-2 text-slate-700">{{ $assignment->teacher?->name ?? 'Guru belum ditentukan' }}</span>
                 </div>
             @endif
-        </div>
+        </x-page-header>
 
         @if (session('status'))
             <div class="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800" role="status">{{ session('status') }}</div>

@@ -1,12 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="mx-auto max-w-5xl">
-        <div class="mb-6">
-            <p class="text-sm font-semibold uppercase tracking-[0.18em] text-accent-700">Pengaturan</p>
-            <h2 class="mt-2 text-3xl font-semibold tracking-tight text-slate-950">Format rapor</h2>
-            <p class="mt-2 text-sm text-slate-600">Atur format tampilan rapor untuk PKBM ini. Pengaturan aman akan dibuat otomatis saat pertama kali dibuka.</p>
-        </div>
+    <div class="mx-auto max-w-5xl space-y-6">
+        <x-page-header eyebrow="Pengaturan PKBM / rapor" title="Format rapor" description="Atur format tampilan rapor untuk PKBM ini. Pengaturan aman akan dibuat otomatis saat pertama kali dibuka." />
 
         @if (session('status'))
             <div class="mb-6 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800" role="status">
@@ -91,9 +87,7 @@
             </section>
 
             <div class="flex justify-end">
-                <button type="submit" class="inline-flex items-center rounded-lg bg-brand-900 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-800 focus:outline-hidden focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2">
-                    Simpan pengaturan format
-                </button>
+                <x-button type="submit" size="lg">Simpan pengaturan format</x-button>
             </div>
         </form>
     </div>

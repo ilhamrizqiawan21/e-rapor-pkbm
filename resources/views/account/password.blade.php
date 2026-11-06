@@ -1,12 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="mx-auto max-w-2xl">
-        <div class="mb-6">
-            <p class="text-sm font-semibold uppercase tracking-[0.18em] text-accent-700">Akun</p>
-            <h2 class="mt-2 text-3xl font-semibold tracking-tight text-slate-950">Ubah password</h2>
-            <p class="mt-2 text-sm text-slate-600">Gunakan minimal 8 karakter dengan huruf besar, huruf kecil, dan angka.</p>
-        </div>
+    <div class="mx-auto max-w-2xl space-y-6">
+        <x-page-header eyebrow="Akun" title="Ubah password" description="Gunakan minimal 8 karakter dengan huruf besar, huruf kecil, dan angka." />
 
         @if (session('status'))
             <div class="mb-5 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800" role="status">{{ session('status') }}</div>

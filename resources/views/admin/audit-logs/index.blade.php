@@ -37,11 +37,7 @@
 
 @section('content')
     <div class="mx-auto max-w-7xl space-y-6">
-        <div>
-            <p class="text-sm font-semibold uppercase tracking-[0.18em] text-accent-700">Tata kelola</p>
-            <h2 class="mt-2 text-3xl font-semibold tracking-tight text-slate-950">Histori audit</h2>
-            <p class="mt-2 text-sm text-slate-600">Riwayat aktivitas penting pada institusi ini. Data bersifat immutable dan hanya dapat ditambahkan oleh proses domain.</p>
-        </div>
+        <x-page-header eyebrow="Tata kelola / audit" title="Histori audit" description="Riwayat aktivitas penting pada institusi ini. Data bersifat immutable dan hanya dapat ditambahkan oleh proses domain." />
 
         <section class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
             <form method="GET" action="{{ route('admin.audit-logs.index') }}" class="grid gap-4 md:grid-cols-2 xl:grid-cols-6">

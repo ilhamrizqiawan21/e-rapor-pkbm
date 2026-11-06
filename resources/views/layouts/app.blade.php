@@ -15,7 +15,7 @@
 @endphp
 <body class="min-h-screen bg-slate-50 font-sans text-slate-900 antialiased" x-data="mobileNavigation()">
     {{-- Mobile drawer mirrors the desktop navigation but keeps touch targets generous. --}}
-    <div x-cloak x-show="mobileSidebarOpen" @keydown.escape.window="closeMobileSidebar()" @keydown="trapFocus($event)" x-ref="drawer" class="relative z-50 lg:hidden" role="dialog" aria-label="Menu navigasi aplikasi" aria-modal="true">
+    <div id="mobile-navigation-drawer" x-cloak x-show="mobileSidebarOpen" @keydown.escape.window="closeMobileSidebar()" @keydown="trapFocus($event)" x-ref="drawer" class="fixed inset-0 z-50 lg:hidden" role="dialog" aria-label="Menu navigasi aplikasi" aria-modal="true">
         <div x-show="mobileSidebarOpen" x-transition:enter="transition-opacity ease-linear duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="transition-opacity ease-linear duration-300" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" class="fixed inset-0 bg-slate-950/70 backdrop-blur-xs" @click="closeMobileSidebar()"></div>
         <div class="fixed inset-0 flex">
             <aside x-show="mobileSidebarOpen" x-transition:enter="transition ease-in-out duration-300 transform" x-transition:enter-start="-translate-x-full" x-transition:enter-end="translate-x-0" x-transition:leave="transition ease-in-out duration-300 transform" x-transition:leave-start="translate-x-0" x-transition:leave-end="-translate-x-full" class="relative mr-16 flex w-full max-w-xs flex-1 flex-col bg-brand-900 text-white shadow-2xl">
@@ -63,6 +63,8 @@
                         <button
                             type="button"
                             @click="openMobileSidebar($event)"
+                            :aria-expanded="mobileSidebarOpen.toString()"
+                            aria-controls="mobile-navigation-drawer"
                             class="inline-flex items-center justify-center rounded-lg p-2 text-slate-600 hover:bg-slate-100 hover:text-slate-900 focus:outline-hidden focus-visible:ring-2 focus-visible:ring-brand-500 lg:hidden"
                             aria-label="Buka menu navigasi"
                         >

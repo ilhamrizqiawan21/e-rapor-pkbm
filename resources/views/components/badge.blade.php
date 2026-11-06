@@ -11,6 +11,8 @@
     $statusMap = [
         'DRAFT' => 'neutral',
         'SUBMITTED' => 'info',
+        'IN_REVIEW' => 'info',
+        'NEEDS_REVISION' => 'danger',
         'APPROVED' => 'success',
         'REVISED' => 'danger',
         'LOCKED' => 'warning',
@@ -55,6 +57,8 @@
     $defaultLabels = [
         'DRAFT' => 'Draft',
         'SUBMITTED' => 'Diajukan',
+        'IN_REVIEW' => 'Sedang ditinjau',
+        'NEEDS_REVISION' => 'Perlu revisi',
         'APPROVED' => 'Disetujui',
         'REVISED' => 'Perbaikan',
         'LOCKED' => 'Terkunci',

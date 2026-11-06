@@ -1,12 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="mx-auto max-w-3xl">
-        <div class="mb-6">
-            <p class="text-sm font-semibold uppercase tracking-[0.18em] text-accent-700">Akun</p>
-            <h2 class="mt-2 text-3xl font-semibold tracking-tight text-slate-950">Profil pengguna</h2>
-            <p class="mt-2 text-sm text-slate-600">Informasi akun yang sedang digunakan.</p>
-        </div>
+    <div class="mx-auto max-w-3xl space-y-6">
+        <x-page-header eyebrow="Akun" title="Profil pengguna" description="Informasi akun yang sedang digunakan." />
 
         <section class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
             <dl class="grid gap-5 sm:grid-cols-2">

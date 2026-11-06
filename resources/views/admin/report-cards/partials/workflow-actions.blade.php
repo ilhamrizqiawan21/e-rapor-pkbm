@@ -14,7 +14,7 @@
             <p class="text-xs font-semibold uppercase tracking-[0.16em] text-accent-700">Workflow rapor</p>
             <div class="mt-2 flex flex-wrap items-center gap-3">
                 <h3 class="text-xl font-semibold text-slate-950">Status dan tindakan</h3>
-                <x-badge :variant="$reportCard->status" dot>{{ str_replace('_', ' ', $reportCard->status) }}</x-badge>
+                <x-badge :variant="$reportCard->status" dot />
             </div>
             <p class="mt-2 text-sm text-slate-600">Setiap perubahan status dicatat dengan actor, waktu, dan alasan bila diperlukan.</p>
         </div>
