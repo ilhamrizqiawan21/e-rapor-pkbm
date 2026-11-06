@@ -9,19 +9,14 @@
 
 @section('content')
     <div class="mx-auto max-w-6xl space-y-6" x-data="{ dirty: false }" @input="dirty = true" @beforeunload.window="if (dirty) $event.returnValue = 'Perubahan sikap atau absensi belum disimpan.'">
-        <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-            <div>
-                <p class="text-sm font-semibold uppercase tracking-[0.18em] text-accent-700">Rapor peserta didik</p>
-                <h2 class="mt-2 text-3xl font-semibold tracking-tight text-slate-950">Sikap dan absensi</h2>
-                <p class="mt-2 text-sm text-slate-600">Lengkapi catatan wali kelas untuk {{ $reportCard->enrollment->student->full_name }} pada semester {{ $reportCard->semester->name }}.</p>
-            </div>
+        <x-page-header eyebrow="Rapor peserta didik" title="Sikap dan absensi" description="Lengkapi catatan wali kelas untuk {{ $reportCard->enrollment->student->full_name }} pada semester {{ $reportCard->semester->name }}." back-href="{{ route('admin.report-cards.index') }}" back-text="Kembali ke daftar rapor">
             <div class="flex items-center gap-2">
                 <x-badge :variant="$reportCard->status" dot>{{ str_replace('_', ' ', $reportCard->status) }}</x-badge>
                 @if ($reportCard->enrollment->academicClass->homeroom_teacher_id === auth()->id())
                     <span class="rounded-full bg-accent-50 px-3 py-1 text-xs font-semibold text-accent-800">Wali kelas</span>
                 @endif
             </div>
-        </div>
+        </x-page-header>
 
         @if (session('status'))
             <div class="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800" role="status">{{ session('status') }}</div>

@@ -2,11 +2,7 @@
 
 @section('content')
     <div class="mx-auto max-w-5xl space-y-6">
-        <div>
-            <p class="text-sm font-semibold uppercase tracking-[0.18em] text-accent-700">Identitas rapor</p>
-            <h2 class="mt-2 text-3xl font-semibold tracking-tight text-slate-950">Identitas dan nomor dokumen</h2>
-            <p class="mt-2 text-sm text-slate-600">Periksa identitas peserta didik, periode belajar, dan nomor dokumen sebelum rapor diproses.</p>
-        </div>
+        <x-page-header eyebrow="Identitas rapor" title="Identitas dan nomor dokumen" description="Periksa identitas peserta didik, periode belajar, dan nomor dokumen sebelum rapor diproses." back-href="{{ route('admin.report-cards.index') }}" back-text="Kembali ke daftar rapor" />
 
         @if (session('status'))
             <div class="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800" role="status">{{ session('status') }}</div>

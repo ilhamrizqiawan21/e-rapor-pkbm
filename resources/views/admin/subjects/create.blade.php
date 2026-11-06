@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="mx-auto max-w-3xl">
-        <div class="mb-6"><p class="text-sm font-semibold uppercase tracking-[0.18em] text-accent-700">Master data</p><h2 class="mt-2 text-3xl font-semibold tracking-tight text-slate-950">Tambah mata pelajaran</h2></div>
+        <x-page-header eyebrow="Master data" title="Tambah mata pelajaran" back-href="{{ route('admin.subjects.index') }}" back-text="Kembali ke mata pelajaran" />
         <form method="POST" action="{{ route('admin.subjects.store') }}" class="space-y-6 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
             @csrf
             @include('admin.subjects._form')

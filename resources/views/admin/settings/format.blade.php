@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="mx-auto max-w-5xl space-y-6">
-        <x-page-header eyebrow="Pengaturan PKBM / rapor" title="Format rapor" description="Atur format tampilan rapor untuk PKBM ini. Pengaturan aman akan dibuat otomatis saat pertama kali dibuka." />
+        <x-page-header eyebrow="Pengaturan PKBM / rapor" title="Format rapor" description="Atur format tampilan rapor untuk PKBM ini. Pengaturan aman akan dibuat otomatis saat pertama kali dibuka." back-href="{{ route('dashboard') }}" back-text="Kembali ke dashboard" />
 
         @if (session('status'))
             <div class="mb-6 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800" role="status">

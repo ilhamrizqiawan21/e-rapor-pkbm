@@ -2,19 +2,9 @@
 
 @section('content')
     <div class="mx-auto max-w-5xl space-y-6">
-        <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-            <div>
-                <p class="text-sm font-semibold uppercase tracking-[0.18em] text-accent-700">Bank deskripsi</p>
-                <h2 class="mt-2 text-3xl font-semibold tracking-tight text-slate-950">{{ $snippet->title }}</h2>
-                <p class="mt-2 text-sm text-slate-600">{{ $snippet->subject?->name ?? 'Semua mata pelajaran' }}</p>
-            </div>
-            <div class="flex flex-wrap gap-2">
-                <x-button href="{{ route('admin.description-snippets.index') }}" variant="secondary">Kembali ke bank</x-button>
-                @can('update', $snippet)
-                    <x-button href="{{ route('admin.description-snippets.edit', $snippet) }}">Edit</x-button>
-                @endcan
-            </div>
-        </div>
+        <x-page-header eyebrow="Bank deskripsi" title="{{ $snippet->title }}" description="{{ $snippet->subject?->name ?? 'Semua mata pelajaran' }}" back-href="{{ route('admin.description-snippets.index') }}" back-text="Kembali ke bank deskripsi">
+            @can('update', $snippet)<x-button href="{{ route('admin.description-snippets.edit', $snippet) }}">Edit</x-button>@endcan
+        </x-page-header>
 
         @if (session('status'))
             <div class="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800" role="status">{{ session('status') }}</div>

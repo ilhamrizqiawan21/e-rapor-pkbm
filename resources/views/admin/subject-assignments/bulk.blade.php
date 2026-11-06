@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="mx-auto max-w-5xl">
-        <div class="mb-6"><p class="text-sm font-semibold uppercase tracking-[0.18em] text-accent-700">Mapping mata pelajaran</p><h2 class="mt-2 text-3xl font-semibold tracking-tight text-slate-950">Tambah mapel ke beberapa kelas</h2><p class="mt-2 text-sm text-slate-600">Mapel yang sudah ada pada kelas akan dilewati. KKM dan guru berikut digunakan untuk mapping baru.</p></div>
+        <x-page-header eyebrow="Mapping mata pelajaran" title="Tambah mapel ke beberapa kelas" description="Mapel yang sudah ada pada kelas akan dilewati. KKM dan guru berikut digunakan untuk mapping baru." back-href="{{ route('admin.academic-classes.index') }}" back-text="Kembali ke kelas / rombel" />
         <form method="POST" action="{{ route('admin.academic-classes.subject-assignments.bulk-store') }}" class="space-y-6">@csrf
             <section class="grid gap-5 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:grid-cols-2">
                 <div class="sm:col-span-2"><label class="text-sm font-medium text-slate-700" for="class_ids">Kelas tujuan</label><select id="class_ids" name="class_ids[]" multiple required class="mt-2 min-h-40 w-full rounded-xl border-slate-300">@foreach ($classes as $class)<option value="{{ $class->id }}" @selected(in_array($class->id, old('class_ids', [])))>{{ $class->name }} · {{ $class->program->name }} · {{ $class->academicYear->name }}</option>@endforeach</select>@error('class_ids')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror</div>

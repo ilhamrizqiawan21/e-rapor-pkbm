@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="mx-auto max-w-4xl space-y-6">
-        <div class="flex items-end justify-between"><div><p class="text-sm font-semibold uppercase tracking-[0.18em] text-accent-700">{{ $program->name }}</p><h2 class="mt-2 text-3xl font-semibold tracking-tight text-slate-950">Daftar tingkat</h2></div><x-button href="{{ route('admin.programs.show', $program) }}" variant="secondary">Kembali</x-button></div>
+        <x-page-header eyebrow="{{ $program->name }}" title="Daftar tingkat" back-href="{{ route('admin.programs.show', $program) }}" back-text="Kembali ke detail program" />
         <section class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
             <div class="mb-5 flex justify-between"><p class="text-sm text-slate-600">Pengelolaan tingkat 1 sampai 12.</p>@can('update', $program)<x-button href="{{ route('admin.programs.levels.create', $program) }}" size="sm">Tambah tingkat</x-button>@endcan</div>
             <div class="grid gap-3 sm:grid-cols-2">

@@ -2,21 +2,13 @@
 
 @section('content')
     <div class="mx-auto max-w-7xl">
-        <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-            <div>
-                <p class="text-sm font-semibold uppercase tracking-[0.18em] text-accent-700">Master akademik</p>
-                <h2 class="mt-2 text-3xl font-semibold tracking-tight text-slate-950">Penugasan mata pelajaran</h2>
-                <p class="mt-2 text-sm text-slate-600">{{ $academicClass->name }} · {{ $academicClass->program->name }} · {{ $academicClass->level->name }} · {{ $academicClass->academicYear->name }}</p>
-            </div>
-            <div class="flex flex-wrap gap-2">
+        <x-page-header eyebrow="Master akademik" title="Penugasan mata pelajaran" description="{{ $academicClass->name }} · {{ $academicClass->program->name }} · {{ $academicClass->level->name }} · {{ $academicClass->academicYear->name }}" back-href="{{ route('admin.academic-classes.show', $academicClass) }}" back-text="Kembali ke detail kelas">
                 @can('create', App\Models\SubjectAssignment::class)
                     <x-button href="{{ route('admin.academic-classes.subject-assignments.copy-create', $academicClass) }}" variant="secondary">Salin konfigurasi</x-button>
                     <x-button href="{{ route('admin.academic-classes.subject-assignments.reorder-create', $academicClass) }}" variant="secondary">Atur urutan</x-button>
                     <x-button href="{{ route('admin.academic-classes.subject-assignments.create', $academicClass) }}">Tambah penugasan</x-button>
                 @endcan
-                <x-button href="{{ route('admin.academic-classes.show', $academicClass) }}" variant="secondary">Kembali ke kelas</x-button>
-            </div>
-        </div>
+        </x-page-header>
 
         @if (session('status'))
             <div class="mb-5 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800" role="status">{{ session('status') }}</div>

@@ -33,18 +33,13 @@
     </script>
 
     <div class="mx-auto max-w-6xl space-y-6">
-        <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-            <div>
-                <p class="text-sm font-semibold uppercase tracking-[0.18em] text-accent-700">Kelengkapan rapor</p>
-                <h2 class="mt-2 text-3xl font-semibold tracking-tight text-slate-950">Ekstrakurikuler & catatan wali kelas</h2>
-                <p class="mt-2 text-sm text-slate-600">Lengkapi bagian rapor untuk peserta didik sebelum rapor diajukan.</p>
-            </div>
+        <x-page-header eyebrow="Kelengkapan rapor" title="Ekstrakurikuler & catatan wali kelas" description="Lengkapi bagian rapor untuk peserta didik sebelum rapor diajukan." back-href="{{ route('admin.report-cards.index') }}" back-text="Kembali ke daftar rapor">
             <div class="rounded-xl border border-slate-200 bg-white px-4 py-3 text-right shadow-sm">
                 <p class="text-xs font-medium uppercase tracking-wide text-slate-500">Peserta didik</p>
                 <p class="mt-1 font-semibold text-slate-950">{{ $reportCard->enrollment?->student?->full_name }}</p>
                 <p class="text-xs text-slate-500">{{ $reportCard->enrollment?->academicClass?->name }} · {{ $reportCard->semester?->name }}</p>
             </div>
-        </div>
+        </x-page-header>
 
         <div class="rounded-2xl border {{ $progress['complete'] ? 'border-emerald-200 bg-emerald-50' : 'border-amber-200 bg-amber-50' }} px-5 py-4" role="status">
             <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">

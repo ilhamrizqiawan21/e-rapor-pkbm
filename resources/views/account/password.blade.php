@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="mx-auto max-w-2xl space-y-6">
-        <x-page-header eyebrow="Akun" title="Ubah password" description="Gunakan minimal 8 karakter dengan huruf besar, huruf kecil, dan angka." />
+        <x-page-header eyebrow="Akun" title="Ubah password" description="Gunakan minimal 8 karakter dengan huruf besar, huruf kecil, dan angka." back-href="{{ route('profile.edit') }}" back-text="Kembali ke profil" />
 
         @if (session('status'))
             <div class="mb-5 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800" role="status">{{ session('status') }}</div>

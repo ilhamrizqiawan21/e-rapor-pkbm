@@ -43,8 +43,8 @@
                     <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-accent-400 font-black tracking-tight text-brand-950">ER</span>
                     <span x-show="!sidebarCollapsed" x-transition.opacity class="min-w-0"><span class="block text-xs font-semibold uppercase tracking-[0.2em] text-accent-300">PKBM</span><span class="mt-1 block truncate text-lg font-semibold">E-Rapor</span></span>
                 </a>
-                <button type="button" @click="toggleSidebar()" class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-slate-300 hover:bg-white/10 hover:text-white focus:outline-hidden focus-visible:ring-2 focus-visible:ring-accent-300" :aria-label="sidebarCollapsed ? 'Buka sidebar' : 'Ciutkan sidebar'" :aria-expanded="(!sidebarCollapsed).toString()" title="Toggle sidebar">
-                    <svg class="h-4 w-4 transition-transform" :class="sidebarCollapsed ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="m15 18-6-6 6-6" /></svg>
+                <button type="button" @click="toggleSidebar()" class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-slate-300 hover:bg-white/10 hover:text-white focus:outline-hidden focus-visible:ring-2 focus-visible:ring-accent-300" :aria-label="sidebarCollapsed ? 'Buka sidebar' : 'Ciutkan sidebar'" :aria-expanded="(!sidebarCollapsed).toString()" title="Menu sidebar">
+                    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 6h16M4 12h16M4 18h16" /></svg>
                 </button>
             </div>
             @include('layouts.partials.sidebar-navigation', ['mobile' => false])

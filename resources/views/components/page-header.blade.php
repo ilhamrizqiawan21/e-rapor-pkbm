@@ -6,7 +6,7 @@
     'backText' => 'Kembali',
 ])
 
-<header class="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+<header class="mb-6 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
     <div class="max-w-3xl">
         @if ($backHref)
             <a href="{{ $backHref }}" class="inline-flex items-center gap-2 text-sm font-semibold text-brand-700 hover:text-brand-950 focus:outline-hidden focus-visible:rounded focus-visible:ring-2 focus-visible:ring-brand-500">

@@ -1,4 +1,4 @@
 @extends('layouts.app')
 @section('content')
-    <div class="mx-auto max-w-4xl"><div class="mb-6"><p class="text-sm font-semibold uppercase tracking-[0.18em] text-accent-700">Master data</p><h2 class="mt-2 text-3xl font-semibold tracking-tight text-slate-950">Tambah Tahun Pelajaran</h2></div>@include('admin.academic-years.form')</div>
+    <div class="mx-auto max-w-4xl"><x-page-header eyebrow="Master data" title="Tambah Tahun Pelajaran" back-href="{{ route('admin.academic-years.index') }}" back-text="Kembali ke tahun pelajaran" />@include('admin.academic-years.form')</div>
 @endsection

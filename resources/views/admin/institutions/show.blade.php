@@ -2,18 +2,10 @@
 
 @section('content')
     <div class="mx-auto max-w-4xl">
-        <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-            <div>
-                <p class="text-sm font-semibold uppercase tracking-[0.18em] text-accent-700">Master data</p>
-                <h2 class="mt-2 text-3xl font-semibold tracking-tight text-slate-950">Detail identitas PKBM</h2>
-            </div>
-            <div class="flex flex-wrap gap-3">
-                <x-button href="{{ route('admin.institutions.preview', $institution) }}" variant="secondary">Preview rapor</x-button>
-                @can('update', $institution)
-                    <x-button href="{{ route('admin.institutions.edit', $institution) }}">Edit identitas</x-button>
-                @endcan
-            </div>
-        </div>
+        <x-page-header eyebrow="Master data" title="Detail identitas PKBM" back-href="{{ route('admin.institutions.index') }}" back-text="Kembali ke identitas PKBM">
+            <x-button href="{{ route('admin.institutions.preview', $institution) }}" variant="secondary">Preview rapor</x-button>
+            @can('update', $institution)<x-button href="{{ route('admin.institutions.edit', $institution) }}">Edit identitas</x-button>@endcan
+        </x-page-header>
 
         <section class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
             <div class="flex flex-col gap-6 sm:flex-row sm:items-start">

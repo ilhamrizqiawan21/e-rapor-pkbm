@@ -2,14 +2,7 @@
 
 @section('content')
     <div class="mx-auto max-w-5xl">
-        <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-            <div>
-                <p class="text-sm font-semibold uppercase tracking-[0.18em] text-accent-700">Preview dokumen</p>
-                <h2 class="mt-2 text-3xl font-semibold tracking-tight text-slate-950">Preview identitas rapor</h2>
-                <p class="mt-2 text-sm text-slate-600">Pratinjau kop, identitas PKBM, dan area penandatangan sebelum modul rapor digunakan.</p>
-            </div>
-            <x-button href="{{ route('admin.institutions.show', $institution) }}" variant="secondary">Kembali ke detail</x-button>
-        </div>
+        <x-page-header eyebrow="Preview dokumen" title="Preview identitas rapor" description="Pratinjau kop, identitas PKBM, dan area penandatangan sebelum modul rapor digunakan." back-href="{{ route('admin.institutions.show', $institution) }}" back-text="Kembali ke detail identitas" />
 
         <section class="overflow-hidden rounded-2xl border border-slate-300 bg-white shadow-sm" style="padding: {{ $settings->margin_top_mm }}mm {{ $settings->margin_right_mm }}mm {{ $settings->margin_bottom_mm }}mm {{ $settings->margin_left_mm }}mm">
             <header class="border-b-2 border-brand-900 pb-5 text-center">

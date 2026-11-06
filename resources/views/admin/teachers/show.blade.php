@@ -6,10 +6,9 @@
             <div class="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800" role="status">{{ session('status') }}</div>
         @endif
 
-        <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-            <div><p class="text-sm font-semibold uppercase tracking-[0.18em] text-accent-700">Master SDM</p><h2 class="mt-2 text-3xl font-semibold tracking-tight text-slate-950">{{ $teacher->name }}</h2><p class="mt-2 text-sm text-slate-600">{{ $teacher->username }}{{ $teacher->email ? ' · '.$teacher->email : '' }}</p></div>
-            <div class="flex flex-wrap gap-2"><x-button href="{{ route('admin.teachers.index') }}" variant="secondary">Kembali</x-button><x-button href="{{ route('admin.teachers.edit', $teacher) }}">Edit data</x-button></div>
-        </div>
+        <x-page-header eyebrow="Master SDM" title="{{ $teacher->name }}" description="{{ $teacher->username }}{{ $teacher->email ? ' · '.$teacher->email : '' }}" back-href="{{ route('admin.teachers.index') }}" back-text="Kembali ke direktori Guru">
+            <x-button href="{{ route('admin.teachers.edit', $teacher) }}">Edit data</x-button>
+        </x-page-header>
 
         <section class="grid gap-4 sm:grid-cols-3">
             <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"><p class="text-xs font-semibold uppercase tracking-wide text-slate-500">Status akun</p><div class="mt-3"><x-badge :variant="$teacher->status->value" dot>{{ $teacher->status->label() }}</x-badge></div></div>

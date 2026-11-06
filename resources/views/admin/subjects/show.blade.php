@@ -3,8 +3,9 @@
 @section('content')
     <div class="mx-auto max-w-6xl space-y-6">
         <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-            <div><p class="text-sm font-semibold uppercase tracking-[0.18em] text-accent-700">Mata pelajaran {{ $subject->code }}</p><h2 class="mt-2 text-3xl font-semibold tracking-tight text-slate-950">{{ $subject->name }}</h2><p class="mt-2 text-sm text-slate-600">Singkatan leger: <span class="font-semibold text-slate-800">{{ $subject->short_name }}</span></p></div>
-            <div class="flex flex-wrap gap-2"><x-button href="{{ route('admin.subjects.index') }}" variant="secondary">Semua mata pelajaran</x-button>@can('update', $subject)<x-button href="{{ route('admin.subjects.edit', $subject) }}">Edit</x-button>@endcan</div>
+            <x-page-header eyebrow="Mata pelajaran {{ $subject->code }}" title="{{ $subject->name }}" description="Singkatan leger: {{ $subject->short_name }}" back-href="{{ route('admin.subjects.index') }}" back-text="Kembali ke mata pelajaran">
+                @can('update', $subject)<x-button href="{{ route('admin.subjects.edit', $subject) }}">Edit</x-button>@endcan
+            </x-page-header>
         </div>
 
         @if (session('status'))<div class="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800" role="status">{{ session('status') }}</div>@endif

@@ -2,11 +2,7 @@
 
 @section('content')
     <div class="mx-auto max-w-3xl">
-        <div class="mb-6">
-            <p class="text-sm font-semibold uppercase tracking-[0.18em] text-accent-700">Bank deskripsi</p>
-            <h2 class="mt-2 text-3xl font-semibold tracking-tight text-slate-950">Tambah snippet</h2>
-            <p class="mt-2 text-sm text-slate-600">Buat kalimat reusable untuk membantu pengisian deskripsi capaian.</p>
-        </div>
+        <x-page-header eyebrow="Bank deskripsi" title="Tambah snippet" description="Buat kalimat reusable untuk membantu pengisian deskripsi capaian." back-href="{{ route('admin.description-snippets.index') }}" back-text="Kembali ke bank deskripsi" />
         <form method="POST" action="{{ route('admin.description-snippets.store') }}" class="space-y-6 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
             @csrf
             @include('admin.description-snippets._form')
