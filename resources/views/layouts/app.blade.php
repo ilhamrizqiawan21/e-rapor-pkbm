@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $title ?? 'E-Rapor PKBM' }}</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    @include('layouts.partials.font-head')
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 @php
@@ -44,7 +42,7 @@
     <!-- Layout Utama -->
     <div class="flex min-h-screen">
         <!-- Sidebar Desktop -->
-        <aside class="hidden shrink-0 flex-col bg-brand-900 text-white transition-[width] duration-200 lg:flex" :class="sidebarCollapsed ? 'w-[88px]' : 'w-72'" :aria-label="sidebarCollapsed ? 'Sidebar ringkas' : 'Sidebar utama'">
+        <aside class="sticky top-0 hidden h-screen max-h-screen shrink-0 flex-col bg-brand-900 text-white transition-[width] duration-200 lg:flex" :class="sidebarCollapsed ? 'w-[88px]' : 'w-72'" :aria-label="sidebarCollapsed ? 'Sidebar ringkas' : 'Sidebar utama'">
             <div class="flex items-center justify-between border-b border-white/10 px-4 py-5" :class="sidebarCollapsed ? 'flex-col gap-4 px-3' : ''">
                 <a href="{{ route('dashboard') }}" class="flex min-w-0 items-center gap-3 rounded-xl focus:outline-hidden focus-visible:ring-2 focus-visible:ring-accent-300" title="E-Rapor PKBM">
                     <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-accent-400 font-black tracking-tight text-brand-950">ER</span>

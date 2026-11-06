@@ -44,6 +44,42 @@ test.describe('UI regressions', () => {
         await expect(trigger).toBeFocused();
     });
 
+    test('preserves sidebar scroll position when switching menus', async ({ page }) => {
+        await loginAsAdmin(page);
+
+        const isMobile = test.info().project.name === 'mobile-chrome';
+        const navigation = isMobile
+            ? page.locator('[role="dialog"] nav')
+            : page.locator('#desktop-sidebar-navigation');
+
+        if (isMobile) {
+            await page.getByRole('button', { name: 'Buka menu navigasi' }).click();
+        }
+
+        const expectedScrollTop = await navigation.evaluate((element) => {
+            const maxScrollTop = element.scrollHeight - element.clientHeight;
+            const scrollTop = Math.min(240, maxScrollTop);
+
+            element.scrollTop = scrollTop;
+            element.dispatchEvent(new Event('scroll', { bubbles: true }));
+
+            return scrollTop;
+        });
+
+        const academicYearsLink = navigation.getByRole('link', { name: 'Tahun pelajaran', exact: true });
+
+        await Promise.all([
+            page.waitForURL(/\/admin\/academic-years$/),
+            academicYearsLink.evaluate((element) => (element as HTMLAnchorElement).click()),
+        ]);
+
+        if (isMobile) {
+            await page.getByRole('button', { name: 'Buka menu navigasi' }).click();
+        }
+
+        await expect.poll(() => navigation.evaluate((element) => element.scrollTop)).toBe(expectedScrollTop);
+    });
+
     test('exposes form errors and hints to assistive technology', async ({ page }) => {
         await loginAsAdmin(page);
         await page.goto('/components-showcase');
