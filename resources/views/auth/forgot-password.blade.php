@@ -7,11 +7,12 @@
             <p class="mt-1 text-sm text-slate-500">Kami akan mengirim tautan reset ke email akun yang terdaftar.</p>
         </div>
 
-        <form method="POST" action="{{ route('password.email') }}" class="space-y-5">
+        <form method="POST" action="{{ route('password.email') }}" class="space-y-5" x-data="{ isSubmitting: false }" @submit="isSubmitting = true" :aria-busy="isSubmitting.toString()">
             @csrf
-            <x-input name="email" type="email" label="Email" placeholder="nama@pkbm.test" :value="old('email')" :error="$errors->first('email')" required autofocus />
-            <button type="submit" class="inline-flex w-full items-center justify-center rounded-lg bg-brand-900 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-950 focus:outline-hidden focus:ring-2 focus:ring-brand-500 focus:ring-offset-2">
-                Kirim tautan reset
+            <x-input name="email" type="email" label="Email" placeholder="nama@pkbm.test" :value="old('email')" :error="$errors->first('email')" autocomplete="email" required autofocus />
+            <button type="submit" :disabled="isSubmitting" class="inline-flex w-full items-center justify-center rounded-lg bg-brand-900 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-950 focus:outline-hidden focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 disabled:cursor-wait disabled:opacity-70">
+                <span x-show="!isSubmitting">Kirim tautan reset</span>
+                <span x-cloak x-show="isSubmitting">Memproses…</span>
             </button>
         </form>
 

@@ -17,6 +17,7 @@
         @keydown.escape.window="mobileSidebarOpen = false"
         class="relative z-50 lg:hidden"
         role="dialog"
+        aria-label="Menu navigasi aplikasi"
         aria-modal="true"
     >
         <!-- Backdrop Overlay -->
@@ -48,7 +49,7 @@
                     <button
                         type="button"
                         @click="mobileSidebarOpen = false"
-                        class="flex h-10 w-10 items-center justify-center rounded-full text-white hover:bg-white/10 focus:outline-hidden"
+                        class="flex h-10 w-10 items-center justify-center rounded-full text-white hover:bg-white/10 focus:outline-hidden focus-visible:ring-2 focus-visible:ring-white"
                         aria-label="Tutup menu"
                     >
                         <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -64,13 +65,18 @@
                     <p class="mt-1 text-sm text-slate-300">Fondasi aplikasi akademik</p>
                 </div>
                 <nav class="flex-1 space-y-1 overflow-y-auto px-4 py-5 text-sm">
-                    <a class="block rounded-lg {{ request()->routeIs('dashboard') ? 'bg-white/10 font-medium' : 'text-slate-300 hover:bg-white/5' }} px-3 py-2" href="{{ route('dashboard') }}">Dashboard</a>
-                    <a class="block rounded-lg {{ request()->routeIs('components.showcase') ? 'bg-white/10 font-medium' : 'text-slate-300 hover:bg-white/5' }} px-3 py-2" href="{{ route('components.showcase') }}">Komponen UI</a>
+                    <a class="block rounded-lg {{ request()->routeIs('dashboard*') ? 'bg-white/10 font-medium' : 'text-slate-300 hover:bg-white/5' }} px-3 py-2" href="{{ route('dashboard') }}" @if (request()->routeIs('dashboard*')) aria-current="page" @endif>Dashboard</a>
+                    <a class="block rounded-lg {{ request()->routeIs('components.showcase') ? 'bg-white/10 font-medium' : 'text-slate-300 hover:bg-white/5' }} px-3 py-2" href="{{ route('components.showcase') }}" @if (request()->routeIs('components.showcase')) aria-current="page" @endif>Komponen UI</a>
                     <span class="block px-3 pt-5 text-xs font-semibold uppercase tracking-wider text-slate-400">Fondasi</span>
                     <span class="block px-3 py-2 text-slate-300">Master Data</span>
                     <span class="block px-3 py-2 text-slate-300">Penilaian</span>
                     <span class="block px-3 py-2 text-slate-300">Rapor dan Leger</span>
                     <span class="block px-3 py-2 text-slate-300">Pengaturan</span>
+                    @auth
+                        <span class="block px-3 pt-5 text-xs font-semibold uppercase tracking-wider text-slate-400">Akun</span>
+                        <a class="block rounded-lg px-3 py-2 text-slate-300 hover:bg-white/5" href="{{ route('profile.edit') }}">Profil saya</a>
+                        <a class="block rounded-lg px-3 py-2 text-slate-300 hover:bg-white/5" href="{{ route('password.edit') }}">Ubah password</a>
+                    @endauth
                 </nav>
                 <div class="border-t border-white/10 px-6 py-5 text-xs text-slate-300">
                     Laravel {{ app()->version() }}
@@ -89,8 +95,8 @@
                 <p class="mt-1 text-sm text-slate-300">Fondasi aplikasi akademik</p>
             </div>
             <nav class="flex-1 space-y-1 px-4 py-5 text-sm">
-                <a class="block rounded-lg {{ request()->routeIs('dashboard') ? 'bg-white/10 font-medium' : 'text-slate-300 hover:bg-white/5' }} px-3 py-2" href="{{ route('dashboard') }}">Dashboard</a>
-                <a class="block rounded-lg {{ request()->routeIs('components.showcase') ? 'bg-white/10 font-medium' : 'text-slate-300 hover:bg-white/5' }} px-3 py-2" href="{{ route('components.showcase') }}">Komponen UI</a>
+                <a class="block rounded-lg {{ request()->routeIs('dashboard*') ? 'bg-white/10 font-medium' : 'text-slate-300 hover:bg-white/5' }} px-3 py-2" href="{{ route('dashboard') }}" @if (request()->routeIs('dashboard*')) aria-current="page" @endif>Dashboard</a>
+                <a class="block rounded-lg {{ request()->routeIs('components.showcase') ? 'bg-white/10 font-medium' : 'text-slate-300 hover:bg-white/5' }} px-3 py-2" href="{{ route('components.showcase') }}" @if (request()->routeIs('components.showcase')) aria-current="page" @endif>Komponen UI</a>
                 <span class="block px-3 pt-5 text-xs font-semibold uppercase tracking-wider text-slate-400">Fondasi</span>
                 <span class="block px-3 py-2 text-slate-300">Master Data</span>
                 <span class="block px-3 py-2 text-slate-300">Penilaian</span>
@@ -111,7 +117,7 @@
                         <button
                             type="button"
                             @click="mobileSidebarOpen = true"
-                            class="inline-flex items-center justify-center rounded-lg p-2 text-slate-600 hover:bg-slate-100 hover:text-slate-900 focus:outline-hidden lg:hidden"
+                            class="inline-flex items-center justify-center rounded-lg p-2 text-slate-600 hover:bg-slate-100 hover:text-slate-900 focus:outline-hidden focus-visible:ring-2 focus-visible:ring-brand-500 lg:hidden"
                             aria-label="Buka menu navigasi"
                         >
                             <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -123,24 +129,57 @@
                             <p class="text-sm font-semibold text-slate-900">Belum dikonfigurasi</p>
                         </div>
                     </div>
-                    <div class="flex items-center gap-4">
+                    <div class="flex items-center gap-3 sm:gap-4">
                         <x-badge variant="warning" dot>Fondasi awal</x-badge>
                         @auth
                             <div class="hidden text-right sm:block">
                                 <p class="text-sm font-semibold text-slate-900">{{ auth()->user()->name }}</p>
                                 <p class="text-xs text-slate-500">{{ auth()->user()->staffProfile?->title ?? 'Pengguna' }}</p>
+                                <p class="text-[11px] font-medium text-accent-700">Role: {{ auth()->user()->roles->map(fn ($role) => $role->code->label())->join(', ') ?: 'Pengguna' }}</p>
                             </div>
-                            <a href="{{ route('password.edit') }}" class="hidden text-sm font-medium text-brand-800 hover:text-brand-950 sm:inline">Ubah password</a>
-                            <form method="POST" action="{{ route('logout') }}">
-                                @csrf
-                                <button type="submit" class="text-sm font-medium text-rose-700 hover:text-rose-900">Keluar</button>
-                            </form>
+                            <div class="relative" x-data="{ accountOpen: false }">
+                                <button
+                                    type="button"
+                                    @click="accountOpen = !accountOpen"
+                                    @click.outside="accountOpen = false"
+                                    :aria-expanded="accountOpen.toString()"
+                                    aria-haspopup="menu"
+                                    class="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-700 shadow-sm hover:bg-slate-50 focus:outline-hidden focus-visible:ring-2 focus-visible:ring-brand-500"
+                                >
+                                    <span class="hidden sm:inline">Akun</span>
+                                    <span class="sm:hidden">{{ str(auth()->user()->name)->limit(12) }}</span>
+                                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 9-7 7-7-7" /></svg>
+                                </button>
+                                <div x-cloak x-show="accountOpen" x-transition role="menu" class="absolute right-0 z-30 mt-2 w-64 overflow-hidden rounded-xl border border-slate-200 bg-white py-2 shadow-lg">
+                                    <div class="border-b border-slate-100 px-4 py-3">
+                                        <p class="truncate text-sm font-semibold text-slate-900">{{ auth()->user()->name }}</p>
+                                        <p class="truncate text-xs text-slate-500">{{ auth()->user()->username }}</p>
+                                        <p class="mt-1 text-xs font-medium text-accent-700">{{ auth()->user()->roles->map(fn ($role) => $role->code->label())->join(', ') ?: 'Pengguna' }}</p>
+                                    </div>
+                                    <a role="menuitem" href="{{ route('profile.edit') }}" class="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50">Profil saya</a>
+                                    <a role="menuitem" href="{{ route('password.edit') }}" class="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50">Ubah password</a>
+                                    <form method="POST" action="{{ route('logout') }}" class="border-t border-slate-100 pt-2">
+                                        @csrf
+                                        <button role="menuitem" type="submit" class="block w-full px-4 py-2 text-left text-sm font-medium text-rose-700 hover:bg-rose-50">Keluar</button>
+                                    </form>
+                                </div>
+                            </div>
                         @endauth
                     </div>
                 </div>
             </header>
 
             <div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+                @if ($errors->any())
+                    <div class="mb-6 rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-800" role="alert" tabindex="-1">
+                        <p class="font-semibold">Periksa kembali data yang diisi.</p>
+                        <ul class="mt-1 list-disc space-y-1 pl-5">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
                 @yield('content')
             </div>
         </main>

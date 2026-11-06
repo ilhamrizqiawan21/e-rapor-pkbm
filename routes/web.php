@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Account\ProfileController;
 use App\Http\Controllers\Admin\UserPasswordController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\NewPasswordController;
@@ -22,12 +23,13 @@ Route::middleware('auth')->group(function (): void {
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 
     Route::get('/', DashboardController::class)->name('dashboard');
-    Route::get('/dashboard/admin', DashboardController::class)->name('dashboard.admin');
-    Route::get('/dashboard/guru', DashboardController::class)->name('dashboard.guru');
-    Route::get('/dashboard/kepsek', DashboardController::class)->name('dashboard.kepsek');
+    Route::get('/dashboard/admin', DashboardController::class)->middleware('role:ADMIN')->name('dashboard.admin');
+    Route::get('/dashboard/guru', DashboardController::class)->middleware('role:GURU')->name('dashboard.guru');
+    Route::get('/dashboard/kepsek', DashboardController::class)->middleware('role:KEPSEK')->name('dashboard.kepsek');
 
     Route::get('/account/password', [PasswordController::class, 'edit'])->name('password.edit');
     Route::put('/account/password', [PasswordController::class, 'update'])->name('password.update');
+    Route::get('/account/profile', [ProfileController::class, 'edit'])->name('profile.edit');
 
     Route::middleware('role:ADMIN')->prefix('admin/users/{user}/password')->name('admin.users.password.')->group(function (): void {
         Route::get('/', [UserPasswordController::class, 'edit'])->name('edit');

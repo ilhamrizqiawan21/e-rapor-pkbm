@@ -232,15 +232,17 @@ Sebuah fitur hanya boleh dianggap selesai jika semua hal berikut terpenuhi:
 
 ## 02.04 UI auth
 
-- [ ] Layout login.
-- [ ] State loading login.
-- [ ] State error login.
-- [ ] Toggle tampil/sembunyikan password.
-- [ ] Link lupa password.
-- [ ] Menu profile.
-- [ ] Menu ubah password.
-- [ ] Menu logout.
-- [ ] Tampilan role aktif.
+- [x] Layout login.
+- [x] State loading login.
+- [x] State error login.
+- [x] Toggle tampil/sembunyikan password.
+- [x] Link lupa password.
+- [x] Menu profile.
+- [x] Menu ubah password.
+- [x] Menu logout.
+- [x] Tampilan role aktif.
+
+**Gate 02.04:** Lulus. UI autentikasi memiliki state normal, loading, error, toggle password, profil, logout, dan role aktif untuk desktop maupun mobile.
 
 ## 02.05 Tests
 

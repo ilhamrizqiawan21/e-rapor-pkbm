@@ -34,7 +34,7 @@ return new class extends Migration
                 DB::table('users')
                     ->where('id', $user->id)
                     ->update(['username' => $candidate]);
-        });
+            });
     }
 
     /**
