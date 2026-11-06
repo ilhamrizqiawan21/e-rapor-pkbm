@@ -33,6 +33,13 @@ test.describe('02.05 authentication and authorization browser flows', () => {
         await expect(page.getByRole('heading', { name: 'Masuk ke aplikasi' })).toBeVisible();
     });
 
+    test('guest is redirected from every private entry route', async ({ page }) => {
+        for (const path of ['/', '/dashboard/admin', '/dashboard/guru', '/dashboard/kepsek', '/account/password', '/account/profile']) {
+            await page.goto(path);
+            await expect(page).toHaveURL(/\/login$/);
+        }
+    });
+
     for (const [name, account] of Object.entries(accounts)) {
         test(`${name} can log in and sees the correct role`, async ({ page }) => {
             await login(page, account);

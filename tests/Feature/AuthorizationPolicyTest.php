@@ -74,6 +74,24 @@ class AuthorizationPolicyTest extends TestCase
         $this->assertFalse(Gate::forUser($guru)->allows('update', $reportCard->refresh()));
     }
 
+    public function test_all_roles_are_blocked_from_records_in_another_institution(): void
+    {
+        $institution = Institution::query()->create(['name' => 'PKBM Isolasi A']);
+        $otherInstitution = Institution::query()->create(['name' => 'PKBM Isolasi B']);
+        $admin = $this->userWithRole($institution, RoleCode::Admin);
+        $guru = $this->userWithRole($institution, RoleCode::Guru);
+        $kepsek = $this->userWithRole($institution, RoleCode::Kepsek);
+        $otherGuru = $this->userWithRole($otherInstitution, RoleCode::Guru);
+        $otherStructure = $this->academicStructure($otherInstitution, $otherGuru, 'CROSS');
+
+        foreach ([$admin, $guru, $kepsek] as $user) {
+            $this->assertFalse(Gate::forUser($user)->allows('view', $otherStructure['class']));
+            $this->assertFalse(Gate::forUser($user)->allows('view', $otherStructure['student']));
+            $this->assertFalse(Gate::forUser($user)->allows('view', $otherStructure['assignment']));
+            $this->assertFalse(Gate::forUser($user)->allows('view', $otherStructure['reportCard']));
+        }
+    }
+
     private function userWithRole(Institution $institution, RoleCode $role): User
     {
         return User::factory()->withRole($role)->create(['institution_id' => $institution->getKey()]);

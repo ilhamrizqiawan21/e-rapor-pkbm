@@ -263,11 +263,13 @@ Sebuah fitur hanya boleh dianggap selesai jika semua hal berikut terpenuhi:
 
 ## 02.06 Gate autentikasi
 
-- [ ] Tiga akun role dapat login.
-- [ ] Setiap role melihat menu yang tepat.
-- [ ] Semua route privat terlindungi.
-- [ ] Test auth dan authorization lulus.
-- [ ] Tidak ada akses silang antar institusi.
+- [x] Tiga akun role dapat login.
+- [x] Setiap role melihat entry dashboard dan label role yang tepat.
+- [x] Semua entry route privat terlindungi dan guest diarahkan ke login.
+- [x] Test auth dan authorization lulus.
+- [x] Tidak ada akses silang antar institusi.
+
+**Gate 02.06:** Lulus. Autentikasi, role boundary, proteksi route privat, dan isolasi data antar institusi telah diverifikasi melalui PHPUnit serta Playwright desktop/mobile.
 
 ---
 
