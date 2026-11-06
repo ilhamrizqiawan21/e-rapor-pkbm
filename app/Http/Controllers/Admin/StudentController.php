@@ -6,9 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreStudentRequest;
 use App\Http\Requests\Admin\UpdateStudentRequest;
 use App\Models\Student;
+use App\Services\AuditLogger;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 
@@ -54,7 +56,7 @@ class StudentController extends Controller
         ]);
     }
 
-    public function store(StoreStudentRequest $request): RedirectResponse
+    public function store(StoreStudentRequest $request, AuditLogger $audit): RedirectResponse
     {
         Gate::authorize('create', Student::class);
 
@@ -62,6 +64,7 @@ class StudentController extends Controller
             ...$request->validated(),
             'institution_id' => $request->user()->institution_id,
         ]);
+        $audit->record($request->user(), 'student.created', Student::class, $student->getKey(), null, Arr::only($student->getAttributes(), $this->auditedFields()));
 
         return redirect()
             ->route('admin.students.show', $student)
@@ -89,32 +92,43 @@ class StudentController extends Controller
         return view('admin.students.edit', compact('student'));
     }
 
-    public function update(UpdateStudentRequest $request, Student $student): RedirectResponse
+    public function update(UpdateStudentRequest $request, Student $student, AuditLogger $audit): RedirectResponse
     {
         Gate::authorize('update', $student);
+        $oldValues = Arr::only($student->getAttributes(), $this->auditedFields());
         $student->update($request->validated());
+        $audit->record($request->user(), 'student.updated', Student::class, $student->getKey(), $oldValues, Arr::only($student->refresh()->getAttributes(), $this->auditedFields()));
 
         return redirect()
             ->route('admin.students.show', $student)
             ->with('status', 'Data peserta didik berhasil diperbarui.');
     }
 
-    public function destroy(Student $student): RedirectResponse
+    public function destroy(Request $request, Student $student, AuditLogger $audit): RedirectResponse
     {
         Gate::authorize('delete', $student);
+        $oldValues = Arr::only($student->getAttributes(), $this->auditedFields());
 
         if ($student->enrollments()->exists()) {
             $student->update(['status' => 'INACTIVE']);
+            $audit->record($request->user(), 'student.updated', Student::class, $student->getKey(), $oldValues, ['status' => 'INACTIVE'], 'Akun dinonaktifkan karena memiliki histori enrollment.');
 
             return redirect()
                 ->route('admin.students.index')
                 ->with('status', 'Peserta didik memiliki histori enrollment sehingga dinonaktifkan, bukan dihapus.');
         }
 
+        $audit->record($request->user(), 'student.deleted', Student::class, $student->getKey(), $oldValues);
         $student->delete();
 
         return redirect()
             ->route('admin.students.index')
             ->with('status', 'Peserta didik berhasil dihapus.');
+    }
+
+    /** @return array<int, string> */
+    private function auditedFields(): array
+    {
+        return ['student_number', 'national_student_number', 'full_name', 'birth_place', 'birth_date', 'gender', 'address', 'status'];
     }
 }

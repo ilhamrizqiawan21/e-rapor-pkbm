@@ -16,16 +16,19 @@ use Illuminate\Support\Facades\Gate;
 
 final class AuditHistoryService
 {
-    /** @var array<string, class-string> */
+    /** @var array<string, class-string|string> */
     public const ENTITY_TYPES = [
         'report_card' => ReportCard::class,
         'report_grade' => ReportGrade::class,
         'student' => Student::class,
         'enrollment' => Enrollment::class,
         'institution' => Institution::class,
+        'user' => User::class,
+        'ledger' => 'ledger',
+        'backup' => 'backup',
     ];
 
-    /** @return array{auditLogs: LengthAwarePaginator, actors: Collection<int, User>, actions: Collection<int, string>, entityTypes: array<string, class-string>, filters: array<string, mixed>} */
+    /** @return array{auditLogs: LengthAwarePaginator, actors: Collection<int, User>, actions: Collection<int, string>, entityTypes: array<string, class-string|string>, filters: array<string, mixed>} */
     public function page(User $actor, array $filters = []): array
     {
         Gate::forUser($actor)->authorize('viewAny', AuditLog::class);

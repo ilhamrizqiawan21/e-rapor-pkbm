@@ -14,6 +14,7 @@ use App\Models\Role;
 use App\Models\StaffProfile;
 use App\Models\SubjectAssignment;
 use App\Models\User;
+use App\Services\AuditLogger;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -65,7 +66,7 @@ class TeacherController extends Controller
         return view('admin.teachers.create', compact('teacher'));
     }
 
-    public function store(StoreTeacherRequest $request): RedirectResponse
+    public function store(StoreTeacherRequest $request, AuditLogger $audit): RedirectResponse
     {
         Gate::authorize('create', User::class);
 
@@ -90,6 +91,7 @@ class TeacherController extends Controller
 
             return $teacher;
         });
+        $audit->record($request->user(), 'user.role_changed', User::class, $teacher->getKey(), null, ['roles' => ['GURU']]);
 
         return redirect()
             ->route('admin.teachers.show', $teacher)
@@ -135,18 +137,20 @@ class TeacherController extends Controller
             ->with('status', 'Data Guru berhasil diperbarui.');
     }
 
-    public function destroy(User $user): RedirectResponse
+    public function destroy(Request $request, User $user, AuditLogger $audit): RedirectResponse
     {
         Gate::authorize('delete', $user);
 
         if ($this->hasAssignmentHistory($user)) {
             $user->update(['status' => UserStatus::Inactive]);
+            $audit->record($request->user(), 'user.updated', User::class, $user->getKey(), ['status' => UserStatus::Active->value], ['status' => UserStatus::Inactive->value], 'Akun Guru dinonaktifkan karena memiliki histori penugasan.');
 
             return redirect()
                 ->route('admin.teachers.index')
                 ->with('status', 'Guru memiliki riwayat penugasan sehingga akun dinonaktifkan, bukan dihapus.');
         }
 
+        $audit->record($request->user(), 'user.role_changed', User::class, $user->getKey(), ['roles' => ['GURU']], ['roles' => []], 'Akun Guru dihapus.');
         DB::transaction(function () use ($user): void {
             $user->roles()->detach();
             $user->delete();

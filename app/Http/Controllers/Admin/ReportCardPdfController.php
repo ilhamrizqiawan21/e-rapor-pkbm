@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Models\AcademicClass;
 use App\Models\ReportCard;
 use App\Models\Semester;
+use App\Services\AuditLogger;
 use App\Services\Reports\ReportCardPdfDataService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -30,14 +31,14 @@ final class ReportCardPdfController extends Controller
         }
     }
 
-    public function download(ReportCard $reportCard, ReportCardPdfDataService $pdf): Response
+    public function download(Request $request, ReportCard $reportCard, ReportCardPdfDataService $pdf, AuditLogger $audit): Response
     {
-        return $this->single($reportCard, $pdf, 'attachment');
+        return $this->single($request, $reportCard, $pdf, 'attachment', $audit);
     }
 
-    public function print(ReportCard $reportCard, ReportCardPdfDataService $pdf): Response
+    public function print(Request $request, ReportCard $reportCard, ReportCardPdfDataService $pdf, AuditLogger $audit): Response
     {
-        return $this->single($reportCard, $pdf, 'inline');
+        return $this->single($request, $reportCard, $pdf, 'inline', $audit);
     }
 
     public function batch(
@@ -45,6 +46,7 @@ final class ReportCardPdfController extends Controller
         AcademicClass $academicClass,
         Semester $semester,
         ReportCardPdfDataService $pdf,
+        AuditLogger $audit,
     ): BinaryFileResponse|Response {
         Gate::authorize('viewAny', ReportCard::class);
         $academicClass->loadMissing('program');
@@ -66,6 +68,11 @@ final class ReportCardPdfController extends Controller
 
         try {
             $archive = $pdf->batchArchive($academicClass, $semester);
+            $audit->record($request->user(), 'report_card.exported', AcademicClass::class, $academicClass->getKey(), null, [
+                'format' => 'pdf-zip',
+                'filename' => $archive['filename'],
+                'semester_id' => $semester->getKey(),
+            ]);
 
             return response()->download($archive['path'], $archive['filename'], [
                 'Content-Type' => 'application/zip',
@@ -77,13 +84,19 @@ final class ReportCardPdfController extends Controller
         }
     }
 
-    private function single(ReportCard $reportCard, ReportCardPdfDataService $pdf, string $disposition): Response
+    private function single(Request $request, ReportCard $reportCard, ReportCardPdfDataService $pdf, string $disposition, AuditLogger $audit): Response
     {
         Gate::authorize('view', $reportCard);
 
         try {
             $filename = $pdf->filename($reportCard);
             $contents = $pdf->pdf($reportCard);
+
+            $audit->record($request->user(), 'report_card.exported', ReportCard::class, $reportCard->getKey(), null, [
+                'format' => 'pdf',
+                'disposition' => $disposition,
+                'filename' => $filename,
+            ]);
 
             return response($contents, 200, [
                 'Content-Type' => 'application/pdf',

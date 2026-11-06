@@ -8,6 +8,18 @@
         'report_card.approved' => 'Approve rapor',
         'report_card.locked' => 'Lock rapor',
         'report_card.unlocked' => 'Unlock rapor',
+        'auth.login' => 'Login',
+        'auth.logout' => 'Logout',
+        'user.role_changed' => 'Perubahan role',
+        'student.created' => 'Tambah peserta didik',
+        'student.updated' => 'Ubah peserta didik',
+        'student.deleted' => 'Hapus peserta didik',
+        'report_grade.updated' => 'Ubah nilai',
+        'ledger.exported' => 'Export leger',
+        'report_card.exported' => 'Export rapor',
+        'backup.created' => 'Buat backup',
+        'backup.restored' => 'Restore backup',
+        'backup.downloaded' => 'Unduh backup',
     ];
     $entityLabels = [
         'report_card' => 'Rapor',
@@ -15,6 +27,9 @@
         'student' => 'Peserta didik',
         'enrollment' => 'Penempatan',
         'institution' => 'Institusi',
+        'user' => 'Akun pengguna',
+        'ledger' => 'Leger',
+        'backup' => 'Backup',
     ];
 @endphp
 

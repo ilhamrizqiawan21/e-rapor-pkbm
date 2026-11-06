@@ -37,6 +37,33 @@ class AuthFlowTest extends TestCase
         $this->assertAuthenticatedAs($admin);
     }
 
+    public function test_login_and_logout_are_recorded_in_audit_history(): void
+    {
+        $institution = Institution::query()->create(['name' => 'PKBM Auth Audit']);
+        $admin = User::factory()->withRole(RoleCode::Admin)->create([
+            'institution_id' => $institution->id,
+            'username' => 'admin-audit',
+            'password' => 'OldPass1',
+        ]);
+
+        $this->post(route('login.store'), ['login' => 'admin-audit', 'password' => 'OldPass1'])
+            ->assertRedirect(route('dashboard.admin'));
+        $this->assertDatabaseHas('audit_logs', [
+            'action' => 'auth.login',
+            'entity_type' => User::class,
+            'entity_id' => $admin->id,
+            'user_id' => $admin->id,
+        ]);
+
+        $this->post(route('logout'))->assertRedirect(route('login'));
+        $this->assertDatabaseHas('audit_logs', [
+            'action' => 'auth.logout',
+            'entity_type' => User::class,
+            'entity_id' => $admin->id,
+            'user_id' => $admin->id,
+        ]);
+    }
+
     public function test_guru_can_login_with_email_and_is_redirected_to_guru_dashboard(): void
     {
         $guru = User::factory()->withRole(RoleCode::Guru)->create([

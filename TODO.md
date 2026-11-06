@@ -946,41 +946,43 @@ Sebuah fitur hanya boleh dianggap selesai jika semua hal berikut terpenuhi:
 
 ## 15.01 Backup
 
-- [ ] Tentukan format backup database.
-- [ ] Backup manual oleh Admin.
-- [ ] Backup otomatis online.
-- [ ] Nama file backup konsisten.
-- [ ] Timestamp backup.
-- [ ] Penyimpanan backup aman.
-- [ ] Retensi backup.
-- [ ] Notifikasi backup berhasil/gagal.
+- [x] Tentukan format backup database.
+- [x] Backup manual oleh Admin.
+- [x] Backup otomatis online.
+- [x] Nama file backup konsisten.
+- [x] Timestamp backup.
+- [x] Penyimpanan backup aman.
+- [x] Retensi backup.
+- [x] Notifikasi backup berhasil/gagal.
 
 ## 15.02 Restore
 
-- [ ] Restore di environment staging.
-- [ ] Validasi file backup.
-- [ ] Konfirmasi destructive restore.
-- [ ] Log actor restore.
-- [ ] Smoke test setelah restore.
-- [ ] Dokumentasikan prosedur restore.
+- [x] Restore di environment staging.
+- [x] Validasi file backup.
+- [x] Konfirmasi destructive restore.
+- [x] Log actor restore.
+- [x] Smoke test setelah restore.
+- [x] Dokumentasikan prosedur restore.
 
 ## 15.03 Audit
 
-- [ ] Audit login.
-- [ ] Audit perubahan role.
-- [ ] Audit perubahan siswa.
-- [ ] Audit transfer kelas.
-- [ ] Audit perubahan nilai.
-- [ ] Audit lock/unlock.
-- [ ] Audit export.
-- [ ] Filter dan pagination audit.
+- [x] Audit login.
+- [x] Audit perubahan role.
+- [x] Audit perubahan siswa.
+- [x] Audit transfer kelas.
+- [x] Audit perubahan nilai.
+- [x] Audit lock/unlock.
+- [x] Audit export.
+- [x] Filter dan pagination audit.
 
 ## 15.04 Gate operasional
 
-- [ ] Backup dapat dibuat.
-- [ ] Backup dapat dipulihkan di staging.
-- [ ] Data setelah restore konsisten.
-- [ ] Audit mencatat aktivitas kritis.
+- [x] Backup dapat dibuat.
+- [x] Backup dapat dipulihkan di staging.
+- [x] Data setelah restore konsisten.
+- [x] Audit mencatat aktivitas kritis.
+
+**Gate 15:** Lulus. Backup SQLite lokal dan dump MySQL/PostgreSQL online tersedia, restore memakai konfirmasi dan safety backup, smoke test tabel inti dijalankan, serta aktivitas kritis tercatat di histori audit immutable.
 
 ---
 

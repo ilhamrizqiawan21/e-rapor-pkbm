@@ -37,6 +37,16 @@ Untuk menjalankan dengan browser terlihat:
 npm run test:e2e:headed
 ```
 
+## Backup, restore, dan scheduler
+
+Backup manual Admin tersedia di \`/admin/backups\`. Backup disimpan pada disk private, diberi timestamp dan checksum SHA-256, lalu dibersihkan sesuai \`BACKUP_RETENTION_DAYS\`. Restore wajib mengunggah file valid dan mengetik \`RESTORE\`; aplikasi membuat safety backup sebelum mengganti database dan menjalankan smoke test tabel inti setelahnya.
+
+Untuk localhost/SQLite, jalankan \`php artisan backup:database\`.
+
+Untuk online/MySQL atau PostgreSQL, pasang binary \`mysqldump\`/\`mysql\` atau \`pg_dump\`/\`psql\` pada server. Jalankan scheduler Laravel pada satu worker dengan \`php artisan schedule:work\`.
+
+Jadwal default adalah setiap hari pukul \`02:30\` waktu aplikasi. Atur disk private, retensi, batas ukuran restore, dan lokasi binary melalui variabel \`BACKUP_*\`.
+
 ## Konfigurasi lingkungan
 
 Profil yang tersedia:

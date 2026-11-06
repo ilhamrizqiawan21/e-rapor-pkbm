@@ -99,6 +99,7 @@
                             @if (auth()->user()->institution_id)
                                 <a class="block rounded-lg {{ request()->routeIs('admin.signatory-settings.*') ? 'bg-white/10 font-medium' : 'text-slate-300 hover:bg-white/5' }} px-3 py-2" href="{{ route('admin.signatory-settings.edit') }}">Penandatangan</a>
                                 <a class="block rounded-lg {{ request()->routeIs('admin.settings.format.*') ? 'bg-white/10 font-medium' : 'text-slate-300 hover:bg-white/5' }} px-3 py-2" href="{{ route('admin.settings.format.edit') }}">Format rapor</a>
+                                <a class="block rounded-lg {{ request()->routeIs('admin.backups.*') ? 'bg-white/10 font-medium' : 'text-slate-300 hover:bg-white/5' }} px-3 py-2" href="{{ route('admin.backups.index') }}">Backup database</a>
                             @endif
                         @endif
                     @endauth
@@ -159,6 +160,7 @@
                         @if (auth()->user()->institution_id)
                             <a class="block rounded-lg {{ request()->routeIs('admin.signatory-settings.*') ? 'bg-white/10 font-medium' : 'text-slate-300 hover:bg-white/5' }} px-3 py-2" href="{{ route('admin.signatory-settings.edit') }}">Penandatangan</a>
                             <a class="block rounded-lg {{ request()->routeIs('admin.settings.format.*') ? 'bg-white/10 font-medium' : 'text-slate-300 hover:bg-white/5' }} px-3 py-2" href="{{ route('admin.settings.format.edit') }}">Format rapor</a>
+                            <a class="block rounded-lg {{ request()->routeIs('admin.backups.*') ? 'bg-white/10 font-medium' : 'text-slate-300 hover:bg-white/5' }} px-3 py-2" href="{{ route('admin.backups.index') }}">Backup database</a>
                         @endif
                     @endif
                 @endauth

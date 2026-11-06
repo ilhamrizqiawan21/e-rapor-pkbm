@@ -16,6 +16,6 @@ test.describe('11 workflow audit browser flows', () => {
         await expect(page.getByRole('heading', { name: 'Histori audit', exact: true })).toBeVisible();
         await expect(page.getByLabel('Actor')).toBeVisible();
         await expect(page.getByLabel('Aksi')).toBeVisible();
-        await expect(page.getByText('Belum ada histori yang sesuai filter.', { exact: true })).toBeVisible();
+        await expect(page.getByRole('table').getByText('Login', { exact: true }).first()).toBeVisible();
     });
 });

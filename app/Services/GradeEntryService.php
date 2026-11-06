@@ -33,6 +33,7 @@ final class GradeEntryService
         private readonly ReportGradeSnapshotService $snapshots,
         private readonly DescriptionSnippetUsageService $snippets,
         private readonly GradeConcurrencyService $concurrency,
+        private readonly AuditLogger $audit,
     ) {}
 
     /**
@@ -112,6 +113,7 @@ final class GradeEntryService
             Gate::forUser($actor)->authorize('update', $reportCard);
 
             $grade = $reportCard->grades()->where('subject_assignment_id', $assignment->getKey())->first();
+            $oldValues = $grade === null ? null : $this->auditValues($grade);
 
             if ($grade === null) {
                 $grade = $this->snapshots->createSnapshot($reportCard, $assignment, $score);
@@ -129,7 +131,17 @@ final class GradeEntryService
                 $grade = $this->snippets->updateFinalDescription($actor, $grade, $description);
             }
 
-            return $grade->fresh(['reportCard', 'subjectAssignment.subject', 'descriptionSnippet']);
+            $freshGrade = $grade->fresh(['reportCard', 'subjectAssignment.subject', 'descriptionSnippet']);
+            $this->audit->record(
+                $actor,
+                'report_grade.updated',
+                ReportGrade::class,
+                $freshGrade->getKey(),
+                $oldValues,
+                $this->auditValues($freshGrade),
+            );
+
+            return $freshGrade;
         });
     }
 
@@ -356,5 +368,18 @@ final class GradeEntryService
         }
 
         return $exception->getMessage() !== '' ? $exception->getMessage() : 'Baris nilai tidak dapat disimpan.';
+    }
+
+    /** @return array<string, mixed> */
+    private function auditValues(ReportGrade $grade): array
+    {
+        return [
+            'report_card_id' => $grade->report_card_id,
+            'subject_assignment_id' => $grade->subject_assignment_id,
+            'score' => $grade->score,
+            'predicate' => $grade->predicate,
+            'description' => $grade->description,
+            'status' => $grade->status,
+        ];
     }
 }

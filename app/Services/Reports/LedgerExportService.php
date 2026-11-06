@@ -9,6 +9,7 @@ use App\Models\ReportCard;
 use App\Models\ReportGrade;
 use App\Models\Semester;
 use App\Models\User;
+use App\Services\AuditLogger;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Gate;
@@ -22,6 +23,7 @@ final class LedgerExportService
     public function __construct(
         private readonly PdfEngine $engine,
         private readonly NativeXlsxWriter $xlsx,
+        private readonly AuditLogger $audit,
     ) {}
 
     /** @return array<string, mixed> */
@@ -69,11 +71,14 @@ final class LedgerExportService
             throw $exception;
         }
 
-        return [
+        $result = [
             'path' => $path,
             'filename' => $this->filename('xlsx', $semester, $academicClass),
             'count' => count($payload['classes']),
         ];
+        $this->auditExport($actor, $semester, $academicClass, 'xlsx', $result['filename'], $result['count']);
+
+        return $result;
     }
 
     /** @return array{contents: string, filename: string, count: int} */
@@ -84,11 +89,14 @@ final class LedgerExportService
             : ['classes' => [$this->classData($actor, $academicClass, $semester)], 'exported_at' => now()->format('d/m/Y H:i')];
         $html = view('reports.ledger.pdf', $payload)->render();
 
-        return [
+        $result = [
             'contents' => $this->engine->render($html),
             'filename' => $this->filename('pdf', $semester, $academicClass),
             'count' => count($payload['classes']),
         ];
+        $this->auditExport($actor, $semester, $academicClass, 'pdf', $result['filename'], $result['count']);
+
+        return $result;
     }
 
     /** @return Collection<int, AcademicClass> */
@@ -403,5 +411,16 @@ final class LedgerExportService
         $scope = $academicClass === null ? 'semua-kelas' : Str::slug((string) ($academicClass->code ?: $academicClass->name));
 
         return 'leger-'.$year.'-'.$term.'-'.$scope.'.'.$extension;
+    }
+
+    private function auditExport(User $actor, Semester $semester, ?AcademicClass $academicClass, string $format, string $filename, int $count): void
+    {
+        $this->audit->record($actor, 'ledger.exported', 'ledger', $academicClass?->getKey() ?? 0, null, [
+            'format' => $format,
+            'filename' => $filename,
+            'semester_id' => $semester->getKey(),
+            'academic_class_id' => $academicClass?->getKey(),
+            'class_count' => $count,
+        ]);
     }
 }

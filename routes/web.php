@@ -4,6 +4,7 @@ use App\Http\Controllers\Account\ProfileController;
 use App\Http\Controllers\Admin\AcademicClassController;
 use App\Http\Controllers\Admin\AcademicYearController;
 use App\Http\Controllers\Admin\AuditHistoryController;
+use App\Http\Controllers\Admin\BackupController;
 use App\Http\Controllers\Admin\ClassTransferController;
 use App\Http\Controllers\Admin\DescriptionSnippetController;
 use App\Http\Controllers\Admin\DescriptionSnippetPickerController;
@@ -125,6 +126,10 @@ Route::middleware('auth')->group(function (): void {
     });
 
     Route::middleware('role:ADMIN')->prefix('admin')->name('admin.')->group(function (): void {
+        Route::get('backups', [BackupController::class, 'index'])->name('backups.index');
+        Route::post('backups', [BackupController::class, 'store'])->name('backups.store');
+        Route::post('backups/restore', [BackupController::class, 'restore'])->name('backups.restore');
+        Route::get('backups/{backup}/download', [BackupController::class, 'download'])->name('backups.download');
         Route::resource('teachers', TeacherController::class)->parameters(['teachers' => 'user']);
         Route::resource('institutions', InstitutionController::class);
         Route::get('institutions/{institution}/preview', [InstitutionPreviewController::class, 'show'])

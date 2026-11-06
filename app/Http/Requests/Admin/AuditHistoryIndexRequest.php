@@ -19,7 +19,7 @@ class AuditHistoryIndexRequest extends FormRequest
             'action' => ['nullable', 'string', 'max:100'],
             'date_from' => ['nullable', 'date'],
             'date_to' => ['nullable', 'date', 'after_or_equal:date_from'],
-            'entity_type' => ['nullable', 'string', 'in:report_card,report_grade,student,enrollment,institution'],
+            'entity_type' => ['nullable', 'string', 'in:report_card,report_grade,student,enrollment,institution,user,ledger,backup'],
             'entity_id' => ['nullable', 'integer', 'min:1'],
         ];
     }
