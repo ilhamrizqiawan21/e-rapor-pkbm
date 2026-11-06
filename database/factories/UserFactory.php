@@ -2,6 +2,9 @@
 
 namespace Database\Factories;
 
+use App\Enums\RoleCode;
+use App\Enums\UserStatus;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
@@ -26,10 +29,12 @@ class UserFactory extends Factory
     {
         return [
             'name' => fake()->name(),
+            'username' => fake()->unique()->userName(),
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
+            'status' => UserStatus::Active,
         ];
     }
 
@@ -41,5 +46,26 @@ class UserFactory extends Factory
         return $this->state(fn (array $attributes) => [
             'email_verified_at' => null,
         ]);
+    }
+
+    public function inactive(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'status' => UserStatus::Inactive,
+        ]);
+    }
+
+    public function withRole(RoleCode|string $role): static
+    {
+        $roleCode = $role instanceof RoleCode ? $role : RoleCode::from($role);
+
+        return $this->afterCreating(function (User $user) use ($roleCode): void {
+            $roleModel = Role::query()->firstOrCreate(
+                ['code' => $roleCode->value],
+                ['name' => $roleCode->label()],
+            );
+
+            $user->roles()->syncWithoutDetaching([$roleModel->getKey()]);
+        });
     }
 }

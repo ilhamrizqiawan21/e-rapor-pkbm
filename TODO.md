@@ -177,18 +177,20 @@ Sebuah fitur hanya boleh dianggap selesai jika semua hal berikut terpenuhi:
 
 ## 02.01 Database dan model
 
-- [ ] Tentukan apakah memakai starter kit auth resmi atau auth custom minimal.
-- [ ] Tambahkan field status user: active/inactive.
-- [ ] Tambahkan relasi user ke institution.
-- [ ] Buat role Admin.
-- [ ] Buat role Guru.
-- [ ] Buat role Kepsek.
-- [ ] Buat pivot user_roles jika satu user dapat memiliki lebih dari satu role.
-- [ ] Buat staff profile untuk data Guru/Kepsek.
-- [ ] Tambahkan employee number/NIP/NIY bila dibutuhkan.
-- [ ] Tambahkan factory user dengan role.
-- [ ] Tambahkan seeder tiga role.
-- [ ] Tambahkan seeder user demo per role.
+- [x] Gunakan auth custom minimal berbasis session web Laravel; starter kit tidak diperlukan pada MVP.
+- [x] Tambahkan field status user: `ACTIVE`/`INACTIVE` dengan enum model.
+- [x] Tambahkan relasi user ke institution.
+- [x] Buat role Admin (`ADMIN`).
+- [x] Buat role Guru (`GURU`).
+- [x] Buat role Kepala PKBM (`KEPSEK`).
+- [x] Buat pivot `user_roles` sehingga satu user dapat memiliki lebih dari satu role.
+- [x] Buat staff profile untuk data Guru/Kepala PKBM.
+- [x] Tambahkan `employee_number` untuk NIP/NIY/nomor pegawai sesuai kebutuhan PKBM.
+- [x] Tambahkan factory user dengan state `withRole()` dan `inactive()`.
+- [x] Tambahkan seeder tiga role.
+- [x] Tambahkan seeder user demo per role: `admin`, `guru`, `kepsek`.
+
+**Gate 02.01:** Lulus. Skema akun dan role siap dipakai tahap alur autentikasi 02.02.
 
 ## 02.02 Alur auth
 

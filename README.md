@@ -44,7 +44,8 @@ Data seed development menyediakan:
 
 - PKBM Contoh
 - Role Admin, Guru, Kepsek
-- User demo `admin@erapor.test`
+- User demo `admin`, `guru`, dan `kepsek`
+- Password demo: `password` untuk seluruh akun lokal
 
 ## Struktur fondasi
 
