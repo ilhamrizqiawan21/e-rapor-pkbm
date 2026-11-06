@@ -10,6 +10,7 @@
         'arrow-left' => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="m15 18-6-6 6-6M9 12h10" />',
         'audit' => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M7 4h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Zm3 4h5M8 12h8M8 16h5" />',
         'check' => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="m5 12 4 4L19 6" />',
+        'calendar' => '<rect x="3.5" y="5" width="17" height="15.5" rx="2" stroke-width="1.8" /><path stroke-linecap="round" stroke-width="1.8" d="M7.5 3.5v3M16.5 3.5v3M3.5 9.5h17" />',
         'chevron-right' => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="m9 18 6-6-6-6" />',
         'copy' => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M8 8V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-3M6 8h7a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2Z" />',
         'download' => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 3v12m0 0 4-4m-4 4-4-4M5 21h14" />',
@@ -25,6 +26,8 @@
         'trash' => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 7h16M10 11v6m4-6v6M9 7V4h6v3m-9 0 1 13h10l1-13" />',
         'upload' => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 16V4m0 0 4 4m-4-4L8 8M5 14v4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4" />',
         'unlock' => '<rect x="5" y="10" width="14" height="10" rx="2" stroke-width="1.8" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M8 10V7a4 4 0 0 1 7.5-2" />',
+        'logout' => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M14 5h4a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-4M10 8l-4 4 4 4m-4-4h10" />',
+        'user' => '<circle cx="12" cy="8" r="3.5" stroke-width="1.8" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4.5 20a7.5 7.5 0 0 1 15 0" />',
         'x' => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M6 6l12 12M18 6 6 18" />',
     ];
 @endphp

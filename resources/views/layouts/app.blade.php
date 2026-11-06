@@ -12,6 +12,13 @@
 @php
     $activePeriodLabel = data_get($period ?? null, 'label', 'Periode belum aktif');
     $periodReady = (bool) ($hasPeriod ?? false);
+    $currentUser = auth()->user();
+    $currentRoleLabel = $currentUser?->roles->map(fn ($role) => $role->code->label())->join(', ') ?: 'Pengguna';
+    $currentUserInitials = collect(str($currentUser?->name ?? 'ER')->explode(' '))
+        ->filter()
+        ->take(2)
+        ->map(fn ($part) => str($part)->substr(0, 1)->upper())
+        ->join('');
 @endphp
 <body class="min-h-screen bg-slate-50 font-sans text-slate-900 antialiased" x-data="mobileNavigation()">
     {{-- Mobile drawer mirrors the desktop navigation but keeps touch targets generous. --}}
@@ -57,58 +64,75 @@
         <!-- Area Konten Utama -->
         <main class="min-w-0 flex-1" x-bind:inert="mobileSidebarOpen" x-bind:aria-hidden="mobileSidebarOpen ? 'true' : 'false'">
             <!-- Header -->
-            <header class="border-b border-slate-200 bg-white">
-                <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
-                    <div class="flex items-center gap-3">
+            <header class="sticky top-0 z-30 border-b border-slate-200/90 bg-white/95 shadow-[0_1px_0_rgba(15,23,42,0.02)] backdrop-blur-md">
+                <div class="mx-auto flex min-h-[76px] max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8">
+                    <div class="flex min-w-0 flex-1 items-center gap-3 lg:flex-none">
                         <button
                             type="button"
                             @click="openMobileSidebar($event)"
                             :aria-expanded="mobileSidebarOpen.toString()"
                             aria-controls="mobile-navigation-drawer"
-                            class="inline-flex items-center justify-center rounded-lg p-2 text-slate-600 hover:bg-slate-100 hover:text-slate-900 focus:outline-hidden focus-visible:ring-2 focus-visible:ring-brand-500 lg:hidden"
+                            class="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 shadow-sm transition-[background-color,border-color,color,transform] duration-150 hover:border-brand-200 hover:bg-brand-50 hover:text-brand-800 active:scale-95 focus:outline-hidden focus-visible:ring-2 focus-visible:ring-brand-500 lg:hidden"
                             aria-label="Buka menu navigasi"
+                            title="Buka menu navigasi"
                         >
-                            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                             </svg>
                         </button>
-                        <div>
-                            <p class="text-xs text-slate-500">Periode aktif</p>
-                            <p class="text-sm font-semibold text-slate-900">{{ $activePeriodLabel }}</p>
+
+                        <div class="flex min-w-0 flex-1 items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50/80 px-3 py-2 sm:flex-none sm:px-3.5">
+                            <span class="hidden h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand-900 text-accent-300 shadow-sm sm:flex" aria-hidden="true">
+                                <x-icon name="calendar" class="h-5 w-5" />
+                            </span>
+                            <div class="min-w-0">
+                                <p class="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.16em] text-slate-500">
+                                    <span class="h-1.5 w-1.5 rounded-full {{ $periodReady ? 'bg-emerald-500' : 'bg-amber-500' }}"></span>
+                                    Periode aktif
+                                </p>
+                                <p class="mt-0.5 max-w-[12rem] truncate text-sm font-semibold text-slate-950 sm:max-w-[18rem]">{{ $activePeriodLabel }}</p>
+                            </div>
                         </div>
                     </div>
-                    <div class="flex items-center gap-3 sm:gap-4">
-                        <x-badge :variant="$periodReady ? 'success' : 'warning'" dot>{{ $periodReady ? 'Periode aktif' : 'Perlu konfigurasi' }}</x-badge>
+
+                    <div class="flex shrink-0 items-center gap-2 sm:gap-3">
+                        <span class="hidden sm:block"><x-badge :variant="$periodReady ? 'success' : 'warning'" dot>{{ $periodReady ? 'Siap digunakan' : 'Perlu konfigurasi' }}</x-badge></span>
                         @auth
-                            <div class="hidden text-right sm:block">
-                                <p class="text-sm font-semibold text-slate-900">{{ auth()->user()->name }}</p>
-                                <p class="text-xs text-slate-500">{{ auth()->user()->staffProfile?->title ?? 'Pengguna' }}</p>
-                                <p class="text-[11px] font-medium text-accent-700">Role: {{ auth()->user()->roles->map(fn ($role) => $role->code->label())->join(', ') ?: 'Pengguna' }}</p>
-                            </div>
                             <div class="relative" x-data="{ accountOpen: false }">
                                 <button
                                     type="button"
                                     @click="accountOpen = !accountOpen"
                                     @click.outside="accountOpen = false"
+                                    @keydown.escape.window="accountOpen = false"
                                     :aria-expanded="accountOpen.toString()"
                                     aria-haspopup="menu"
-                                    class="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-700 shadow-sm hover:bg-slate-50 focus:outline-hidden focus-visible:ring-2 focus-visible:ring-brand-500"
+                                    aria-label="Buka menu akun"
+                                    title="Menu akun"
+                                    class="group inline-flex min-h-11 items-center gap-2 rounded-xl border border-slate-200 bg-white px-1.5 py-1.5 text-left shadow-sm transition-[background-color,border-color,box-shadow,transform] duration-150 hover:border-brand-200 hover:bg-brand-50/50 hover:shadow-md active:scale-[0.98] focus:outline-hidden focus-visible:ring-2 focus-visible:ring-brand-500 sm:gap-3 sm:pl-2"
                                 >
-                                    <span class="hidden sm:inline">Akun</span>
-                                    <span class="sm:hidden">{{ str(auth()->user()->name)->limit(12) }}</span>
-                                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 9-7 7-7-7" /></svg>
+                                    <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-brand-900 text-xs font-bold tracking-wide text-accent-300 shadow-inner" aria-hidden="true">{{ $currentUserInitials ?: 'ER' }}</span>
+                                    <span class="hidden min-w-0 sm:block">
+                                        <span class="block max-w-[9rem] truncate text-sm font-semibold leading-5 text-slate-950">{{ $currentUser->name }}</span>
+                                        <span class="block max-w-[9rem] truncate text-[11px] font-medium uppercase tracking-wide text-slate-500">{{ $currentRoleLabel }}</span>
+                                    </span>
+                                    <svg class="mr-1 h-4 w-4 text-slate-400 transition-transform duration-150 group-hover:text-brand-700" :class="accountOpen ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 9-7 7-7-7" /></svg>
                                 </button>
-                                <div x-cloak x-show="accountOpen" x-transition role="menu" class="absolute right-0 z-30 mt-2 w-64 overflow-hidden rounded-xl border border-slate-200 bg-white py-2 shadow-lg">
-                                    <div class="border-b border-slate-100 px-4 py-3">
-                                        <p class="truncate text-sm font-semibold text-slate-900">{{ auth()->user()->name }}</p>
-                                        <p class="truncate text-xs text-slate-500">{{ auth()->user()->username }}</p>
-                                        <p class="mt-1 text-xs font-medium text-accent-700">{{ auth()->user()->roles->map(fn ($role) => $role->code->label())->join(', ') ?: 'Pengguna' }}</p>
+                                <div x-cloak x-show="accountOpen" x-transition:enter="transition ease-out duration-150" x-transition:enter-start="translate-y-1 opacity-0" x-transition:enter-end="translate-y-0 opacity-100" x-transition:leave="transition ease-in duration-100" x-transition:leave-start="translate-y-0 opacity-100" x-transition:leave-end="translate-y-1 opacity-0" role="menu" class="absolute right-0 z-30 mt-3 w-[min(19rem,calc(100vw-2rem))] overflow-hidden rounded-2xl border border-slate-200 bg-white py-2 shadow-xl shadow-slate-900/10 ring-1 ring-black/5">
+                                    <div class="flex items-center gap-3 border-b border-slate-100 px-4 py-4">
+                                        <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-brand-900 text-sm font-bold tracking-wide text-accent-300">{{ $currentUserInitials ?: 'ER' }}</span>
+                                        <div class="min-w-0">
+                                            <p class="truncate text-sm font-semibold text-slate-950">{{ $currentUser->name }}</p>
+                                            <p class="truncate text-xs text-slate-500">{{ $currentUser->username }}</p>
+                                            <p class="mt-1 text-xs font-semibold text-accent-700">Role: {{ $currentRoleLabel }}</p>
+                                        </div>
                                     </div>
-                                    <a role="menuitem" href="{{ route('profile.edit') }}" class="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50">Profil saya</a>
-                                    <a role="menuitem" href="{{ route('password.edit') }}" class="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50">Ubah password</a>
-                                    <form method="POST" action="{{ route('logout') }}" class="border-t border-slate-100 pt-2">
+                                    <div class="p-2">
+                                        <a role="menuitem" href="{{ route('profile.edit') }}" class="flex min-h-10 items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium text-slate-700 transition-colors duration-150 hover:bg-brand-50 hover:text-brand-900 focus:outline-hidden focus-visible:ring-2 focus-visible:ring-brand-500"><x-icon name="user" class="h-4 w-4 text-slate-400" />Profil saya</a>
+                                        <a role="menuitem" href="{{ route('password.edit') }}" class="flex min-h-10 items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium text-slate-700 transition-colors duration-150 hover:bg-brand-50 hover:text-brand-900 focus:outline-hidden focus-visible:ring-2 focus-visible:ring-brand-500"><x-icon name="lock" class="h-4 w-4 text-slate-400" />Ubah password</a>
+                                    </div>
+                                    <form method="POST" action="{{ route('logout') }}" class="border-t border-slate-100 px-2 pt-2">
                                         @csrf
-                                        <button role="menuitem" type="submit" class="block w-full px-4 py-2 text-left text-sm font-medium text-rose-700 hover:bg-rose-50">Keluar</button>
+                                        <button role="menuitem" type="submit" class="flex min-h-10 w-full items-center gap-3 rounded-xl px-3 py-2 text-left text-sm font-semibold text-rose-700 transition-colors duration-150 hover:bg-rose-50 focus:outline-hidden focus-visible:ring-2 focus-visible:ring-rose-500"><x-icon name="logout" class="h-4 w-4" />Keluar dari aplikasi</button>
                                     </form>
                                 </div>
                             </div>
