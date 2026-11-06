@@ -70,7 +70,23 @@ class ReportCardPolicy
 
     public function review(User $user, ReportCard $reportCard): bool
     {
-        return $this->hasClassAccess($user, $reportCard) && $user->hasRole('KEPSEK');
+        return in_array($reportCard->status, ['SUBMITTED', 'IN_REVIEW'], true)
+            && $this->hasClassAccess($user, $reportCard)
+            && $user->hasAnyRole(['GURU', 'KEPSEK']);
+    }
+
+    public function submit(User $user, ReportCard $reportCard): bool
+    {
+        return in_array($reportCard->status, ['DRAFT', 'NEEDS_REVISION'], true)
+            && $this->hasClassAccess($user, $reportCard)
+            && $user->hasRole('GURU');
+    }
+
+    public function reject(User $user, ReportCard $reportCard): bool
+    {
+        return $reportCard->status === 'IN_REVIEW'
+            && $this->hasClassAccess($user, $reportCard)
+            && $user->hasAnyRole(['GURU', 'KEPSEK']);
     }
 
     public function approve(User $user, ReportCard $reportCard): bool

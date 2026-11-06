@@ -7,7 +7,28 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-#[Fillable(['enrollment_id', 'semester_id', 'document_number', 'status', 'issued_date', 'published_at', 'locked_at', 'unlocked_at'])]
+#[Fillable([
+    'enrollment_id',
+    'semester_id',
+    'document_number',
+    'status',
+    'issued_date',
+    'published_at',
+    'submitted_at',
+    'submitted_by_user_id',
+    'reviewed_at',
+    'reviewed_by_user_id',
+    'rejected_at',
+    'rejected_by_user_id',
+    'rejection_reason',
+    'approved_at',
+    'approved_by_user_id',
+    'locked_at',
+    'locked_by_user_id',
+    'unlocked_at',
+    'unlocked_by_user_id',
+    'unlock_reason',
+])]
 class ReportCard extends Model
 {
     protected function casts(): array
@@ -15,6 +36,10 @@ class ReportCard extends Model
         return [
             'issued_date' => 'date',
             'published_at' => 'datetime',
+            'submitted_at' => 'datetime',
+            'reviewed_at' => 'datetime',
+            'rejected_at' => 'datetime',
+            'approved_at' => 'datetime',
             'locked_at' => 'datetime',
             'unlocked_at' => 'datetime',
         ];
@@ -38,5 +63,40 @@ class ReportCard extends Model
     public function signatures(): HasMany
     {
         return $this->hasMany(ReportSignature::class);
+    }
+
+    public function submittedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'submitted_by_user_id');
+    }
+
+    public function reviewedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'reviewed_by_user_id');
+    }
+
+    public function rejectedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'rejected_by_user_id');
+    }
+
+    public function approvedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'approved_by_user_id');
+    }
+
+    public function lockedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'locked_by_user_id');
+    }
+
+    public function unlockedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'unlocked_by_user_id');
+    }
+
+    public function auditLogs(): HasMany
+    {
+        return $this->hasMany(AuditLog::class);
     }
 }
