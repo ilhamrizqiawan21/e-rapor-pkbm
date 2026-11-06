@@ -26,6 +26,7 @@ class PredicateRangeController extends Controller
         return view('admin.predicate-ranges.index', [
             'ranges' => $this->ranges->query($institution)->get(),
             'institution' => $institution,
+            'modalRange' => new PredicateRange(['minimum_score' => 0, 'maximum_score' => 100, 'display_order' => 1, 'active' => true]),
         ]);
     }
 

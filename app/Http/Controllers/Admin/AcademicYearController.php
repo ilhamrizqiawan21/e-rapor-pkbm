@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Enums\AcademicYearStatus;
+use App\Enums\SemesterCode;
+use App\Enums\SemesterStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreAcademicYearRequest;
 use App\Http\Requests\Admin\UpdateAcademicYearRequest;
 use App\Models\AcademicYear;
+use App\Models\Semester;
 use App\Services\AcademicPeriodService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -39,6 +42,7 @@ class AcademicYearController extends Controller
         return view('admin.academic-years.index', [
             'academicYears' => $academicYears,
             'statusOptions' => AcademicYearStatus::cases(),
+            'modalAcademicYear' => new AcademicYear(['status' => AcademicYearStatus::Draft]),
         ]);
     }
 
@@ -68,7 +72,17 @@ class AcademicYearController extends Controller
         Gate::authorize('view', $academicYear);
         $academicYear->load(['semesters' => fn ($query) => $query->orderBy('sequence')]);
 
-        return view('admin.academic-years.show', compact('academicYear'));
+        return view('admin.academic-years.show', [
+            'academicYear' => $academicYear,
+            'modalSemester' => new Semester([
+                'code' => SemesterCode::Ganjil,
+                'name' => SemesterCode::Ganjil->label(),
+                'sequence' => 1,
+                'status' => SemesterStatus::Draft,
+            ]),
+            'semesterCodeOptions' => SemesterCode::cases(),
+            'semesterStatusOptions' => SemesterStatus::cases(),
+        ]);
     }
 
     public function edit(AcademicYear $academicYear): View

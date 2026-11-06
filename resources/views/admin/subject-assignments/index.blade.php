@@ -6,7 +6,7 @@
                 @can('create', App\Models\SubjectAssignment::class)
                     <x-button href="{{ route('admin.academic-classes.subject-assignments.copy-create', $academicClass) }}" variant="secondary" icon="copy">Salin konfigurasi</x-button>
                     <x-button href="{{ route('admin.academic-classes.subject-assignments.reorder-create', $academicClass) }}" variant="secondary" icon="audit">Atur urutan</x-button>
-                    <x-button href="{{ route('admin.academic-classes.subject-assignments.create', $academicClass) }}" icon="add">Tambah penugasan</x-button>
+                    <x-button href="#" icon="add" @click.prevent="$dispatch('open-modal', 'assignment-create')">Tambah penugasan</x-button>
                 @endcan
         </x-page-header>
 
@@ -17,7 +17,7 @@
         @if ($assignments->isEmpty())
             <x-empty-state title="Belum ada penugasan mapel" description="Admin dapat menambahkan mata pelajaran dan guru pengampu untuk kelas ini.">
                 @can('create', App\Models\SubjectAssignment::class)
-                    <x-slot:actions><x-button href="{{ route('admin.academic-classes.subject-assignments.create', $academicClass) }}" icon="add">Buat penugasan pertama</x-button></x-slot:actions>
+                    <x-slot:actions><x-button href="#" @click.prevent="$dispatch('open-modal', 'assignment-create')" icon="add">Buat penugasan pertama</x-button></x-slot:actions>
                 @endcan
             </x-empty-state>
         @else
@@ -42,7 +42,7 @@
                                     <x-table.td><x-badge :variant="$assignment->active ? 'ACTIVE' : 'INACTIVE'" dot>{{ $assignment->active ? 'Aktif' : 'Nonaktif' }}</x-badge></x-table.td>
                                     <x-table.td align="right">
                                         @can('update', $assignment)
-                                            <x-button size="sm" variant="edit" icon="edit" href="{{ route('admin.academic-classes.subject-assignments.edit', [$academicClass, $assignment]) }}">Edit</x-button>
+                                            <x-button size="sm" variant="edit" icon="edit" href="#" @click.prevent="$dispatch('open-modal', 'assignment-edit-{{ $assignment->id }}')">Edit</x-button>
                                         @endcan
                                         @can('delete', $assignment)
                                             <form class="mt-2 sm:mt-0 sm:ml-1 inline-block" method="POST" action="{{ route('admin.academic-classes.subject-assignments.destroy', [$academicClass, $assignment]) }}">
@@ -58,5 +58,32 @@
                 </div>
             </div>
         @endif
+
+        @can('create', App\Models\SubjectAssignment::class)
+            <x-modal name="assignment-create" title="Tambah penugasan mata pelajaran" max-width="4xl">
+                <form method="POST" action="{{ route('admin.academic-classes.subject-assignments.store', $academicClass) }}" class="space-y-5">
+                    @include('admin.subject-assignments.form', ['assignment' => $modalAssignment, 'modal' => true])
+                    <div class="flex justify-end gap-2 border-t border-slate-100 pt-4">
+                        <x-button type="button" variant="cancel" icon="x" @click="$dispatch('close-modal', 'assignment-create')">Batal</x-button>
+                        <x-button type="submit" icon="save">Simpan penugasan</x-button>
+                    </div>
+                </form>
+            </x-modal>
+        @endcan
+
+        @foreach ($assignments as $assignment)
+            @can('update', $assignment)
+                <x-modal name="assignment-edit-{{ $assignment->id }}" title="Edit penugasan mata pelajaran" max-width="4xl">
+                    <form method="POST" action="{{ route('admin.academic-classes.subject-assignments.update', [$academicClass, $assignment]) }}" class="space-y-5">
+                        @method('PUT')
+                        @include('admin.subject-assignments.form', ['assignment' => $assignment, 'modal' => true])
+                        <div class="flex justify-end gap-2 border-t border-slate-100 pt-4">
+                            <x-button type="button" variant="cancel" icon="x" @click="$dispatch('close-modal', 'assignment-edit-{{ $assignment->id }}')">Batal</x-button>
+                            <x-button type="submit" icon="save">Simpan perubahan</x-button>
+                        </div>
+                    </form>
+                </x-modal>
+            @endcan
+        @endforeach
     </div>
 @endsection

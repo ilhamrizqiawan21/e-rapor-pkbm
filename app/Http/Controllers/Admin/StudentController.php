@@ -86,7 +86,12 @@ class StudentController extends Controller
             'otherStatuses' => (clone $visibleStudents)->whereIn('status', ['INACTIVE', 'GRADUATED', 'TRANSFERRED'])->count(),
         ];
 
-        return view('admin.students.index', compact('students', 'summary', 'activeAcademicYear'));
+        return view('admin.students.index', [
+            'students' => $students,
+            'summary' => $summary,
+            'activeAcademicYear' => $activeAcademicYear,
+            'modalStudent' => new Student(['status' => 'ACTIVE']),
+        ]);
     }
 
     public function create(): View

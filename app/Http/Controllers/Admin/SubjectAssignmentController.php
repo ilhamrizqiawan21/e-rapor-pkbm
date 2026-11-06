@@ -36,6 +36,8 @@ class SubjectAssignmentController extends Controller
         return view('admin.subject-assignments.index', [
             'academicClass' => $academicClass->load(['academicYear', 'program', 'level']),
             'assignments' => $query->get(),
+            'modalAssignment' => new SubjectAssignment(['minimum_score' => 70, 'display_order' => 1, 'active' => true]),
+            ...$this->formOptions($request->user()),
         ]);
     }
 

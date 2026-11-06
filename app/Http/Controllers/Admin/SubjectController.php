@@ -35,7 +35,10 @@ class SubjectController extends Controller
             ->paginate(20)
             ->withQueryString();
 
-        return view('admin.subjects.index', compact('subjects'));
+        return view('admin.subjects.index', [
+            'subjects' => $subjects,
+            'modalSubject' => new Subject(['display_order' => 1, 'active' => true]),
+        ]);
     }
 
     public function create(Request $request): View

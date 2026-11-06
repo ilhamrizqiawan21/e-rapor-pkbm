@@ -18,4 +18,6 @@
         <x-select name="status" label="Status" :options="['ACTIVE' => 'Aktif', 'INACTIVE' => 'Nonaktif']" :selected="old('status', $academicClass->status ?? 'ACTIVE')" required />
     </div>
 </section>
-<div class="flex flex-wrap justify-end gap-3"><x-button type="submit" icon="save">Simpan kelas</x-button><x-button href="{{ $academicClass->exists ? route('admin.academic-classes.show', $academicClass) : route('admin.academic-classes.index') }}" variant="cancel" icon="x">Batal</x-button></div>
+@if (! ($modal ?? false))
+    <div class="flex flex-wrap justify-end gap-3"><x-button type="submit" icon="save">Simpan kelas</x-button><x-button href="{{ $academicClass->exists ? route('admin.academic-classes.show', $academicClass) : route('admin.academic-classes.index') }}" variant="cancel" icon="x">Batal</x-button></div>
+@endif

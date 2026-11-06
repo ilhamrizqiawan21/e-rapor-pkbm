@@ -13,4 +13,6 @@
         <span><span class="font-semibold text-slate-900">Rentang aktif</span><span class="mt-1 block text-xs text-slate-500">Hanya rentang aktif yang dipakai untuk konversi nilai baru.</span></span>
     </label>
 </section>
-<div class="flex flex-wrap justify-end gap-3"><x-button type="submit" icon="save">Simpan rentang</x-button><x-button href="{{ route('admin.predicate-ranges.index') }}" variant="cancel" icon="x">Batal</x-button></div>
+@if (! ($modal ?? false))
+    <div class="flex flex-wrap justify-end gap-3"><x-button type="submit" icon="save">Simpan rentang</x-button><x-button href="{{ route('admin.predicate-ranges.index') }}" variant="cancel" icon="x">Batal</x-button></div>
+@endif

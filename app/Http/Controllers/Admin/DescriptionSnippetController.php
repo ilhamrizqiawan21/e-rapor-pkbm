@@ -45,6 +45,16 @@ class DescriptionSnippetController extends Controller
         return view('admin.description-snippets.index', [
             'snippets' => $snippets,
             'subjects' => $this->subjects($institution),
+            'teachers' => User::query()
+                ->where('institution_id', $institution->getKey())
+                ->whereHas('roles', fn ($query) => $query->where('code', 'GURU'))
+                ->where('status', 'ACTIVE')
+                ->orderBy('name')
+                ->get(['id', 'name']),
+            'modalSnippet' => new DescriptionSnippet([
+                'visibility' => $user->hasRole('ADMIN') ? DescriptionSnippetVisibility::Shared : DescriptionSnippetVisibility::Private,
+                'active' => true,
+            ]),
         ]);
     }
 

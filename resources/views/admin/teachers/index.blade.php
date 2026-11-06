@@ -12,7 +12,7 @@
                 <h1 class="mt-3 text-3xl font-semibold tracking-tight text-slate-950 sm:text-4xl">Guru</h1>
                 <p class="mt-3 text-sm leading-6 text-slate-600">Kelola akun tutor, identitas NIP/NIY, kontak, dan kesiapan penugasan untuk periode yang sedang berjalan.</p>
             </div>
-            <x-button href="{{ route('admin.teachers.create') }}" icon="add">Tambah Guru</x-button>
+            <x-button href="#" icon="add" @click.prevent="$dispatch('open-modal', 'teacher-create')">Tambah Guru</x-button>
         </header>
 
         @if (session('status'))
@@ -65,10 +65,10 @@
                                 <x-table.td>@if ($activeAcademicYear)<p class="font-medium text-slate-800">{{ $teacher->active_subject_assignments_count }} mapel aktif</p><p class="mt-1 text-xs text-slate-500">{{ $teacher->active_homeroom_classes_count }} wali kelas</p>@else<p class="text-sm text-slate-500">Menunggu periode aktif</p>@endif</x-table.td>
                                 <x-table.td><p>{{ $teacher->staffProfile?->phone ?? '—' }}</p><p class="mt-1 max-w-48 truncate text-xs text-slate-500">{{ $teacher->email ?? 'Email belum diisi' }}</p></x-table.td>
                                 <x-table.td><x-badge :variant="$teacher->status->value" dot>{{ $teacher->status->label() }}</x-badge></x-table.td>
-                                <x-table.td align="right"><div class="flex flex-wrap justify-end gap-2"><x-button href="{{ route('admin.teachers.show', $teacher) }}" variant="detail" size="sm" icon="eye">Detail</x-button><x-button href="{{ route('admin.teachers.edit', $teacher) }}" variant="edit" size="sm" icon="edit">Edit</x-button></div></x-table.td>
+                                <x-table.td align="right"><div class="flex flex-wrap justify-end gap-2"><x-button href="{{ route('admin.teachers.show', $teacher) }}" variant="detail" size="sm" icon="eye">Detail</x-button><x-button href="#" @click.prevent="$dispatch('open-modal', 'teacher-edit-{{ $teacher->id }}')" variant="edit" size="sm" icon="edit">Edit</x-button></div></x-table.td>
                             </tr>
                         @empty
-                            <tr><td colspan="6" class="px-6 py-16"><div class="mx-auto max-w-md text-center"><span class="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-50 text-brand-700"><x-nav-icon name="teachers" /></span><h3 class="mt-4 font-semibold text-slate-900">{{ $hasFilters ? 'Tidak ada Guru yang cocok' : 'Belum ada akun Guru' }}</h3><p class="mt-2 text-sm leading-6 text-slate-500">{{ $hasFilters ? 'Coba ubah kata kunci atau reset filter untuk melihat akun lain.' : 'Tambahkan akun Guru agar penugasan mapel dan wali kelas dapat dikelola.' }}</p>@if ($hasFilters)<x-button class="mt-5" href="{{ route('admin.teachers.index') }}" variant="secondary" size="sm" icon="x">Reset filter</x-button>@else<x-button class="mt-5" href="{{ route('admin.teachers.create') }}" size="sm" icon="add">Tambah Guru</x-button>@endif</div></td></tr>
+                            <tr><td colspan="6" class="px-6 py-16"><div class="mx-auto max-w-md text-center"><span class="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-50 text-brand-700"><x-nav-icon name="teachers" /></span><h3 class="mt-4 font-semibold text-slate-900">{{ $hasFilters ? 'Tidak ada Guru yang cocok' : 'Belum ada akun Guru' }}</h3><p class="mt-2 text-sm leading-6 text-slate-500">{{ $hasFilters ? 'Coba ubah kata kunci atau reset filter untuk melihat akun lain.' : 'Tambahkan akun Guru agar penugasan mapel dan wali kelas dapat dikelola.' }}</p>@if ($hasFilters)<x-button class="mt-5" href="{{ route('admin.teachers.index') }}" variant="secondary" size="sm" icon="x">Reset filter</x-button>@else<x-button class="mt-5" href="#" @click.prevent="$dispatch('open-modal', 'teacher-create')" size="sm" icon="add">Tambah Guru</x-button>@endif</div></td></tr>
                         @endforelse
                     </tbody>
                 </table>
@@ -79,7 +79,7 @@
                     <article class="rounded-2xl border border-slate-200 p-4" data-responsive-card>
                         <div class="flex items-start justify-between gap-3"><div><a href="{{ route('admin.teachers.show', $teacher) }}" class="font-semibold text-brand-900">{{ $teacher->name }}</a><p class="mt-1 text-xs text-slate-500">{{ $teacher->username }}{{ $teacher->email ? ' · '.$teacher->email : '' }}</p></div><x-badge :variant="$teacher->status->value" dot>{{ $teacher->status->label() }}</x-badge></div>
                         <dl class="mt-4 grid grid-cols-2 gap-3 text-sm"><div><dt class="text-xs text-slate-500">NIP / NIY</dt><dd class="mt-1 font-medium text-slate-800">{{ $teacher->staffProfile?->employee_number ?? 'Belum diisi' }}</dd></div><div><dt class="text-xs text-slate-500">Jabatan</dt><dd class="mt-1 font-medium text-slate-800">{{ $teacher->staffProfile?->title ?? 'Belum diisi' }}</dd></div><div><dt class="text-xs text-slate-500">Penugasan</dt><dd class="mt-1 font-medium text-slate-800">{{ $activeAcademicYear ? $teacher->active_subject_assignments_count.' mapel · '.$teacher->active_homeroom_classes_count.' wali' : 'Periode belum aktif' }}</dd></div><div><dt class="text-xs text-slate-500">Kelengkapan</dt><dd class="mt-1 font-medium text-slate-800">{{ $profileCompletion }}/3 data pendukung</dd></div></dl>
-                        <div class="mt-4 flex flex-wrap gap-2"><x-button href="{{ route('admin.teachers.show', $teacher) }}" variant="detail" size="sm" icon="eye">Lihat detail</x-button><x-button href="{{ route('admin.teachers.edit', $teacher) }}" variant="edit" size="sm" icon="edit">Edit</x-button></div>
+                        <div class="mt-4 flex flex-wrap gap-2"><x-button href="{{ route('admin.teachers.show', $teacher) }}" variant="detail" size="sm" icon="eye">Lihat detail</x-button><x-button href="#" @click.prevent="$dispatch('open-modal', 'teacher-edit-{{ $teacher->id }}')" variant="edit" size="sm" icon="edit">Edit</x-button></div>
                     </article>
                 @empty
                     <div class="px-2 py-10 text-center"><span class="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-50 text-brand-700"><x-nav-icon name="teachers" /></span><h3 class="mt-4 font-semibold text-slate-900">{{ $hasFilters ? 'Tidak ada Guru yang cocok' : 'Belum ada akun Guru' }}</h3><p class="mt-2 text-sm leading-6 text-slate-500">{{ $hasFilters ? 'Coba ubah kata kunci atau reset filter.' : 'Tambahkan akun Guru untuk mulai mengatur penugasan.' }}</p></div>
@@ -87,5 +87,29 @@
             </div>
             <div class="border-t border-slate-100 px-5 sm:px-6"><x-pagination :paginator="$teachers" /></div>
         </section>
+
+        <x-modal name="teacher-create" title="Tambah Guru" max-width="4xl">
+            <form method="POST" action="{{ route('admin.teachers.store') }}" class="space-y-6">
+                @csrf
+                @include('admin.teachers.form', ['teacher' => $modalTeacher])
+                <div class="flex justify-end gap-2 border-t border-slate-100 pt-4">
+                    <x-button type="button" variant="cancel" icon="x" @click="$dispatch('close-modal', 'teacher-create')">Batal</x-button>
+                    <x-button type="submit" icon="save">Simpan Guru</x-button>
+                </div>
+            </form>
+        </x-modal>
+
+        @foreach ($teachers as $teacher)
+            <x-modal name="teacher-edit-{{ $teacher->id }}" title="Edit Guru" max-width="4xl">
+                <form method="POST" action="{{ route('admin.teachers.update', $teacher) }}" class="space-y-6">
+                    @csrf @method('PUT')
+                    @include('admin.teachers.form', ['teacher' => $teacher])
+                    <div class="flex justify-end gap-2 border-t border-slate-100 pt-4">
+                        <x-button type="button" variant="cancel" icon="x" @click="$dispatch('close-modal', 'teacher-edit-{{ $teacher->id }}')">Batal</x-button>
+                        <x-button type="submit" icon="save">Simpan perubahan</x-button>
+                    </div>
+                </form>
+            </x-modal>
+        @endforeach
     </div>
 @endsection

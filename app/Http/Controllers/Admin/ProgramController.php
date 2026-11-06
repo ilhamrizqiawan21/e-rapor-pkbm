@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreProgramRequest;
 use App\Http\Requests\Admin\UpdateProgramRequest;
 use App\Models\Institution;
+use App\Models\Level;
 use App\Models\Program;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -24,7 +25,10 @@ class ProgramController extends Controller
             ->orderBy('code')
             ->paginate(20);
 
-        return view('admin.programs.index', compact('programs'));
+        return view('admin.programs.index', [
+            'programs' => $programs,
+            'modalProgram' => new Program,
+        ]);
     }
 
     public function create(Request $request): View
@@ -53,7 +57,10 @@ class ProgramController extends Controller
 
         $program->load(['levels' => fn ($query) => $query->orderBy('number')]);
 
-        return view('admin.programs.show', compact('program'));
+        return view('admin.programs.show', [
+            'program' => $program,
+            'modalLevel' => new Level(['program_id' => $program->getKey()]),
+        ]);
     }
 
     public function edit(Request $request, Program $program): View

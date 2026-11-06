@@ -3,23 +3,46 @@
 @section('content')
     <div class="mx-auto max-w-7xl space-y-6">
         <x-page-header eyebrow="Rapor / konfigurasi nilai" title="Rentang predikat" description="Atur konversi nilai 0–100 untuk {{ $institution->name }}. Rentang yang sudah tersimpan tidak mengubah rapor terkunci.">
-            <x-button href="{{ route('admin.predicate-ranges.preview') }}" variant="detail" icon="eye">Preview nilai</x-button><x-button href="{{ route('admin.predicate-ranges.create') }}" icon="add">Tambah rentang</x-button>
+            <x-button href="{{ route('admin.predicate-ranges.preview') }}" variant="detail" icon="eye">Preview nilai</x-button><x-button href="#" icon="add" @click.prevent="$dispatch('open-modal', 'predicate-range-create')">Tambah rentang</x-button>
         </x-page-header>
 
         @if (session('status'))<div class="flex items-start gap-3 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800" role="status"><svg class="mt-0.5 h-5 w-5 shrink-0 text-emerald-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="m5 12 4 4L19 6" /></svg><span>{{ session('status') }}</span></div>@endif
 
         @if ($ranges->isEmpty())
-            <x-empty-state title="Belum ada rentang predikat" description="Tambahkan rentang nilai agar sistem dapat menampilkan predikat pada input nilai dan rapor."><x-slot:actions><x-button href="{{ route('admin.predicate-ranges.create') }}" size="sm" icon="add">Tambah rentang</x-button></x-slot:actions></x-empty-state>
+            <x-empty-state title="Belum ada rentang predikat" description="Tambahkan rentang nilai agar sistem dapat menampilkan predikat pada input nilai dan rapor."><x-slot:actions><x-button href="#" @click.prevent="$dispatch('open-modal', 'predicate-range-create')" size="sm" icon="add">Tambah rentang</x-button></x-slot:actions></x-empty-state>
         @else
             <section class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm" aria-labelledby="predicate-directory-heading">
                 <div class="flex flex-col gap-2 border-b border-slate-100 px-5 py-5 sm:flex-row sm:items-start sm:justify-between sm:px-6"><div><h2 id="predicate-directory-heading" class="text-lg font-semibold text-slate-950">Direktori rentang predikat</h2><p class="mt-1 text-sm text-slate-500">Pastikan rentang tidak tumpang tindih dan mencakup kebutuhan nilai 0–100.</p></div><span class="inline-flex w-fit items-center rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-600">{{ $ranges->count() }} rentang</span></div>
                 <div class="hidden overflow-x-auto md:block"><table class="min-w-full divide-y divide-slate-200 text-sm"><caption class="sr-only">Daftar rentang predikat</caption><thead class="bg-slate-50 text-left text-xs font-semibold uppercase tracking-wide text-slate-500"><tr><x-table.th>Urutan</x-table.th><x-table.th>Predikat</x-table.th><x-table.th>Rentang nilai</x-table.th><x-table.th>Status</x-table.th><x-table.th align="right">Aksi</x-table.th></tr></thead><tbody class="divide-y divide-slate-100">
                     @foreach ($ranges as $range)
-                        <tr class="align-top transition-colors hover:bg-slate-50"><x-table.td>{{ $range->display_order }}</x-table.td><x-table.td><p class="font-semibold text-slate-900">{{ $range->code }}</p><p class="mt-1 text-xs text-slate-500">{{ $range->label }}</p></x-table.td><x-table.td><span class="font-semibold text-slate-800">{{ $range->minimum_score }}–{{ $range->maximum_score }}</span><p class="mt-1 text-xs text-slate-500">Skala nilai</p></x-table.td><x-table.td><x-badge :variant="$range->active ? 'ACTIVE' : 'INACTIVE'" dot>{{ $range->active ? 'Aktif' : 'Nonaktif' }}</x-badge></x-table.td><x-table.td align="right"><div class="flex flex-wrap justify-end gap-2"><x-button size="sm" variant="edit" icon="edit" href="{{ route('admin.predicate-ranges.edit', $range) }}">Edit</x-button><form method="POST" action="{{ route('admin.predicate-ranges.destroy', $range) }}">@csrf @method('DELETE')<x-button type="submit" size="sm" variant="danger" icon="trash" confirm="Hapus rentang predikat ini?">Hapus</x-button></form></div></x-table.td></tr>
+                        <tr class="align-top transition-colors hover:bg-slate-50"><x-table.td>{{ $range->display_order }}</x-table.td><x-table.td><p class="font-semibold text-slate-900">{{ $range->code }}</p><p class="mt-1 text-xs text-slate-500">{{ $range->label }}</p></x-table.td><x-table.td><span class="font-semibold text-slate-800">{{ $range->minimum_score }}–{{ $range->maximum_score }}</span><p class="mt-1 text-xs text-slate-500">Skala nilai</p></x-table.td><x-table.td><x-badge :variant="$range->active ? 'ACTIVE' : 'INACTIVE'" dot>{{ $range->active ? 'Aktif' : 'Nonaktif' }}</x-badge></x-table.td><x-table.td align="right"><div class="flex flex-wrap justify-end gap-2"><x-button size="sm" variant="edit" icon="edit" href="#" @click.prevent="$dispatch('open-modal', 'predicate-range-edit-{{ $range->id }}')">Edit</x-button><form method="POST" action="{{ route('admin.predicate-ranges.destroy', $range) }}">@csrf @method('DELETE')<x-button type="submit" size="sm" variant="danger" icon="trash" confirm="Hapus rentang predikat ini?">Hapus</x-button></form></div></x-table.td></tr>
                     @endforeach
                 </tbody></table></div>
-                <div class="space-y-3 p-4 md:hidden">@foreach ($ranges as $range)<article class="rounded-2xl border border-slate-200 p-4" data-responsive-card><div class="flex items-start justify-between gap-3"><div><p class="text-xs font-semibold uppercase tracking-wide text-slate-500">Urutan {{ $range->display_order }}</p><p class="mt-1 font-semibold text-slate-900">{{ $range->code }} · {{ $range->label }}</p></div><x-badge :variant="$range->active ? 'ACTIVE' : 'INACTIVE'" dot>{{ $range->active ? 'Aktif' : 'Nonaktif' }}</x-badge></div><p class="mt-4 text-2xl font-semibold tracking-tight text-slate-950">{{ $range->minimum_score }}–{{ $range->maximum_score }}</p><p class="mt-1 text-xs text-slate-500">Rentang nilai</p><div class="mt-4 flex flex-wrap gap-2"><x-button size="sm" variant="edit" icon="edit" href="{{ route('admin.predicate-ranges.edit', $range) }}">Edit</x-button><form method="POST" action="{{ route('admin.predicate-ranges.destroy', $range) }}">@csrf @method('DELETE')<x-button type="submit" size="sm" variant="danger" icon="trash" confirm="Hapus rentang predikat ini?">Hapus</x-button></form></div></article>@endforeach</div>
+                <div class="space-y-3 p-4 md:hidden">@foreach ($ranges as $range)<article class="rounded-2xl border border-slate-200 p-4" data-responsive-card><div class="flex items-start justify-between gap-3"><div><p class="text-xs font-semibold uppercase tracking-wide text-slate-500">Urutan {{ $range->display_order }}</p><p class="mt-1 font-semibold text-slate-900">{{ $range->code }} · {{ $range->label }}</p></div><x-badge :variant="$range->active ? 'ACTIVE' : 'INACTIVE'" dot>{{ $range->active ? 'Aktif' : 'Nonaktif' }}</x-badge></div><p class="mt-4 text-2xl font-semibold tracking-tight text-slate-950">{{ $range->minimum_score }}–{{ $range->maximum_score }}</p><p class="mt-1 text-xs text-slate-500">Rentang nilai</p><div class="mt-4 flex flex-wrap gap-2"><x-button size="sm" variant="edit" icon="edit" href="#" @click.prevent="$dispatch('open-modal', 'predicate-range-edit-{{ $range->id }}')">Edit</x-button><form method="POST" action="{{ route('admin.predicate-ranges.destroy', $range) }}">@csrf @method('DELETE')<x-button type="submit" size="sm" variant="danger" icon="trash" confirm="Hapus rentang predikat ini?">Hapus</x-button></form></div></article>@endforeach</div>
             </section>
         @endif
+
+        <x-modal name="predicate-range-create" title="Tambah rentang predikat" max-width="3xl">
+            <form method="POST" action="{{ route('admin.predicate-ranges.store') }}" class="space-y-5">
+                @include('admin.predicate-ranges._form', ['range' => $modalRange, 'modal' => true])
+                <div class="flex justify-end gap-2 border-t border-slate-100 pt-4">
+                    <x-button type="button" variant="cancel" icon="x" @click="$dispatch('close-modal', 'predicate-range-create')">Batal</x-button>
+                    <x-button type="submit" icon="save">Simpan rentang</x-button>
+                </div>
+            </form>
+        </x-modal>
+
+        @foreach ($ranges as $range)
+            <x-modal name="predicate-range-edit-{{ $range->id }}" title="Edit rentang predikat" max-width="3xl">
+                <form method="POST" action="{{ route('admin.predicate-ranges.update', $range) }}" class="space-y-5">
+                    @method('PUT')
+                    @include('admin.predicate-ranges._form', ['range' => $range, 'modal' => true])
+                    <div class="flex justify-end gap-2 border-t border-slate-100 pt-4">
+                        <x-button type="button" variant="cancel" icon="x" @click="$dispatch('close-modal', 'predicate-range-edit-{{ $range->id }}')">Batal</x-button>
+                        <x-button type="submit" icon="save">Simpan perubahan</x-button>
+                    </div>
+                </form>
+            </x-modal>
+        @endforeach
     </div>
 @endsection

@@ -14,7 +14,7 @@
             @can('create', App\Models\Student::class)
                 <div class="flex flex-wrap gap-2">
                     <x-button href="{{ route('admin.students.import.create') }}" variant="secondary" icon="upload">Import data</x-button>
-                    <x-button href="{{ route('admin.students.create') }}" icon="add">Tambah peserta didik</x-button>
+                    <x-button href="#" icon="add" @click.prevent="$dispatch('open-modal', 'student-create')">Tambah peserta didik</x-button>
                 </div>
             @endcan
         </header>
@@ -86,10 +86,10 @@
                                 <x-table.td>@if ($activeEnrollment?->academicClass)<p class="font-medium text-slate-800">{{ $activeEnrollment->academicClass->name }}</p><p class="mt-1 text-xs text-slate-500">{{ $activeEnrollment->academicClass->program->name }} · {{ $activeEnrollment->academicClass->level->name }}</p>@elseif ($activeAcademicYear)<x-badge variant="warning" dot>Belum ditempatkan</x-badge><p class="mt-1 text-xs text-slate-500">Atur melalui Kelas / rombel</p>@else<p class="text-sm text-slate-500">Menunggu periode aktif</p>@endif</x-table.td>
                                 <x-table.td><div class="flex items-center gap-2"><span class="h-1.5 w-16 overflow-hidden rounded-full bg-slate-200"><span class="block h-full rounded-full bg-accent-500" style="width: {{ ($profileCompletion / 3) * 100 }}%"></span></span><span class="text-xs font-medium text-slate-600">{{ $profileCompletion }}/3</span></div><p class="mt-1 text-xs text-slate-500">Data pendukung</p></x-table.td>
                                 <x-table.td><x-badge :variant="$student->status" dot>{{ $statusLabels[$student->status] ?? $student->status }}</x-badge><p class="mt-2 text-xs text-slate-500">{{ $student->enrollments_count }} histori penempatan</p></x-table.td>
-                                <x-table.td align="right"><div class="flex flex-wrap justify-end gap-2"><x-button href="{{ route('admin.students.show', $student) }}" variant="detail" size="sm" icon="eye">Detail</x-button>@can('update', $student)<x-button href="{{ route('admin.students.edit', $student) }}" variant="edit" size="sm" icon="edit">Edit</x-button>@endcan</div></x-table.td>
+                                <x-table.td align="right"><div class="flex flex-wrap justify-end gap-2"><x-button href="{{ route('admin.students.show', $student) }}" variant="detail" size="sm" icon="eye">Detail</x-button>@can('update', $student)<x-button href="#" @click.prevent="$dispatch('open-modal', 'student-edit-{{ $student->id }}')" variant="edit" size="sm" icon="edit">Edit</x-button>@endcan</div></x-table.td>
                             </tr>
                         @empty
-                            <tr><td colspan="6" class="px-6 py-16"><div class="mx-auto max-w-md text-center"><span class="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-50 text-brand-700"><x-nav-icon name="students" /></span><h3 class="mt-4 font-semibold text-slate-900">{{ $hasFilters ? 'Tidak ada data yang cocok' : 'Belum ada peserta didik' }}</h3><p class="mt-2 text-sm leading-6 text-slate-500">{{ $hasFilters ? 'Coba ubah kata kunci atau reset filter untuk melihat data lain.' : 'Tambahkan satu peserta didik secara manual atau gunakan import template untuk memulai.' }}</p>@if ($hasFilters)<x-button class="mt-5" href="{{ route('admin.students.index') }}" variant="secondary" size="sm" icon="x">Reset filter</x-button>@endif @can('create', App\Models\Student::class)<x-button class="mt-5" href="{{ route('admin.students.create') }}" size="sm" icon="add">Tambah manual</x-button>@endcan</div></td></tr>
+                            <tr><td colspan="6" class="px-6 py-16"><div class="mx-auto max-w-md text-center"><span class="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-50 text-brand-700"><x-nav-icon name="students" /></span><h3 class="mt-4 font-semibold text-slate-900">{{ $hasFilters ? 'Tidak ada data yang cocok' : 'Belum ada peserta didik' }}</h3><p class="mt-2 text-sm leading-6 text-slate-500">{{ $hasFilters ? 'Coba ubah kata kunci atau reset filter untuk melihat data lain.' : 'Tambahkan satu peserta didik secara manual atau gunakan import template untuk memulai.' }}</p>@if ($hasFilters)<x-button class="mt-5" href="{{ route('admin.students.index') }}" variant="secondary" size="sm" icon="x">Reset filter</x-button>@endif @can('create', App\Models\Student::class)<x-button class="mt-5" href="#" @click.prevent="$dispatch('open-modal', 'student-create')" size="sm" icon="add">Tambah manual</x-button>@endcan</div></td></tr>
                         @endforelse
                     </tbody>
                 </table>
@@ -101,7 +101,7 @@
                     <article class="rounded-2xl border border-slate-200 p-4" data-responsive-card>
                         <div class="flex items-start justify-between gap-3"><div><a href="{{ route('admin.students.show', $student) }}" class="font-semibold text-brand-900">{{ $student->full_name }}</a><p class="mt-1 text-xs text-slate-500">NIPD {{ $student->student_number }} · NISN {{ $student->national_student_number ?? '—' }}</p></div><x-badge :variant="$student->status" dot>{{ $statusLabels[$student->status] ?? $student->status }}</x-badge></div>
                         <dl class="mt-4 grid grid-cols-2 gap-3 text-sm"><div><dt class="text-xs text-slate-500">Penempatan</dt><dd class="mt-1 font-medium text-slate-800">{{ $activeEnrollment?->academicClass?->name ?? ($activeAcademicYear ? 'Belum ditempatkan' : 'Periode belum aktif') }}</dd></div><div><dt class="text-xs text-slate-500">Kelengkapan</dt><dd class="mt-1 font-medium text-slate-800">{{ $profileCompletion }}/3 data pendukung</dd></div><div><dt class="text-xs text-slate-500">Tempat, tanggal lahir</dt><dd class="mt-1 font-medium text-slate-800">{{ $student->birth_place ?? '—' }}, {{ $student->birth_date?->format('d/m/Y') ?? '—' }}</dd></div><div><dt class="text-xs text-slate-500">Orang tua / wali</dt><dd class="mt-1 font-medium text-slate-800">{{ $student->guardian_name ?? '—' }}</dd></div></dl>
-                        <p class="mt-3 text-xs text-slate-500">{{ $student->enrollments_count }} histori penempatan</p><div class="mt-4 flex flex-wrap gap-2"><x-button href="{{ route('admin.students.show', $student) }}" variant="detail" size="sm" icon="eye">Lihat detail</x-button>@can('update', $student)<x-button href="{{ route('admin.students.edit', $student) }}" variant="edit" size="sm" icon="edit">Edit</x-button>@endcan</div>
+                        <p class="mt-3 text-xs text-slate-500">{{ $student->enrollments_count }} histori penempatan</p><div class="mt-4 flex flex-wrap gap-2"><x-button href="{{ route('admin.students.show', $student) }}" variant="detail" size="sm" icon="eye">Lihat detail</x-button>@can('update', $student)<x-button href="#" @click.prevent="$dispatch('open-modal', 'student-edit-{{ $student->id }}')" variant="edit" size="sm" icon="edit">Edit</x-button>@endcan</div>
                     </article>
                 @empty
                     <div class="px-2 py-10 text-center"><span class="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-50 text-brand-700"><x-nav-icon name="students" /></span><h3 class="mt-4 font-semibold text-slate-900">{{ $hasFilters ? 'Tidak ada data yang cocok' : 'Belum ada peserta didik' }}</h3><p class="mt-2 text-sm leading-6 text-slate-500">{{ $hasFilters ? 'Coba ubah kata kunci atau reset filter.' : 'Tambahkan data peserta didik untuk mulai mengelola penempatan.' }}</p></div>
@@ -109,5 +109,33 @@
             </div>
             <div class="border-t border-slate-100 px-5 sm:px-6"><x-pagination :paginator="$students" /></div>
         </section>
+
+        @can('create', App\Models\Student::class)
+            <x-modal name="student-create" title="Tambah peserta didik" max-width="4xl">
+                <form method="POST" action="{{ route('admin.students.store') }}" class="space-y-5">
+                    @csrf
+                    @include('admin.students.form', ['student' => $modalStudent])
+                    <div class="flex justify-end gap-2 border-t border-slate-100 pt-4">
+                        <x-button type="button" variant="cancel" icon="x" @click="$dispatch('close-modal', 'student-create')">Batal</x-button>
+                        <x-button type="submit" icon="save">Simpan peserta didik</x-button>
+                    </div>
+                </form>
+            </x-modal>
+        @endcan
+
+        @foreach ($students as $student)
+            @can('update', $student)
+                <x-modal name="student-edit-{{ $student->id }}" title="Edit peserta didik" max-width="4xl">
+                    <form method="POST" action="{{ route('admin.students.update', $student) }}" class="space-y-5">
+                        @csrf @method('PUT')
+                        @include('admin.students.form', ['student' => $student])
+                        <div class="flex justify-end gap-2 border-t border-slate-100 pt-4">
+                            <x-button type="button" variant="cancel" icon="x" @click="$dispatch('close-modal', 'student-edit-{{ $student->id }}')">Batal</x-button>
+                            <x-button type="submit" icon="save">Simpan perubahan</x-button>
+                        </div>
+                    </form>
+                </x-modal>
+            @endcan
+        @endforeach
     </div>
 @endsection

@@ -26,5 +26,12 @@
             </label>
         </div>
     </section>
-    <div class="flex flex-wrap justify-end gap-3"><x-button href="{{ $isEdit ? route('admin.academic-years.show', $academicYear) : route('admin.academic-years.index') }}" variant="cancel" icon="x">Batal</x-button><x-button type="submit" icon="save">{{ $isEdit ? 'Simpan perubahan' : 'Simpan tahun pelajaran' }}</x-button></div>
+    <div class="flex flex-wrap justify-end gap-3">
+        @if ($modalName ?? false)
+            <x-button type="button" variant="cancel" icon="x" @click="$dispatch('close-modal', '{{ $modalName }}')">Batal</x-button>
+        @else
+            <x-button href="{{ $isEdit ? route('admin.academic-years.show', $academicYear) : route('admin.academic-years.index') }}" variant="cancel" icon="x">Batal</x-button>
+        @endif
+        <x-button type="submit" icon="save">{{ $isEdit ? 'Simpan perubahan' : 'Simpan tahun pelajaran' }}</x-button>
+    </div>
 </form>

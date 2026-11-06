@@ -38,7 +38,11 @@ class AcademicClassController extends Controller
             ->paginate(15)
             ->withQueryString();
 
-        return view('admin/academic-classes/index', compact('classes'));
+        return view('admin/academic-classes/index', [
+            'classes' => $classes,
+            'modalAcademicClass' => new AcademicClass(['status' => 'ACTIVE']),
+            ...$this->formOptions($user),
+        ]);
     }
 
     public function create(Request $request): View

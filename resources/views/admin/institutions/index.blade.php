@@ -4,7 +4,7 @@
     <div class="mx-auto max-w-5xl space-y-6">
         <x-page-header eyebrow="Pengaturan PKBM / identitas" title="Identitas PKBM" description="Kelola identitas yang digunakan pada rapor, leger, dan dokumen resmi.">
             @can('create', App\Models\Institution::class)
-                <x-button href="{{ route('admin.institutions.create') }}" icon="add">Tambah PKBM</x-button>
+                <x-button href="#" icon="add" @click.prevent="$dispatch('open-modal', 'institution-create')">Tambah PKBM</x-button>
             @endcan
         </x-page-header>
 
@@ -36,7 +36,7 @@
                 <div class="flex flex-wrap gap-3 border-t border-slate-100 bg-slate-50 px-6 py-4 sm:px-8">
                     <x-button href="{{ route('admin.institutions.show', $institution) }}" variant="detail" icon="eye">Lihat detail</x-button>
                     @can('update', $institution)
-                        <x-button href="{{ route('admin.institutions.edit', $institution) }}" variant="edit" icon="edit">Edit identitas</x-button>
+                        <x-button href="#" @click.prevent="$dispatch('open-modal', 'institution-edit-{{ $institution->id }}')" variant="edit" icon="edit">Edit identitas</x-button>
                     @endcan
                 </div>
             </section>
@@ -44,10 +44,24 @@
             <x-empty-state title="Identitas PKBM belum tersedia" description="Buat identitas PKBM terlebih dahulu agar dapat digunakan pada dokumen rapor dan leger.">
                 @can('create', App\Models\Institution::class)
                     <x-slot:actions>
-                        <x-button href="{{ route('admin.institutions.create') }}" icon="add">Buat identitas PKBM</x-button>
+                        <x-button href="#" @click.prevent="$dispatch('open-modal', 'institution-create')" icon="add">Buat identitas PKBM</x-button>
                     </x-slot:actions>
                 @endcan
             </x-empty-state>
+        @endif
+
+        @can('create', App\Models\Institution::class)
+            <x-modal name="institution-create" title="Tambah identitas PKBM" max-width="4xl">
+                @include('admin.institutions.form', ['institution' => $modalInstitution, 'formMode' => 'create', 'modalName' => 'institution-create'])
+            </x-modal>
+        @endcan
+
+        @if ($institution)
+            @can('update', $institution)
+                <x-modal name="institution-edit-{{ $institution->id }}" title="Edit identitas PKBM" max-width="4xl">
+                    @include('admin.institutions.form', ['institution' => $institution, 'formMode' => 'edit', 'modalName' => 'institution-edit-'.$institution->id])
+                </x-modal>
+            @endcan
         @endif
     </div>
 @endsection

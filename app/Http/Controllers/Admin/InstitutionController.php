@@ -29,7 +29,10 @@ class InstitutionController extends Controller
             Gate::authorize('view', $institution);
         }
 
-        return view('admin.institutions.index', compact('institution'));
+        return view('admin.institutions.index', [
+            'institution' => $institution,
+            'modalInstitution' => $institution ?? new Institution,
+        ]);
     }
 
     public function create(): View

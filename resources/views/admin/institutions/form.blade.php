@@ -69,7 +69,11 @@
     </section>
 
     <div class="flex flex-wrap items-center justify-end gap-3">
-        <x-button href="{{ $isEdit ? route('admin.institutions.show', $institution) : route('admin.institutions.index') }}" variant="cancel" icon="x">Batal</x-button>
+        @if ($modalName ?? false)
+            <x-button type="button" variant="cancel" icon="x" @click="$dispatch('close-modal', '{{ $modalName }}')">Batal</x-button>
+        @else
+            <x-button href="{{ $isEdit ? route('admin.institutions.show', $institution) : route('admin.institutions.index') }}" variant="cancel" icon="x">Batal</x-button>
+        @endif
         <x-button type="submit" icon="save">{{ $isEdit ? 'Simpan perubahan' : 'Simpan identitas' }}</x-button>
     </div>
 </form>

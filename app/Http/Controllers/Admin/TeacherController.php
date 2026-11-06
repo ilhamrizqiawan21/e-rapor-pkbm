@@ -120,7 +120,15 @@ class TeacherController extends Controller
                 ->count(),
         ];
 
-        return view('admin.teachers.index', compact('teachers', 'summary', 'activeAcademicYear'));
+        $modalTeacher = new User(['status' => UserStatus::Active]);
+        $modalTeacher->setRelation('staffProfile', new StaffProfile);
+
+        return view('admin.teachers.index', [
+            'teachers' => $teachers,
+            'summary' => $summary,
+            'activeAcademicYear' => $activeAcademicYear,
+            'modalTeacher' => $modalTeacher,
+        ]);
     }
 
     public function create(): View
