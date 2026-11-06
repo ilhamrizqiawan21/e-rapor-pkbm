@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Enums\AcademicYearStatus;
 use App\Enums\SemesterStatus;
+use App\Exceptions\GradeConcurrencyConflict;
 use App\Models\AcademicClass;
 use App\Models\AcademicYear;
 use App\Models\DescriptionSnippet;
@@ -30,6 +31,7 @@ final class GradeEntryService
     public function __construct(
         private readonly ReportGradeSnapshotService $snapshots,
         private readonly DescriptionSnippetUsageService $snippets,
+        private readonly GradeConcurrencyService $concurrency,
     ) {}
 
     /**
@@ -111,6 +113,8 @@ final class GradeEntryService
 
             if ($grade === null) {
                 $grade = $this->snapshots->createSnapshot($reportCard, $assignment, $score);
+            } elseif (($data['expected_updated_at'] ?? '') !== '') {
+                $grade = $this->concurrency->updateScore($grade, $data['expected_updated_at'], $score);
             } else {
                 $grade = $this->snapshots->updateScore($grade, $score);
             }
@@ -144,7 +148,7 @@ final class GradeEntryService
             try {
                 $this->saveRow($actor, [...$context, ...$row]);
                 $saved++;
-            } catch (ValidationException|AuthorizationException|ModelNotFoundException|LogicException|InvalidArgumentException $exception) {
+            } catch (ValidationException|AuthorizationException|ModelNotFoundException|LogicException|InvalidArgumentException|GradeConcurrencyConflict $exception) {
                 $errors[$enrollmentId] = $this->messageFor($exception);
             }
         }
@@ -334,6 +338,7 @@ final class GradeEntryService
             'score' => ['nullable', 'integer', 'between:0,100'],
             'description' => ['nullable', 'string', 'max:10000'],
             'description_snippet_id' => ['nullable', 'integer'],
+            'expected_updated_at' => ['nullable', 'date'],
         ])->validate();
     }
 

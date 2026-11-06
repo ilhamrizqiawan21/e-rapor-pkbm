@@ -22,6 +22,7 @@ class StoreReportGradeRequest extends FormRequest
                 'score' => $row['score'] ?? null,
                 'description' => $row['description'] ?? null,
                 'description_snippet_id' => $row['description_snippet_id'] ?? null,
+                'expected_updated_at' => $row['expected_updated_at'] ?? null,
             ]);
         }
     }
@@ -38,6 +39,7 @@ class StoreReportGradeRequest extends FormRequest
             'score' => ['nullable', 'integer', 'between:0,100'],
             'description' => ['nullable', 'string', 'max:10000'],
             'description_snippet_id' => ['nullable', 'integer'],
+            'expected_updated_at' => ['nullable', 'date'],
             'rows' => ['nullable', 'array'],
         ];
     }

@@ -3,6 +3,7 @@
 namespace Tests\Unit\Services;
 
 use App\Enums\RoleCode;
+use App\Exceptions\GradeConcurrencyConflict;
 use App\Models\AcademicClass;
 use App\Models\AcademicYear;
 use App\Models\DescriptionSnippet;
@@ -10,6 +11,7 @@ use App\Models\Enrollment;
 use App\Models\Institution;
 use App\Models\Level;
 use App\Models\Program;
+use App\Models\ReportGrade;
 use App\Models\Semester;
 use App\Models\Student;
 use App\Models\Subject;
@@ -91,6 +93,31 @@ class GradeEntryServiceTest extends TestCase
 
         $this->assertSame(92, $updated->score);
         $this->assertDatabaseCount('report_grades', 1);
+    }
+
+    public function test_stale_updated_at_cannot_overwrite_a_newer_grade(): void
+    {
+        [$guru, $assignment, $semester, $enrollment] = $this->academicSetup();
+        $service = app(GradeEntryService::class);
+        $grade = $service->saveRow($guru, $this->row($assignment, $semester, $enrollment, ['score' => 70]));
+        $staleUpdatedAt = $grade->updated_at->toIso8601String();
+
+        ReportGrade::query()->whereKey($grade->id)->update([
+            'score' => 88,
+            'updated_at' => now()->addMinute(),
+        ]);
+
+        try {
+            $service->saveRow($guru, $this->row($assignment, $semester, $enrollment, [
+                'score' => 60,
+                'expected_updated_at' => $staleUpdatedAt,
+            ]));
+            $this->fail('Save dengan timestamp lama seharusnya ditolak.');
+        } catch (GradeConcurrencyConflict $exception) {
+            $this->assertSame(88, $exception->grade()->score);
+        }
+
+        $this->assertSame(88, $grade->refresh()->score);
     }
 
     public function test_teacher_cannot_save_a_subject_assignment_owned_by_another_teacher(): void

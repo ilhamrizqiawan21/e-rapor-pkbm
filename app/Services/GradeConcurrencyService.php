@@ -80,7 +80,19 @@ final class GradeConcurrencyService
         DateTimeInterface|string $expectedUpdatedAt,
         ?int $score,
     ): ReportGrade {
-        return $this->update($grade, $expectedUpdatedAt, ['score' => $score]);
+        $predicate = null;
+
+        foreach ($grade->predicate_ranges_snapshot ?? [] as $range) {
+            if ($score !== null && $score >= (int) ($range['minimum_score'] ?? 0) && $score <= (int) ($range['maximum_score'] ?? -1)) {
+                $predicate = $range['code'] ?? null;
+                break;
+            }
+        }
+
+        return $this->update($grade, $expectedUpdatedAt, [
+            'score' => $score,
+            'predicate' => $predicate,
+        ]);
     }
 
     /**

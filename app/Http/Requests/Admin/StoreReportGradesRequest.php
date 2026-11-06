@@ -25,6 +25,7 @@ class StoreReportGradesRequest extends FormRequest
             'rows.*.score' => ['nullable'],
             'rows.*.description' => ['nullable', 'string', 'max:10000'],
             'rows.*.description_snippet_id' => ['nullable', 'integer'],
+            'rows.*.expected_updated_at' => ['nullable', 'date'],
         ];
     }
 }

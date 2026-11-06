@@ -7,12 +7,14 @@ use App\Http\Controllers\Admin\ClassTransferController;
 use App\Http\Controllers\Admin\DescriptionSnippetController;
 use App\Http\Controllers\Admin\DescriptionSnippetPickerController;
 use App\Http\Controllers\Admin\EnrollmentController;
+use App\Http\Controllers\Admin\GradeEntryController;
 use App\Http\Controllers\Admin\InstitutionController;
 use App\Http\Controllers\Admin\InstitutionFormatSettingsController;
 use App\Http\Controllers\Admin\InstitutionPreviewController;
 use App\Http\Controllers\Admin\LevelController;
 use App\Http\Controllers\Admin\PredicateRangeController;
 use App\Http\Controllers\Admin\ProgramController;
+use App\Http\Controllers\Admin\ReportCardWorkflowController;
 use App\Http\Controllers\Admin\SemesterController;
 use App\Http\Controllers\Admin\SignatorySettingsController;
 use App\Http\Controllers\Admin\StudentController;
@@ -81,6 +83,15 @@ Route::middleware('auth')->group(function (): void {
         Route::resource('subjects', SubjectController::class);
         Route::get('description-snippets/picker', [DescriptionSnippetPickerController::class, 'index'])->name('description-snippets.picker');
         Route::resource('description-snippets', DescriptionSnippetController::class);
+        Route::get('grade-entry', [GradeEntryController::class, 'index'])->name('grade-entry.index');
+        Route::post('grade-entry', [GradeEntryController::class, 'store'])->name('grade-entry.store');
+        Route::post('grade-entry/all', [GradeEntryController::class, 'storeAll'])->name('grade-entry.store-all');
+        Route::post('report-cards/{report_card}/submit', [ReportCardWorkflowController::class, 'submit'])->name('report-cards.submit');
+        Route::post('report-cards/{report_card}/review', [ReportCardWorkflowController::class, 'review'])->name('report-cards.review');
+        Route::post('report-cards/{report_card}/reject', [ReportCardWorkflowController::class, 'reject'])->name('report-cards.reject');
+        Route::post('report-cards/{report_card}/approve', [ReportCardWorkflowController::class, 'approve'])->name('report-cards.approve');
+        Route::post('report-cards/{report_card}/lock', [ReportCardWorkflowController::class, 'lock'])->name('report-cards.lock');
+        Route::post('report-cards/{report_card}/unlock', [ReportCardWorkflowController::class, 'unlock'])->name('report-cards.unlock');
     });
 
     Route::middleware('role:ADMIN')->prefix('admin/users/{user}/password')->name('admin.users.password.')->group(function (): void {

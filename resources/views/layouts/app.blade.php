@@ -84,6 +84,7 @@
                         <a class="block rounded-lg {{ request()->routeIs('admin.academic-classes.*') ? 'bg-white/10 font-medium' : 'text-slate-300 hover:bg-white/5' }} px-3 py-2" href="{{ route('admin.academic-classes.index') }}">Kelas / rombel</a>
                     @endauth
                     <span class="block px-3 py-2 text-slate-300">Penilaian</span>
+                    <a class="block rounded-lg {{ request()->routeIs('admin.grade-entry.*') ? 'bg-white/10 font-medium' : 'text-slate-300 hover:bg-white/5' }} px-3 py-2" href="{{ route('admin.grade-entry.index') }}">Input nilai</a>
                     <span class="block px-3 py-2 text-slate-300">Rapor dan Leger</span>
                     <span class="block px-3 py-2 text-slate-300">Pengaturan</span>
                     @auth
@@ -138,6 +139,7 @@
                     <a class="block rounded-lg {{ request()->routeIs('admin.academic-classes.*') ? 'bg-white/10 font-medium' : 'text-slate-300 hover:bg-white/5' }} px-3 py-2" href="{{ route('admin.academic-classes.index') }}">Kelas / rombel</a>
                 @endauth
                 <span class="block px-3 py-2 text-slate-300">Penilaian</span>
+                <a class="block rounded-lg {{ request()->routeIs('admin.grade-entry.*') ? 'bg-white/10 font-medium' : 'text-slate-300 hover:bg-white/5' }} px-3 py-2" href="{{ route('admin.grade-entry.index') }}">Input nilai</a>
                 <span class="block px-3 py-2 text-slate-300">Rapor dan Leger</span>
                 <span class="block px-3 py-2 text-slate-300">Pengaturan</span>
                 @auth

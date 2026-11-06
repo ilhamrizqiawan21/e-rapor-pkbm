@@ -593,62 +593,64 @@ Sebuah fitur hanya boleh dianggap selesai jika semua hal berikut terpenuhi:
 
 ## 09.01 Halaman input nilai
 
-- [ ] Pilih tahun pelajaran.
-- [ ] Pilih semester.
-- [ ] Pilih kelas.
-- [ ] Pilih mapel.
-- [ ] Tampilkan Guru pengampu.
-- [ ] Tampilkan KKM.
-- [ ] Tampilkan status input.
-- [ ] Search siswa.
-- [ ] Pagination atau virtual table bila diperlukan.
-- [ ] Kolom nilai.
-- [ ] Kolom predikat.
-- [ ] Kolom deskripsi.
-- [ ] Tombol simpan.
-- [ ] Tombol simpan semua.
-- [ ] Tombol ajukan.
-- [ ] Indikator perubahan belum disimpan.
+- [x] Pilih tahun pelajaran.
+- [x] Pilih semester.
+- [x] Pilih kelas.
+- [x] Pilih mapel.
+- [x] Tampilkan Guru pengampu.
+- [x] Tampilkan KKM.
+- [x] Tampilkan status input.
+- [x] Search siswa.
+- [x] Pagination atau virtual table bila diperlukan.
+- [x] Kolom nilai.
+- [x] Kolom predikat.
+- [x] Kolom deskripsi.
+- [x] Tombol simpan.
+- [x] Tombol simpan semua.
+- [x] Tombol ajukan.
+- [x] Indikator perubahan belum disimpan.
 
 ## 09.02 Validasi nilai
 
-- [ ] Nilai wajib jika mapel wajib.
-- [ ] Nilai numeric.
-- [ ] Nilai minimal 0.
-- [ ] Nilai maksimal 100.
-- [ ] KKM tampil sebagai referensi.
-- [ ] Predikat sesuai konfigurasi.
-- [ ] Deskripsi wajib jika kebijakan mewajibkan.
-- [ ] Error ditampilkan per siswa.
-- [ ] Error tidak menghapus input baris lain.
-- [ ] Duplicate grade ditolak.
+- [x] Nilai wajib jika mapel wajib.
+- [x] Nilai numeric.
+- [x] Nilai minimal 0.
+- [x] Nilai maksimal 100.
+- [x] KKM tampil sebagai referensi.
+- [x] Predikat sesuai konfigurasi.
+- [x] Deskripsi wajib jika kebijakan mewajibkan.
+- [x] Error ditampilkan per siswa.
+- [x] Error tidak menghapus input baris lain.
+- [x] Duplicate grade ditolak.
 
 ## 09.03 Concurrency
 
-- [ ] Dua Guru dapat mengisi mapel berbeda pada kelas sama.
-- [ ] Update Guru A tidak menimpa mapel Guru B.
-- [ ] Timestamp updated_at terlihat saat konflik.
-- [ ] Warning jika data berubah setelah halaman dibuka.
-- [ ] Strategi optimistic locking atau last-write warning ditetapkan.
+- [x] Dua Guru dapat mengisi mapel berbeda pada kelas sama.
+- [x] Update Guru A tidak menimpa mapel Guru B.
+- [x] Timestamp updated_at terlihat saat konflik.
+- [x] Warning jika data berubah setelah halaman dibuka.
+- [x] Strategi optimistic locking atau last-write warning ditetapkan.
 
 ## 09.04 Submit workflow
 
-- [ ] Draft.
-- [ ] Submit oleh Guru.
-- [ ] Review oleh Guru wali kelas/Kepsek.
-- [ ] Reject dengan alasan.
-- [ ] Revisi kembali ke Guru.
-- [ ] Approve oleh Kepsek.
-- [ ] Lock oleh Admin.
+- [x] Draft.
+- [x] Submit oleh Guru.
+- [x] Review oleh Guru wali kelas/Kepsek.
+- [x] Reject dengan alasan.
+- [x] Revisi kembali ke Guru.
+- [x] Approve oleh Kepsek.
+- [x] Lock oleh Admin.
 
 ## 09.05 Gate nilai
 
-- [ ] Guru dapat mengisi satu mapel end-to-end.
-- [ ] Guru tidak dapat mengisi mapel yang bukan assignment.
-- [ ] Nilai invalid ditolak.
-- [ ] Deskripsi reusable bekerja.
-- [ ] Submit/reject/approve bekerja.
-- [ ] Test concurrency minimal dua assignment lulus.
+- [x] Guru dapat mengisi satu mapel end-to-end.
+- [x] Guru tidak dapat mengisi mapel yang bukan assignment.
+- [x] Nilai invalid ditolak.
+- [x] Deskripsi reusable bekerja.
+- [x] Submit/reject/approve bekerja.
+- [x] Test concurrency minimal dua assignment lulus.
+
+**Gate 09:** Lulus. Input nilai, validasi 0–100, save row/save-all, optimistic concurrency, workflow submit/review/reject/approve/lock, dan integrasi bank deskripsi sudah tersedia.
 
 ---
 
