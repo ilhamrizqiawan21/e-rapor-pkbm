@@ -34,6 +34,11 @@ class Institution extends Model
         return $this->hasMany(Subject::class);
     }
 
+    public function programs(): HasMany
+    {
+        return $this->hasMany(Program::class);
+    }
+
     public function signatorySetting(): HasOne
     {
         return $this->hasOne(InstitutionSignatorySetting::class);

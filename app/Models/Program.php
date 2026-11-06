@@ -19,4 +19,9 @@ class Program extends Model
     {
         return $this->hasMany(Level::class);
     }
+
+    public function academicClasses(): HasMany
+    {
+        return $this->hasMany(AcademicClass::class);
+    }
 }

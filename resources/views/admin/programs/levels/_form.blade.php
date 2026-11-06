@@ -1,0 +1,1 @@
+<div class="grid gap-5 sm:grid-cols-2"><x-input name="number" type="number" label="Nomor tingkat" :value="old('number', $level->number)" :error="$errors->first('number')" required min="1" max="12" /><x-input name="name" label="Nama tingkat" :value="old('name', $level->name)" :error="$errors->first('name')" required hint="Contoh: Tingkat 1 atau nama custom PKBM." /></div>
