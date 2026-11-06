@@ -11,6 +11,10 @@ use Illuminate\Validation\ValidationException;
 
 final class ReportCardWorkflowService
 {
+    public function __construct(private readonly ReportCardIdentityService $identity)
+    {
+    }
+
     public function submit(ReportCard $reportCard, User $actor): ReportCard
     {
         return $this->transition(
@@ -102,6 +106,7 @@ final class ReportCardWorkflowService
                 'unlocked_at' => null,
                 'unlocked_by_user_id' => null,
                 'unlock_reason' => null,
+                'identity_snapshot' => $this->identity->snapshot($locked),
             ],
         );
     }
