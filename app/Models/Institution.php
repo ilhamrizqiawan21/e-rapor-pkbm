@@ -34,6 +34,11 @@ class Institution extends Model
         return $this->hasMany(Subject::class);
     }
 
+    public function descriptionSnippets(): HasMany
+    {
+        return $this->hasMany(DescriptionSnippet::class);
+    }
+
     public function predicateRanges(): HasMany
     {
         return $this->hasMany(PredicateRange::class);

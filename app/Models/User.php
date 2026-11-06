@@ -74,6 +74,11 @@ class User extends Authenticatable implements CanResetPasswordContract
         return $this->hasMany(ReportSignature::class);
     }
 
+    public function ownedDescriptionSnippets(): HasMany
+    {
+        return $this->hasMany(DescriptionSnippet::class, 'owner_user_id');
+    }
+
     public function hasRole(RoleCode|string $role): bool
     {
         $code = $role instanceof RoleCode ? $role->value : $role;

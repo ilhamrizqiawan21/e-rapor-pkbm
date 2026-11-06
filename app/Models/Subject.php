@@ -27,4 +27,9 @@ class Subject extends Model
     {
         return $this->hasMany(SubjectAssignment::class);
     }
+
+    public function descriptionSnippets(): HasMany
+    {
+        return $this->hasMany(DescriptionSnippet::class);
+    }
 }
