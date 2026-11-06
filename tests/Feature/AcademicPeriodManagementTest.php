@@ -6,8 +6,11 @@ use App\Enums\AcademicYearStatus;
 use App\Enums\RoleCode;
 use App\Http\Controllers\Admin\AcademicYearController;
 use App\Http\Controllers\Admin\SemesterController;
+use App\Models\AcademicClass;
 use App\Models\AcademicYear;
 use App\Models\Institution;
+use App\Models\Level;
+use App\Models\Program;
 use App\Models\Semester;
 use App\Models\User;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
@@ -136,6 +139,24 @@ class AcademicPeriodManagementTest extends TestCase
         $year = AcademicYear::query()->create(['institution_id' => $institution->getKey(), 'name' => '2025/2026']);
         $guru = $this->userWithRole($institution, RoleCode::Guru);
         $kepsek = $this->userWithRole($institution, RoleCode::Kepsek);
+        $program = Program::query()->create([
+            'institution_id' => $institution->getKey(),
+            'code' => 'PA',
+            'name' => 'Paket A',
+        ]);
+        $level = Level::query()->create([
+            'program_id' => $program->getKey(),
+            'number' => 1,
+            'name' => 'Tingkat 1',
+        ]);
+        AcademicClass::query()->create([
+            'academic_year_id' => $year->getKey(),
+            'program_id' => $program->getKey(),
+            'level_id' => $level->getKey(),
+            'homeroom_teacher_id' => $guru->getKey(),
+            'code' => 'PA-1A',
+            'name' => 'Paket A Tingkat 1A',
+        ]);
 
         foreach ([$guru, $kepsek] as $viewer) {
             $this->actingAs($viewer)->get(route('admin.academic-years.index'))->assertOk()->assertSee('2025/2026');

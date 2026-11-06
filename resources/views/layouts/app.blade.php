@@ -69,6 +69,11 @@
                     <a class="block rounded-lg {{ request()->routeIs('components.showcase') ? 'bg-white/10 font-medium' : 'text-slate-300 hover:bg-white/5' }} px-3 py-2" href="{{ route('components.showcase') }}" @if (request()->routeIs('components.showcase')) aria-current="page" @endif>Komponen UI</a>
                     <span class="block px-3 pt-5 text-xs font-semibold uppercase tracking-wider text-slate-400">Fondasi</span>
                     <span class="block px-3 py-2 text-slate-300">Master Data</span>
+                    @auth
+                        <a class="block rounded-lg {{ request()->routeIs('admin.academic-years.*') ? 'bg-white/10 font-medium' : 'text-slate-300 hover:bg-white/5' }} px-3 py-2" href="{{ route('admin.academic-years.index') }}">Tahun pelajaran</a>
+                        <a class="block rounded-lg {{ request()->routeIs('admin.programs.*') ? 'bg-white/10 font-medium' : 'text-slate-300 hover:bg-white/5' }} px-3 py-2" href="{{ route('admin.programs.index') }}">Program & tingkat</a>
+                        <a class="block rounded-lg {{ request()->routeIs('admin.academic-classes.*') ? 'bg-white/10 font-medium' : 'text-slate-300 hover:bg-white/5' }} px-3 py-2" href="{{ route('admin.academic-classes.index') }}">Kelas / rombel</a>
+                    @endauth
                     <span class="block px-3 py-2 text-slate-300">Penilaian</span>
                     <span class="block px-3 py-2 text-slate-300">Rapor dan Leger</span>
                     <span class="block px-3 py-2 text-slate-300">Pengaturan</span>
@@ -109,6 +114,11 @@
                 <a class="block rounded-lg {{ request()->routeIs('components.showcase') ? 'bg-white/10 font-medium' : 'text-slate-300 hover:bg-white/5' }} px-3 py-2" href="{{ route('components.showcase') }}" @if (request()->routeIs('components.showcase')) aria-current="page" @endif>Komponen UI</a>
                 <span class="block px-3 pt-5 text-xs font-semibold uppercase tracking-wider text-slate-400">Fondasi</span>
                 <span class="block px-3 py-2 text-slate-300">Master Data</span>
+                @auth
+                    <a class="block rounded-lg {{ request()->routeIs('admin.academic-years.*') ? 'bg-white/10 font-medium' : 'text-slate-300 hover:bg-white/5' }} px-3 py-2" href="{{ route('admin.academic-years.index') }}">Tahun pelajaran</a>
+                    <a class="block rounded-lg {{ request()->routeIs('admin.programs.*') ? 'bg-white/10 font-medium' : 'text-slate-300 hover:bg-white/5' }} px-3 py-2" href="{{ route('admin.programs.index') }}">Program & tingkat</a>
+                    <a class="block rounded-lg {{ request()->routeIs('admin.academic-classes.*') ? 'bg-white/10 font-medium' : 'text-slate-300 hover:bg-white/5' }} px-3 py-2" href="{{ route('admin.academic-classes.index') }}">Kelas / rombel</a>
+                @endauth
                 <span class="block px-3 py-2 text-slate-300">Penilaian</span>
                 <span class="block px-3 py-2 text-slate-300">Rapor dan Leger</span>
                 <span class="block px-3 py-2 text-slate-300">Pengaturan</span>

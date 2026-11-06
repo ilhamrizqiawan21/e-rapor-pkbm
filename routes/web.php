@@ -1,9 +1,14 @@
 <?php
 
 use App\Http\Controllers\Account\ProfileController;
+use App\Http\Controllers\Admin\AcademicClassController;
+use App\Http\Controllers\Admin\AcademicYearController;
 use App\Http\Controllers\Admin\InstitutionController;
 use App\Http\Controllers\Admin\InstitutionFormatSettingsController;
 use App\Http\Controllers\Admin\InstitutionPreviewController;
+use App\Http\Controllers\Admin\LevelController;
+use App\Http\Controllers\Admin\ProgramController;
+use App\Http\Controllers\Admin\SemesterController;
 use App\Http\Controllers\Admin\SignatorySettingsController;
 use App\Http\Controllers\Admin\UserPasswordController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
@@ -34,6 +39,14 @@ Route::middleware('auth')->group(function (): void {
     Route::get('/account/password', [PasswordController::class, 'edit'])->name('password.edit');
     Route::put('/account/password', [PasswordController::class, 'update'])->name('password.update');
     Route::get('/account/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+
+    Route::prefix('admin')->name('admin.')->group(function (): void {
+        Route::resource('academic-years', AcademicYearController::class);
+        Route::resource('academic-years.semesters', SemesterController::class)->except(['show']);
+        Route::resource('programs', ProgramController::class);
+        Route::resource('programs.levels', LevelController::class);
+        Route::resource('academic-classes', AcademicClassController::class);
+    });
 
     Route::middleware('role:ADMIN')->prefix('admin/users/{user}/password')->name('admin.users.password.')->group(function (): void {
         Route::get('/', [UserPasswordController::class, 'edit'])->name('edit');

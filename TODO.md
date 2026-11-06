@@ -327,55 +327,57 @@ Sebuah fitur hanya boleh dianggap selesai jika semua hal berikut terpenuhi:
 
 ## 04.01 Tahun pelajaran
 
-- [ ] CRUD tahun pelajaran.
-- [ ] Field nama, tanggal mulai, tanggal selesai.
-- [ ] Status draft/aktif/ditutup.
-- [ ] Hanya satu tahun pelajaran aktif per institusi.
-- [ ] Tidak dapat menghapus periode yang memiliki data.
-- [ ] Konfirmasi penutupan periode.
+- [x] CRUD tahun pelajaran.
+- [x] Field nama, tanggal mulai, tanggal selesai.
+- [x] Status draft/aktif/ditutup.
+- [x] Hanya satu tahun pelajaran aktif per institusi.
+- [x] Tidak dapat menghapus periode yang memiliki data.
+- [x] Konfirmasi penutupan periode.
 
 ## 04.02 Semester
 
-- [ ] CRUD semester.
-- [ ] Semester Ganjil.
-- [ ] Semester Genap.
-- [ ] Urutan semester.
-- [ ] Status draft/aktif/ditutup.
-- [ ] Hanya semester aktif yang dapat menerima input nilai.
+- [x] CRUD semester.
+- [x] Semester Ganjil.
+- [x] Semester Genap.
+- [x] Urutan semester.
+- [x] Status draft/aktif/ditutup.
+- [x] Hanya semester aktif yang dapat menerima input nilai.
 
 ## 04.03 Program dan tingkat
 
-- [ ] CRUD program.
-- [ ] Seed Paket A.
-- [ ] Seed Paket B.
-- [ ] Seed Paket C.
-- [ ] CRUD tingkat 1–12.
-- [ ] Validasi tingkat antara 1 dan 12.
-- [ ] Mapping tingkat ke program.
-- [ ] Opsi nama tingkat custom.
+- [x] CRUD program.
+- [x] Seed Paket A.
+- [x] Seed Paket B.
+- [x] Seed Paket C.
+- [x] CRUD tingkat 1–12.
+- [x] Validasi tingkat antara 1 dan 12.
+- [x] Mapping tingkat ke program.
+- [x] Opsi nama tingkat custom.
 
 ## 04.04 Kelas/rombel
 
-- [ ] CRUD kelas.
-- [ ] Kode kelas.
-- [ ] Nama kelas.
-- [ ] Tahun pelajaran.
-- [ ] Program.
-- [ ] Tingkat.
-- [ ] Guru wali kelas.
-- [ ] Status aktif/nonaktif.
-- [ ] Daftar siswa per kelas.
-- [ ] Daftar mapel per kelas.
-- [ ] Progress kelengkapan rapor kelas.
-- [ ] Tidak boleh membuat kode kelas duplikat pada periode sama.
+- [x] CRUD kelas.
+- [x] Kode kelas.
+- [x] Nama kelas.
+- [x] Tahun pelajaran.
+- [x] Program.
+- [x] Tingkat.
+- [x] Guru wali kelas.
+- [x] Status aktif/nonaktif.
+- [x] Daftar siswa per kelas.
+- [x] Daftar mapel per kelas.
+- [x] Progress kelengkapan rapor kelas.
+- [x] Tidak boleh membuat kode kelas duplikat pada periode sama.
 
 ## 04.05 Gate periode
 
-- [ ] Admin dapat membuat periode dan semester.
-- [ ] Admin dapat membuat kelas 1–12.
-- [ ] Guru hanya melihat periode/kelas yang ditugaskan.
-- [ ] Periode tertutup menolak perubahan akademik biasa.
-- [ ] Test uniqueness periode dan kelas lulus.
+- [x] Admin dapat membuat periode dan semester.
+- [x] Admin dapat membuat kelas 1–12.
+- [x] Guru hanya melihat periode/kelas yang ditugaskan.
+- [x] Periode tertutup menolak perubahan akademik biasa.
+- [x] Test uniqueness periode dan kelas lulus.
+
+**Gate 04:** Lulus. Periode akademik, semester, program Paket A/B/C, tingkat 1–12, dan kelas/rombel sudah tersedia dengan pembatasan akses dan perlindungan periode tertutup.
 
 ---
 

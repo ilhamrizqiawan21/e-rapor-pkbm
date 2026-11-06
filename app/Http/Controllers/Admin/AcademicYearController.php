@@ -19,8 +19,17 @@ class AcademicYearController extends Controller
     {
         Gate::authorize('viewAny', AcademicYear::class);
 
-        $academicYears = AcademicYear::query()
-            ->where('institution_id', $request->user()->institution_id)
+        $query = AcademicYear::query()
+            ->where('institution_id', $request->user()->institution_id);
+
+        if ($request->user()->hasRole('GURU')) {
+            $query->whereHas('classes', function ($classes) use ($request): void {
+                $classes->where('homeroom_teacher_id', $request->user()->getKey())
+                    ->orWhereHas('subjectAssignments', fn ($assignments) => $assignments->where('teacher_id', $request->user()->getKey()));
+            });
+        }
+
+        $academicYears = $query
             ->withCount(['semesters', 'classes'])
             ->with(['semesters' => fn ($query) => $query->orderBy('sequence')])
             ->orderByDesc('start_date')

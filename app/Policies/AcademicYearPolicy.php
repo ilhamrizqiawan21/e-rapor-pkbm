@@ -14,7 +14,20 @@ class AcademicYearPolicy
 
     public function view(User $user, AcademicYear $academicYear): bool
     {
-        return $this->belongsToInstitution($user, $academicYear);
+        if (! $this->belongsToInstitution($user, $academicYear)) {
+            return false;
+        }
+
+        if ($user->hasAnyRole(['ADMIN', 'KEPSEK'])) {
+            return true;
+        }
+
+        return $academicYear->classes()
+            ->where(function ($classes) use ($user): void {
+                $classes->where('homeroom_teacher_id', $user->getKey())
+                    ->orWhereHas('subjectAssignments', fn ($assignments) => $assignments->where('teacher_id', $user->getKey()));
+            })
+            ->exists();
     }
 
     public function create(User $user): bool
