@@ -104,13 +104,13 @@ Sebuah fitur hanya boleh dianggap selesai jika semua hal berikut terpenuhi:
 
 ## 01.01 Source control
 
-- [ ] Inisialisasi Git repository project.
-- [ ] Buat branch utama yang disepakati.
-- [ ] Tambahkan `.gitattributes` dan `.gitignore` yang benar.
-- [ ] Pastikan `.env` tidak dilacak.
-- [ ] Pastikan `vendor/`, `node_modules/`, dan hasil build sesuai kebijakan repository.
-- [ ] Buat commit baseline scaffold.
-- [ ] Tetapkan format commit.
+- [x] Inisialisasi Git repository project.
+- [x] Buat branch utama `main`.
+- [x] Tambahkan `.gitattributes` dan `.gitignore` yang benar.
+- [x] Pastikan `.env` tidak dilacak.
+- [x] Pastikan `vendor/`, `node_modules/`, database SQLite lokal, dan hasil build sesuai kebijakan repository.
+- [x] Buat commit baseline scaffold: `44bebae chore(repo): create initial Laravel foundation`.
+- [x] Tetapkan format Conventional Commits melalui `.gitmessage` dan konfigurasi repository.
 
 ## 01.02 Toolchain
 
