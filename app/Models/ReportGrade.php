@@ -43,4 +43,14 @@ class ReportGrade extends Model
     {
         return $this->belongsTo(ReportCard::class);
     }
+
+    public function subjectAssignment(): BelongsTo
+    {
+        return $this->belongsTo(SubjectAssignment::class);
+    }
+
+    public function descriptionSnippet(): BelongsTo
+    {
+        return $this->belongsTo(DescriptionSnippet::class);
+    }
 }
