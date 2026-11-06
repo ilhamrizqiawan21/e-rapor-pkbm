@@ -51,11 +51,11 @@ final class ReportCardIdentityService
 
     public function updateDocumentNumber(ReportCard $reportCard, ?string $documentNumber, User $actor): ReportCard
     {
-        Gate::forUser($actor)->authorize('update', $reportCard);
+        Gate::forUser($actor)->authorize('manageCompleteness', $reportCard);
 
         return DB::transaction(function () use ($reportCard, $documentNumber, $actor): ReportCard {
             $locked = ReportCard::query()->lockForUpdate()->findOrFail($reportCard->getKey());
-            Gate::forUser($actor)->authorize('update', $locked);
+            Gate::forUser($actor)->authorize('manageCompleteness', $locked);
 
             $oldDocumentNumber = $locked->document_number;
             $locked->forceFill(['document_number' => $documentNumber])->save();

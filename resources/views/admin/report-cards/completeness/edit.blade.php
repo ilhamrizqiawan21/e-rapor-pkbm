@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @php
+    $editable = auth()->user()->can('manageCompleteness', $reportCard);
     $initialRows = old('rows', $extracurriculars
         ->map(fn ($activity): array => [
             'activity_name' => $activity->activity_name,
@@ -45,6 +46,22 @@
             </div>
         </div>
 
+        <div class="rounded-2xl border {{ $progress['complete'] ? 'border-emerald-200 bg-emerald-50' : 'border-amber-200 bg-amber-50' }} px-5 py-4" role="status">
+            <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                    <p class="font-semibold {{ $progress['complete'] ? 'text-emerald-800' : 'text-amber-900' }}">{{ $progress['completed'] }}/{{ $progress['total'] }} komponen wajib lengkap</p>
+                    @if ($progress['missing'] !== [])
+                        <p class="mt-1 text-sm {{ $progress['complete'] ? 'text-emerald-700' : 'text-amber-800' }}">Belum lengkap: {{ collect($progress['missing'])->pluck('label')->implode(', ') }}</p>
+                    @else
+                        <p class="mt-1 text-sm text-emerald-700">Rapor siap diajukan untuk pemeriksaan.</p>
+                    @endif
+                </div>
+                @if (! $editable)
+                    <x-badge variant="LOCKED" dot>Hanya baca</x-badge>
+                @endif
+            </div>
+        </div>
+
         @if (session('status'))
             <div class="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800" role="status">{{ session('status') }}</div>
         @endif
@@ -59,7 +76,7 @@
                     <h3 class="mt-1 text-xl font-semibold text-slate-950">Ekstrakurikuler</h3>
                     <p class="mt-1 text-sm text-slate-600">Tambahkan kegiatan dan keterangan capaian. Urutan baris akan menjadi urutan pada rapor.</p>
                 </div>
-                <button type="button" @click="addRow()" class="inline-flex items-center justify-center rounded-lg border border-brand-200 bg-brand-50 px-3 py-2 text-sm font-semibold text-brand-900 transition hover:bg-brand-100 focus:outline-hidden focus-visible:ring-2 focus-visible:ring-brand-500">
+                <button type="button" @click="addRow()" @disabled(! $editable) class="inline-flex items-center justify-center rounded-lg border border-brand-200 bg-brand-50 px-3 py-2 text-sm font-semibold text-brand-900 transition hover:bg-brand-100 focus:outline-hidden focus-visible:ring-2 focus-visible:ring-brand-500 disabled:cursor-not-allowed disabled:opacity-50">
                     + Tambah kegiatan
                 </button>
             </div>
@@ -78,25 +95,27 @@
                             <div class="grid gap-4 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)_auto] lg:items-start">
                                 <div>
                                     <label class="text-sm font-semibold text-slate-800" :for="'activity-name-' + row.key">Nama kegiatan</label>
-                                    <input class="mt-2 block w-full rounded-lg border-slate-300 text-sm shadow-sm focus:border-brand-500 focus:ring-brand-500" type="text" :id="'activity-name-' + row.key" :name="'rows[' + index + '][activity_name]'" x-model="row.activity_name" maxlength="120" placeholder="Contoh: Pramuka">
+                                    <input class="mt-2 block w-full rounded-lg border-slate-300 text-sm shadow-sm focus:border-brand-500 focus:ring-brand-500 disabled:bg-slate-100" type="text" :id="'activity-name-' + row.key" :name="'rows[' + index + '][activity_name]'" x-model="row.activity_name" maxlength="120" placeholder="Contoh: Pramuka" @disabled(! $editable)>
                                 </div>
                                 <div>
                                     <label class="text-sm font-semibold text-slate-800" :for="'activity-description-' + row.key">Keterangan</label>
-                                    <textarea class="mt-2 block w-full rounded-lg border-slate-300 text-sm shadow-sm focus:border-brand-500 focus:ring-brand-500" :id="'activity-description-' + row.key" :name="'rows[' + index + '][description]'" x-model="row.description" maxlength="500" rows="2" placeholder="Contoh: Aktif dan menunjukkan tanggung jawab."></textarea>
+                                    <textarea class="mt-2 block w-full rounded-lg border-slate-300 text-sm shadow-sm focus:border-brand-500 focus:ring-brand-500 disabled:bg-slate-100" :id="'activity-description-' + row.key" :name="'rows[' + index + '][description]'" x-model="row.description" maxlength="500" rows="2" placeholder="Contoh: Aktif dan menunjukkan tanggung jawab." @disabled(! $editable)></textarea>
                                 </div>
                                 <div class="flex flex-wrap gap-2 lg:justify-end">
-                                    <button type="button" @click="moveRow(index, -1)" :disabled="index === 0" class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-xs font-semibold text-slate-700 disabled:cursor-not-allowed disabled:opacity-40" :aria-label="'Naikkan kegiatan baris ' + (index + 1)">Naik</button>
-                                    <button type="button" @click="moveRow(index, 1)" :disabled="index === rows.length - 1" class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-xs font-semibold text-slate-700 disabled:cursor-not-allowed disabled:opacity-40" :aria-label="'Turunkan kegiatan baris ' + (index + 1)">Turun</button>
-                                    <button type="button" @click="removeRow(index)" class="rounded-lg border border-rose-200 bg-white px-3 py-2 text-xs font-semibold text-rose-700 hover:bg-rose-50">Hapus</button>
+                                    <button type="button" @click="moveRow(index, -1)" :disabled="index === 0 || {{ $editable ? 'false' : 'true' }}" class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-xs font-semibold text-slate-700 disabled:cursor-not-allowed disabled:opacity-40" :aria-label="'Naikkan kegiatan baris ' + (index + 1)">Naik</button>
+                                    <button type="button" @click="moveRow(index, 1)" :disabled="index === rows.length - 1 || {{ $editable ? 'false' : 'true' }}" class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-xs font-semibold text-slate-700 disabled:cursor-not-allowed disabled:opacity-40" :aria-label="'Turunkan kegiatan baris ' + (index + 1)">Turun</button>
+                                    <button type="button" @click="removeRow(index)" @disabled(! $editable) class="rounded-lg border border-rose-200 bg-white px-3 py-2 text-xs font-semibold text-rose-700 hover:bg-rose-50 disabled:cursor-not-allowed disabled:opacity-40">Hapus</button>
                                 </div>
                             </div>
                         </article>
                     </template>
                 </div>
 
-                <div class="flex justify-end border-t border-slate-100 pt-4">
-                    <x-button type="submit" variant="success">Simpan ekstrakurikuler</x-button>
-                </div>
+                @if ($editable)
+                    <div class="flex justify-end border-t border-slate-100 pt-4">
+                        <x-button type="submit" variant="success">Simpan ekstrakurikuler</x-button>
+                    </div>
+                @endif
             </form>
         </section>
 
@@ -115,15 +134,17 @@
                         <label for="homeroom-note" class="text-sm font-semibold text-slate-800">Catatan / saran</label>
                         <span class="text-xs font-medium text-slate-500"><span x-text="note.length">0</span>/{{ $noteMaxLength }} karakter</span>
                     </div>
-                    <textarea id="homeroom-note" name="note" x-model="note" maxlength="{{ $noteMaxLength }}" rows="5" class="mt-2 block w-full rounded-lg border-slate-300 text-sm shadow-sm focus:border-brand-500 focus:ring-brand-500" placeholder="Tulis catatan wali kelas..."></textarea>
+                    <textarea id="homeroom-note" name="note" x-model="note" maxlength="{{ $noteMaxLength }}" rows="5" class="mt-2 block w-full rounded-lg border-slate-300 text-sm shadow-sm focus:border-brand-500 focus:ring-brand-500" placeholder="Tulis catatan wali kelas..." @disabled(! $editable)></textarea>
                     <div class="mt-2 flex flex-wrap items-center justify-between gap-2">
                         <p class="text-xs text-slate-500">Maksimal {{ $noteMaxLength }} karakter. Kosongkan untuk menghapus catatan.</p>
-                        <button type="button" class="text-xs font-semibold text-brand-800 underline hover:text-brand-950" data-description-picker data-target="homeroom-note" data-picker-url="{{ route('admin.description-snippets.picker') }}">Gunakan bank deskripsi</button>
+                        <button type="button" class="text-xs font-semibold text-brand-800 underline hover:text-brand-950 disabled:text-slate-400" data-description-picker data-target="homeroom-note" data-picker-url="{{ route('admin.description-snippets.picker') }}" @disabled(! $editable)>Gunakan bank deskripsi</button>
                     </div>
                 </div>
-                <div class="flex justify-end border-t border-slate-100 pt-4">
-                    <x-button type="submit" variant="success">Simpan catatan</x-button>
-                </div>
+                @if ($editable)
+                    <div class="flex justify-end border-t border-slate-100 pt-4">
+                        <x-button type="submit" variant="success">Simpan catatan</x-button>
+                    </div>
+                @endif
             </form>
         </section>
     </div>

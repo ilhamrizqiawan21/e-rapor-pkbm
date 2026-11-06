@@ -12,7 +12,7 @@ class UpdateReportCardIdentityRequest extends FormRequest
         $reportCard = $this->route('report_card');
 
         return $reportCard instanceof ReportCard
-            && ($this->user()?->can('update', $reportCard) ?? false);
+            && ($this->user()?->can('manageCompleteness', $reportCard) ?? false);
     }
 
     /**

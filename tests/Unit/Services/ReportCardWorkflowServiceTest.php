@@ -5,11 +5,14 @@ namespace Tests\Unit\Services;
 use App\Enums\RoleCode;
 use App\Models\AcademicClass;
 use App\Models\AcademicYear;
+use App\Models\AttendanceSummary;
+use App\Models\AttitudeAssessment;
 use App\Models\Enrollment;
 use App\Models\Institution;
 use App\Models\Level;
 use App\Models\Program;
 use App\Models\ReportCard;
+use App\Models\ReportGrade;
 use App\Models\Semester;
 use App\Models\Student;
 use App\Models\Subject;
@@ -119,7 +122,7 @@ class ReportCardWorkflowServiceTest extends TestCase
             'name' => 'Mapel Workflow',
             'short_name' => 'WF',
         ]);
-        SubjectAssignment::query()->create([
+        $assignment = SubjectAssignment::query()->create([
             'class_id' => $class->id,
             'subject_id' => $subject->id,
             'teacher_id' => $guru->id,
@@ -145,6 +148,22 @@ class ReportCardWorkflowServiceTest extends TestCase
             'enrollment_id' => $enrollment->id,
             'semester_id' => $semester->id,
             'status' => 'DRAFT',
+            'document_number' => 'RAPOR-WF-001',
+        ]);
+
+        AttitudeAssessment::query()->create(['report_card_id' => $reportCard->id, 'attitude_type' => 'SPIRITUAL', 'description' => 'Menunjukkan sikap spiritual yang baik.']);
+        AttitudeAssessment::query()->create(['report_card_id' => $reportCard->id, 'attitude_type' => 'SOCIAL', 'description' => 'Mampu bekerja sama dengan baik.']);
+        AttendanceSummary::query()->create(['report_card_id' => $reportCard->id]);
+        ReportGrade::query()->create([
+            'report_card_id' => $reportCard->id,
+            'subject_assignment_id' => $assignment->id,
+            'subject_name_snapshot' => 'Mapel Workflow',
+            'subject_short_name_snapshot' => 'WF',
+            'minimum_score_snapshot' => 70,
+            'display_order_snapshot' => 1,
+            'score' => 85,
+            'predicate' => 'A',
+            'description' => 'Menguasai materi dengan baik.',
         ]);
 
         return compact('institution', 'guru', 'kepsek', 'admin', 'reportCard');

@@ -658,57 +658,59 @@ Sebuah fitur hanya boleh dianggap selesai jika semua hal berikut terpenuhi:
 
 ## 10.01 Identitas dan nomor dokumen
 
-- [ ] Tampilkan identitas siswa.
-- [ ] Tampilkan NIPD/NISN.
-- [ ] Tampilkan kelas.
-- [ ] Tampilkan semester.
-- [ ] Tampilkan tahun pelajaran.
-- [ ] Tampilkan identitas PKBM.
-- [ ] Input nomor dokumen manual.
-- [ ] Validasi nomor dokumen sesuai kebijakan.
-- [ ] Snapshot identitas saat lock.
+- [x] Tampilkan identitas siswa.
+- [x] Tampilkan NIPD/NISN.
+- [x] Tampilkan kelas.
+- [x] Tampilkan semester.
+- [x] Tampilkan tahun pelajaran.
+- [x] Tampilkan identitas PKBM.
+- [x] Input nomor dokumen manual.
+- [x] Validasi nomor dokumen sesuai kebijakan.
+- [x] Snapshot identitas saat lock.
 
 ## 10.02 Sikap
 
-- [ ] Input sikap spiritual.
-- [ ] Input sikap sosial.
-- [ ] Deskripsi manual.
-- [ ] Bank deskripsi dapat dipakai.
-- [ ] Validasi komponen wajib.
-- [ ] Permission Guru wali kelas.
+- [x] Input sikap spiritual.
+- [x] Input sikap sosial.
+- [x] Deskripsi manual.
+- [x] Bank deskripsi dapat dipakai.
+- [x] Validasi komponen wajib.
+- [x] Permission Guru wali kelas.
 
 ## 10.03 Absensi
 
-- [ ] Input sakit.
-- [ ] Input izin.
-- [ ] Input tanpa keterangan.
-- [ ] Nilai integer tidak negatif.
-- [ ] Tampilkan satuan hari.
-- [ ] Validasi angka besar yang tidak wajar.
+- [x] Input sakit.
+- [x] Input izin.
+- [x] Input tanpa keterangan.
+- [x] Nilai integer tidak negatif.
+- [x] Tampilkan satuan hari.
+- [x] Validasi angka besar yang tidak wajar.
 
 ## 10.04 Ekstrakurikuler
 
-- [ ] Tambah baris kegiatan.
-- [ ] Nama kegiatan.
-- [ ] Keterangan.
-- [ ] Urutkan baris.
-- [ ] Hapus baris kosong.
-- [ ] Empty state jika tidak ada kegiatan.
+- [x] Tambah baris kegiatan.
+- [x] Nama kegiatan.
+- [x] Keterangan.
+- [x] Urutkan baris.
+- [x] Hapus baris kosong.
+- [x] Empty state jika tidak ada kegiatan.
 
 ## 10.05 Catatan wali kelas
 
-- [ ] Input catatan/saran.
-- [ ] Bank deskripsi opsional.
-- [ ] Counter karakter.
-- [ ] Preview catatan pada rapor.
+- [x] Input catatan/saran.
+- [x] Bank deskripsi opsional.
+- [x] Counter karakter.
+- [x] Preview catatan pada rapor.
 
 ## 10.06 Gate kelengkapan
 
-- [ ] Progress per siswa.
-- [ ] Progress per kelas.
-- [ ] Komponen kosong teridentifikasi.
-- [ ] Sistem menolak approve jika wajib kosong.
-- [ ] Guru wali kelas dapat memperbaiki data.
+- [x] Progress per siswa.
+- [x] Progress per kelas.
+- [x] Komponen kosong teridentifikasi.
+- [x] Sistem menolak approve jika wajib kosong.
+- [x] Guru wali kelas dapat memperbaiki data.
+
+**Gate 10:** Lulus. Identitas dan snapshot nomor dokumen, sikap, absensi, ekstrakurikuler, catatan wali kelas, progress kelengkapan, dan blokir approval untuk komponen wajib sudah tersedia.
 
 ---
 

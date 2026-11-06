@@ -11,9 +11,10 @@ use Illuminate\Validation\ValidationException;
 
 final class ReportCardWorkflowService
 {
-    public function __construct(private readonly ReportCardIdentityService $identity)
-    {
-    }
+    public function __construct(
+        private readonly ReportCardIdentityService $identity,
+        private readonly ReportCardCompletenessService $completeness,
+    ) {}
 
     public function submit(ReportCard $reportCard, User $actor): ReportCard
     {
@@ -85,10 +86,14 @@ final class ReportCardWorkflowService
             'approve',
             ['IN_REVIEW'],
             'APPROVED',
-            fn (ReportCard $locked, User $user): array => [
-                'approved_at' => now(),
-                'approved_by_user_id' => $user->getKey(),
-            ],
+            function (ReportCard $locked, User $user): array {
+                $this->completeness->assertComplete($locked);
+
+                return [
+                    'approved_at' => now(),
+                    'approved_by_user_id' => $user->getKey(),
+                ];
+            },
         );
     }
 
