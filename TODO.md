@@ -246,16 +246,20 @@ Sebuah fitur hanya boleh dianggap selesai jika semua hal berikut terpenuhi:
 
 ## 02.05 Tests
 
-- [ ] Guest tidak dapat membuka dashboard.
-- [ ] Login valid berhasil.
-- [ ] Login invalid gagal.
-- [ ] User inactive ditolak.
-- [ ] Admin dapat membuka route Admin.
-- [ ] Guru ditolak dari route Admin.
-- [ ] Kepsek dapat membuka route review.
-- [ ] Guru tidak dapat lock report card.
-- [ ] Kepsek tidak dapat unlock report card.
-- [ ] Logout menghapus session.
+- [x] Guest tidak dapat membuka dashboard.
+- [x] Login valid berhasil untuk Admin, Guru, dan Kepala PKBM.
+- [x] Login invalid gagal dan menampilkan pesan error.
+- [x] User inactive ditolak.
+- [x] Admin dapat membuka route Admin.
+- [x] Guru ditolak dari route Admin.
+- [x] Kepala PKBM dapat membuka dashboard role/review entry.
+- [x] Guru tidak dapat lock report card melalui authorization policy.
+- [x] Kepala PKBM tidak dapat unlock report card melalui authorization policy.
+- [x] Logout menghapus session.
+
+**Catatan test:** Alur browser yang sudah tersedia diverifikasi Playwright pada Chromium desktop dan mobile. Skenario lock/unlock report card diverifikasi pada `AuthorizationPolicyTest` karena UI workflow report card belum dibangun.
+
+**Gate 02.05:** Lulus. 20 Playwright test desktop/mobile dan seluruh test authorization terkait lulus.
 
 ## 02.06 Gate autentikasi
 

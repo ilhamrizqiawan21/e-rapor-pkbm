@@ -8,7 +8,7 @@ Fondasi aplikasi e-Rapor untuk PKBM kelas 1–12.
 - Livewire 4
 - Blade
 - Tailwind CSS 4
-- Alpine.js melalui ekosistem Livewire saat dibutuhkan
+- Alpine.js dibundel melalui Vite
 - SQLite untuk development awal; MySQL/PostgreSQL untuk deployment
 
 ## Menjalankan project
@@ -22,6 +22,20 @@ php artisan serve
 ```
 
 Buka `http://127.0.0.1:8000`.
+
+## Menjalankan browser test
+
+Playwright menyiapkan database SQLite E2E terpisah (`database/database.e2e.sqlite`), menjalankan server Laravel pada port `8001`, lalu menguji Chromium desktop dan mobile.
+
+```bash
+npm run test:e2e
+```
+
+Untuk menjalankan dengan browser terlihat:
+
+```bash
+npm run test:e2e:headed
+```
 
 ## Konfigurasi lingkungan
 
