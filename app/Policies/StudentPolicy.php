@@ -4,7 +4,6 @@ namespace App\Policies;
 
 use App\Models\Student;
 use App\Models\User;
-use Illuminate\Database\Eloquent\Builder;
 
 class StudentPolicy
 {
@@ -21,21 +20,9 @@ class StudentPolicy
      */
     public function view(User $user, Student $student): bool
     {
-        if (! $this->belongsToInstitution($user, $student)) {
-            return false;
-        }
-
-        if ($user->hasAnyRole(['ADMIN', 'KEPSEK'])) {
-            return true;
-        }
-
-        return $student->enrollments()
-            ->whereHas('academicClass', function (Builder $query) use ($user): void {
-                $query->where('homeroom_teacher_id', $user->getKey())
-                    ->orWhereHas('subjectAssignments', function (Builder $assignmentQuery) use ($user): void {
-                        $assignmentQuery->where('teacher_id', $user->getKey());
-                    });
-            })
+        return $student->newQuery()
+            ->whereKey($student->getKey())
+            ->visibleTo($user)
             ->exists();
     }
 
