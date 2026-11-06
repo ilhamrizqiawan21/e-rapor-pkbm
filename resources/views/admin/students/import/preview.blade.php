@@ -4,6 +4,7 @@
     <div class="mx-auto max-w-7xl space-y-6">
         <header class="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
             <div>
+                <div class="mb-4"><x-breadcrumb current="Tinjau hasil import" parent-href="{{ route('admin.students.import.create') }}" parent-label="Import peserta didik" /></div>
                 <a href="{{ route('admin.students.import.create') }}" class="inline-flex items-center gap-2 text-sm font-semibold text-brand-700 hover:text-brand-950 focus:outline-hidden focus-visible:rounded focus-visible:ring-2 focus-visible:ring-brand-500"><svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="m15 18-6-6 6-6" /></svg>Ganti file</a>
                 <p class="mt-5 text-xs font-bold uppercase tracking-[0.22em] text-accent-700">Peserta didik / import</p>
                 <h1 class="mt-3 text-3xl font-semibold tracking-tight text-slate-950 sm:text-4xl">Tinjau hasil import</h1>

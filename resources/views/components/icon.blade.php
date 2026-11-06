@@ -9,6 +9,7 @@
         'arrow-left' => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="m15 18-6-6 6-6M9 12h10" />',
         'audit' => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M7 4h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Zm3 4h5M8 12h8M8 16h5" />',
         'check' => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="m5 12 4 4L19 6" />',
+        'chevron-right' => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="m9 18 6-6-6-6" />',
         'copy' => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M8 8V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-3M6 8h7a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2Z" />',
         'download' => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 3v12m0 0 4-4m-4 4-4-4M5 21h14" />',
         'edit' => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="m14.5 5.5 4 4M5 19l1.2-4.8L16.7 3.7a2.1 2.1 0 0 1 3 3l-10.5 10.5L5 19Z" />',

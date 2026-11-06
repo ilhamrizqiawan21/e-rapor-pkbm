@@ -5,6 +5,7 @@
     'href' => null,
     'disabled' => false,
     'icon' => null,
+    'confirm' => null,
 ])
 
 @php
@@ -13,6 +14,7 @@
     $variants = [
         'primary' => 'bg-brand-900 text-white hover:bg-brand-950 focus-visible:ring-brand-700 shadow-xs active:bg-brand-950',
         'secondary' => 'bg-white text-slate-700 border border-slate-300 hover:bg-slate-50 focus-visible:ring-brand-500 shadow-xs active:bg-slate-100',
+        'detail' => 'border border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-100 focus-visible:ring-blue-500 shadow-xs active:bg-blue-200',
         'accent' => 'bg-accent-600 text-white hover:bg-accent-700 focus-visible:ring-accent-500 shadow-xs active:bg-accent-800',
         'success' => 'bg-emerald-600 text-white hover:bg-emerald-700 focus-visible:ring-emerald-500 shadow-xs active:bg-emerald-800',
         'danger' => 'bg-rose-600 text-white hover:bg-rose-700 focus-visible:ring-rose-500 shadow-xs active:bg-rose-800',
@@ -40,7 +42,7 @@
         {{ $slot }}
     </a>
 @else
-    <button type="{{ $type }}" {{ $disabled ? 'disabled' : '' }} {{ $attributes->merge(['class' => $classes]) }}>
+    <button type="{{ $type }}" {{ $disabled ? 'disabled' : '' }} @if ($confirm) onclick='return confirm(@js($confirm));' @endif {{ $attributes->merge(['class' => $classes]) }}>
         @if ($icon)<x-icon :name="$icon" />@endif
         {{ $slot }}
     </button>

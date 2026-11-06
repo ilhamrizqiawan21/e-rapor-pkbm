@@ -8,7 +8,7 @@
             <div><label class="text-sm font-medium text-slate-700" for="reason">Alasan wajib</label><input id="reason" name="reason" value="{{ old('reason') }}" required class="mt-2 w-full rounded-xl border-slate-300">@error('reason')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror</div>
             <div><label class="text-sm font-medium text-slate-700" for="reporting_enrollment_id">Sumber rapor</label><select id="reporting_enrollment_id" name="reporting_enrollment_id" class="mt-2 w-full rounded-xl border-slate-300"><option value="target">Enrollment tujuan (default)</option><option value="{{ $enrollment->id }}" @selected(old('reporting_enrollment_id') == $enrollment->id)>Enrollment asal</option></select><p class="mt-1 text-xs text-slate-500">Pilihan ini menentukan enrollment yang dipakai untuk sumber rapor transfer tengah semester.</p>@error('reporting_enrollment_id')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror</div>
             <div><label class="text-sm font-medium text-slate-700" for="notes">Catatan</label><textarea id="notes" name="notes" rows="3" class="mt-2 w-full rounded-xl border-slate-300">{{ old('notes') }}</textarea></div>
-            <div class="flex justify-end gap-2"><x-button variant="cancel" icon="x" href="{{ route('admin.enrollments.show', $enrollment) }}">Batal</x-button><x-button type="submit" variant="success" icon="check">Setujui perpindahan</x-button></div>
+            <div class="flex justify-end gap-2"><x-button variant="cancel" icon="x" href="{{ route('admin.enrollments.show', $enrollment) }}">Batal</x-button><x-button type="submit" variant="success" icon="check" confirm="Setujui perpindahan peserta didik ini?">Setujui perpindahan</x-button></div>
         </form>
     </div>
 @endsection

@@ -3,7 +3,7 @@
 @section('content')
     <div class="mx-auto max-w-4xl">
         <x-page-header eyebrow="Master data" title="Detail identitas PKBM" back-href="{{ route('admin.institutions.index') }}" back-text="Kembali ke identitas PKBM">
-            <x-button href="{{ route('admin.institutions.preview', $institution) }}" variant="secondary" icon="eye">Preview rapor</x-button>
+            <x-button href="{{ route('admin.institutions.preview', $institution) }}" variant="detail" icon="eye">Preview rapor</x-button>
             @can('update', $institution)<x-button href="{{ route('admin.institutions.edit', $institution) }}" variant="edit" icon="edit">Edit identitas</x-button>@endcan
         </x-page-header>
 

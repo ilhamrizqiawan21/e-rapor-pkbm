@@ -28,7 +28,7 @@
                                 <p class="mt-2 text-sm text-slate-500">{{ $academicYear->start_date?->translatedFormat('d F Y') }} — {{ $academicYear->end_date?->translatedFormat('d F Y') }}</p>
                             </div>
                             <div class="flex flex-wrap gap-2">
-                                <x-button size="sm" variant="secondary" href="{{ route('admin.academic-years.show', $academicYear) }}">Detail semester</x-button>
+                                <x-button size="sm" variant="detail" icon="eye" href="{{ route('admin.academic-years.show', $academicYear) }}">Detail semester</x-button>
                                 @can('update', $academicYear)
                                     <x-button size="sm" href="{{ route('admin.academic-years.edit', $academicYear) }}" variant="edit" icon="edit">Edit</x-button>
                                 @endcan

@@ -30,7 +30,7 @@
                     @csrf
                     <div><label for="backup" class="block text-sm font-semibold text-amber-950">File backup</label><input id="backup" name="backup" type="file" required accept=".sqlite,.db,.sql,.gz" class="mt-2 block w-full rounded-lg border-amber-300 bg-white text-sm"></div>
                     <div><label for="confirmation" class="block text-sm font-semibold text-amber-950">Konfirmasi</label><input id="confirmation" name="confirmation" type="text" required autocomplete="off" class="mt-2 block w-full rounded-lg border-amber-300 bg-white text-sm" placeholder="RESTORE"></div>
-                    <x-button type="submit" variant="danger">Pulihkan database</x-button>
+                    <x-button type="submit" variant="danger" icon="upload" confirm="Pulihkan database dari file ini? Database aktif akan diganti setelah safety backup dibuat.">Pulihkan database</x-button>
                 </form>
             </section>
         </div>

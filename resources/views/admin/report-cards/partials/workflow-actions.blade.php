@@ -30,23 +30,23 @@
             <x-button href="{{ route('admin.report-cards.pdf.print', $reportCard) }}" size="sm" variant="pdf" icon="print" target="_blank" rel="noopener">Cetak PDF</x-button>
         @endif
         @if ($canSubmit)
-            <form method="POST" action="{{ route('admin.report-cards.submit', $reportCard) }}">@csrf <x-button type="submit" variant="success" icon="check">Ajukan untuk ditinjau</x-button></form>
+            <form method="POST" action="{{ route('admin.report-cards.submit', $reportCard) }}">@csrf <x-button type="submit" variant="success" icon="check" confirm="Ajukan rapor ini untuk ditinjau?">Ajukan untuk ditinjau</x-button></form>
         @endif
         @if ($canReview)
-            <form method="POST" action="{{ route('admin.report-cards.review', $reportCard) }}">@csrf <x-button type="submit" icon="eye">Mulai review kelengkapan</x-button></form>
+            <form method="POST" action="{{ route('admin.report-cards.review', $reportCard) }}">@csrf <x-button type="submit" icon="eye" confirm="Mulai review kelengkapan rapor ini?">Mulai review kelengkapan</x-button></form>
         @endif
         @if ($canApprove)
-            <form method="POST" action="{{ route('admin.report-cards.approve', $reportCard) }}">@csrf <x-button type="submit" variant="success" icon="check">Setujui rapor</x-button></form>
+            <form method="POST" action="{{ route('admin.report-cards.approve', $reportCard) }}">@csrf <x-button type="submit" variant="success" icon="check" confirm="Setujui rapor ini? Pastikan seluruh data sudah benar.">Setujui rapor</x-button></form>
         @endif
         @if ($canLock)
-            <form method="POST" action="{{ route('admin.report-cards.lock', $reportCard) }}">@csrf <x-button type="submit" icon="lock">Kunci rapor</x-button></form>
+            <form method="POST" action="{{ route('admin.report-cards.lock', $reportCard) }}">@csrf <x-button type="submit" icon="lock" confirm="Kunci rapor ini? Data akan menjadi snapshot dan tidak dapat diedit biasa.">Kunci rapor</x-button></form>
         @endif
         @if ($canReject)
             <form method="POST" action="{{ route('admin.report-cards.reject', $reportCard) }}" class="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:items-end">
                 @csrf
                 <label class="sr-only" for="reject-reason-{{ $reportCard->id }}">Alasan penolakan</label>
                 <input id="reject-reason-{{ $reportCard->id }}" name="reason" required minlength="3" maxlength="2000" placeholder="Alasan penolakan" class="w-full rounded-lg border-slate-300 text-sm shadow-sm sm:w-64">
-                <x-button type="submit" variant="danger" icon="arrow-left">Kembalikan untuk revisi</x-button>
+                <x-button type="submit" variant="danger" icon="arrow-left" confirm="Kembalikan rapor ini untuk revisi?">Kembalikan untuk revisi</x-button>
             </form>
         @endif
         @if ($canUnlock)
@@ -81,7 +81,7 @@
                 <form method="POST" action="{{ route('admin.report-cards.unlock', $reportCard) }}" class="mt-5 space-y-4">
                     @csrf
                     <div><label for="unlock-reason-{{ $reportCard->id }}" class="block text-sm font-semibold text-slate-800">Alasan unlock</label><textarea id="unlock-reason-{{ $reportCard->id }}" name="reason" required minlength="3" maxlength="2000" rows="4" class="mt-2 block w-full rounded-lg border-slate-300 text-sm shadow-sm focus:border-brand-500 focus:ring-brand-500" placeholder="Contoh: Koreksi nomor dokumen sebelum penerbitan."></textarea></div>
-                    <div class="flex justify-end gap-2"><x-button type="button" @click="unlockOpen = false" variant="cancel" icon="x">Batal</x-button><x-button type="submit" variant="warning" icon="unlock">Buka kunci dan kembali ke Draft</x-button></div>
+                    <div class="flex justify-end gap-2"><x-button type="button" @click="unlockOpen = false" variant="cancel" icon="x">Batal</x-button><x-button type="submit" variant="warning" icon="unlock" confirm="Buka kunci rapor ini dan kembalikan ke Draft?">Buka kunci dan kembali ke Draft</x-button></div>
                 </form>
             </div>
         </div>

@@ -34,7 +34,7 @@
                     </div>
                 </div>
                 <div class="flex flex-wrap gap-3 border-t border-slate-100 bg-slate-50 px-6 py-4 sm:px-8">
-                    <x-button href="{{ route('admin.institutions.show', $institution) }}" variant="secondary" icon="eye">Lihat detail</x-button>
+                    <x-button href="{{ route('admin.institutions.show', $institution) }}" variant="detail" icon="eye">Lihat detail</x-button>
                     @can('update', $institution)
                         <x-button href="{{ route('admin.institutions.edit', $institution) }}" variant="edit" icon="edit">Edit identitas</x-button>
                     @endcan

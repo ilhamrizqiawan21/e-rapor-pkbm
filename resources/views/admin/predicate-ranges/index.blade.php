@@ -3,7 +3,7 @@
 @section('content')
     <div class="mx-auto max-w-7xl space-y-6">
         <x-page-header eyebrow="Rapor / konfigurasi nilai" title="Rentang predikat" description="Atur konversi nilai 0–100 untuk {{ $institution->name }}. Rentang yang sudah tersimpan tidak mengubah rapor terkunci.">
-            <x-button href="{{ route('admin.predicate-ranges.preview') }}" variant="secondary" icon="eye">Preview nilai</x-button><x-button href="{{ route('admin.predicate-ranges.create') }}" icon="add">Tambah rentang</x-button>
+            <x-button href="{{ route('admin.predicate-ranges.preview') }}" variant="detail" icon="eye">Preview nilai</x-button><x-button href="{{ route('admin.predicate-ranges.create') }}" icon="add">Tambah rentang</x-button>
         </x-page-header>
 
         @if (session('status'))<div class="flex items-start gap-3 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800" role="status"><svg class="mt-0.5 h-5 w-5 shrink-0 text-emerald-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="m5 12 4 4L19 6" /></svg><span>{{ session('status') }}</span></div>@endif
