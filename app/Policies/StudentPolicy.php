@@ -4,6 +4,7 @@ namespace App\Policies;
 
 use App\Models\Student;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Builder;
 
 class StudentPolicy
 {
@@ -29,9 +30,9 @@ class StudentPolicy
         }
 
         return $student->enrollments()
-            ->whereHas('academicClass', function ($query) use ($user): void {
+            ->whereHas('academicClass', function (Builder $query) use ($user): void {
                 $query->where('homeroom_teacher_id', $user->getKey())
-                    ->orWhereHas('subjectAssignments', function ($assignmentQuery) use ($user): void {
+                    ->orWhereHas('subjectAssignments', function (Builder $assignmentQuery) use ($user): void {
                         $assignmentQuery->where('teacher_id', $user->getKey());
                     });
             })

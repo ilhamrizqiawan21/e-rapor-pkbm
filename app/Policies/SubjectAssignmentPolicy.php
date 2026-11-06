@@ -4,6 +4,7 @@ namespace App\Policies;
 
 use App\Models\SubjectAssignment;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Builder;
 
 class SubjectAssignmentPolicy
 {
@@ -72,7 +73,7 @@ class SubjectAssignmentPolicy
     {
         return $user->isActive()
             && $subjectAssignment->academicClass()
-                ->whereHas('program', fn ($query) => $query->where('institution_id', $user->institution_id))
+                ->whereHas('program', fn (Builder $query): Builder => $query->where('institution_id', $user->institution_id))
                 ->exists();
     }
 }

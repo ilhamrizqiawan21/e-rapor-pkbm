@@ -213,20 +213,22 @@ Sebuah fitur hanya boleh dianggap selesai jika semua hal berikut terpenuhi:
 
 ## 02.03 Authorization
 
-- [ ] Middleware authenticated.
-- [ ] Middleware role.
-- [ ] Policy Institution.
-- [ ] Policy AcademicClass.
-- [ ] Policy Student.
-- [ ] Policy SubjectAssignment.
-- [ ] Policy ReportCard.
-- [ ] Admin dapat semua data institusinya.
-- [ ] Guru hanya dapat melihat penugasan sendiri.
-- [ ] Kepsek hanya dapat melihat data institusinya dan melakukan review.
-- [ ] Guru wali kelas dapat mengakses kelengkapan kelas yang ditugaskan.
-- [ ] Guru tidak dapat lock/unlock.
-- [ ] Kepsek tidak dapat unlock.
-- [ ] Admin dapat lock/unlock.
+- [x] Middleware `authenticated` melalui middleware bawaan Laravel pada seluruh route privat.
+- [x] Middleware `role` dengan alias `role:ADMIN|GURU|KEPSEK`.
+- [x] Policy `Institution`.
+- [x] Policy `AcademicClass`.
+- [x] Policy `Student`.
+- [x] Policy `SubjectAssignment`.
+- [x] Policy `ReportCard`.
+- [x] Admin dapat semua data dalam institusinya, tanpa bypass lintas institusi.
+- [x] Guru hanya dapat melihat kelas, Peserta Didik, dan penugasan yang terkait dengannya.
+- [x] Kepala PKBM hanya dapat melihat data institusinya dan melakukan review/approve rapor.
+- [x] Guru wali kelas dapat mengakses kelas yang ditugaskan sebagai wali.
+- [x] Guru tidak dapat lock/unlock.
+- [x] Kepala PKBM tidak dapat lock/unlock.
+- [x] Admin dapat lock/unlock rapor sesuai status workflow.
+
+**Gate 02.03:** Lulus. Authorization policy dan role boundary siap dipakai modul master data serta workflow rapor.
 
 ## 02.04 UI auth
 

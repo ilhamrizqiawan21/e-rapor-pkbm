@@ -30,7 +30,7 @@ class ReportCardPolicy
      */
     public function create(User $user): bool
     {
-        return $user->isActive() && $user->hasAnyRole(['ADMIN', 'GURU']);
+        return $user->isActive() && $user->institution_id !== null && $user->hasAnyRole(['ADMIN', 'GURU']);
     }
 
     /**
