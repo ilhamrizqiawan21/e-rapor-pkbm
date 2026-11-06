@@ -23,6 +23,23 @@ php artisan serve
 
 Buka `http://127.0.0.1:8000`.
 
+## Konfigurasi lingkungan
+
+Profil yang tersedia:
+
+- `.env.example`: development localhost/LAN dengan SQLite file `database/database.sqlite`.
+- `.env.testing.example`: PHPUnit dengan SQLite in-memory, cache/session array, queue sync, dan mail array.
+- `.env.staging.example`: contoh staging online dengan MySQL, HTTPS, queue/cache/session database, dan SMTP.
+- `.env.production.example`: contoh production online; semua credential dan `APP_KEY` wajib diisi pada server, bukan di-commit.
+
+Konfigurasi aplikasi menggunakan timezone `Asia/Jakarta`, locale `id`, format tanggal `dd/mm/YYYY`, format waktu `dd/mm/YYYY HH:mm`, serta angka Indonesia dengan pemisah ribuan titik dan desimal koma.
+
+Storage dibagi menjadi disk private (`local`), disk public (`public`), dan disk arsip PDF rapor (`local` secara default). Mail lokal memakai log, sedangkan staging/production memakai SMTP melalui environment server. Queue dan cache default memakai database agar kompatibel dengan localhost maupun deployment online.
+
+## Browser minimum
+
+Aplikasi membutuhkan JavaScript aktif dan mendukung dua versi mayor terbaru Chrome, Edge, Firefox, serta Safari. Browser lama di luar kebijakan tersebut tidak menjadi target dukungan MVP.
+
 Data seed development menyediakan:
 
 - PKBM Contoh

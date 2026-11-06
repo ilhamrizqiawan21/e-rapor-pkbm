@@ -122,24 +122,24 @@ Sebuah fitur hanya boleh dianggap selesai jika semua hal berikut terpenuhi:
 - [x] Livewire 4 terpasang.
 - [x] Tailwind CSS 4 terpasang.
 - [x] Laravel Boost terpasang.
-- [ ] Tetapkan database development default.
-- [ ] Tetapkan database test.
-- [ ] Tetapkan versi browser minimum yang didukung.
+- [x] Tetapkan database development default: SQLite file `database/database.sqlite`.
+- [x] Tetapkan database test: SQLite in-memory melalui `phpunit.xml` dan `.env.testing.example`.
+- [x] Tetapkan versi browser minimum: dua versi mayor terbaru Chrome, Edge, Firefox, dan Safari dengan JavaScript aktif.
 
 ## 01.03 Konfigurasi aplikasi
 
 - [x] Set nama aplikasi menjadi E-Rapor PKBM.
-- [ ] Set timezone aplikasi ke Asia/Jakarta.
-- [ ] Set locale aplikasi ke id.
-- [ ] Set format tanggal Indonesia.
-- [ ] Set format angka dan desimal.
-- [ ] Set `APP_URL` untuk localhost.
-- [ ] Siapkan `.env.example` lengkap.
-- [ ] Pisahkan konfigurasi local, test, staging, dan production.
-- [ ] Konfigurasi storage public/private.
-- [ ] Konfigurasi mail untuk local log dan production SMTP.
-- [ ] Konfigurasi queue sesuai kebutuhan export.
-- [ ] Konfigurasi cache dan session untuk online.
+- [x] Set timezone aplikasi ke Asia/Jakarta.
+- [x] Set locale aplikasi ke id.
+- [x] Set format tanggal Indonesia: `d/m/Y`.
+- [x] Set format angka dan desimal: ribuan titik, desimal koma, dua angka desimal.
+- [x] Set `APP_URL` untuk localhost ke `http://localhost:8000`.
+- [x] Siapkan `.env.example` lengkap.
+- [x] Pisahkan konfigurasi local, test, staging, dan production melalui `.env*.example`.
+- [x] Konfigurasi storage public/private dan disk arsip PDF.
+- [x] Konfigurasi mail: log pada local, array pada test, SMTP pada staging/production.
+- [x] Konfigurasi queue database untuk kebutuhan export.
+- [x] Konfigurasi cache dan session database untuk online/localhost; test memakai array.
 
 ## 01.04 Fondasi UI
 
