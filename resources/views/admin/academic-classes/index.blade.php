@@ -8,9 +8,15 @@
                 <h2 class="mt-2 text-3xl font-semibold tracking-tight text-slate-950">Kelas / Rombel</h2>
                 <p class="mt-2 text-sm text-slate-600">Daftar kelas yang tersedia sesuai akses akun dan penugasan Anda.</p>
             </div>
-            @can('create', App\Models\AcademicClass::class)
-                <x-button href="{{ route('admin.academic-classes.create') }}">Tambah kelas</x-button>
-            @endcan
+            <div class="flex flex-wrap gap-2">
+                @can('create', App\Models\SubjectAssignment::class)
+                    <x-button href="{{ route('admin.academic-classes.subject-assignments.bulk-create') }}" variant="secondary">Mapping beberapa kelas</x-button>
+                    <x-button href="{{ route('admin.academic-classes.subject-assignments.bulk-assign-teacher.create') }}" variant="secondary">Bulk assign Guru</x-button>
+                @endcan
+                @can('create', App\Models\AcademicClass::class)
+                    <x-button href="{{ route('admin.academic-classes.create') }}">Tambah kelas</x-button>
+                @endcan
+            </div>
         </div>
 
         @if (session('status'))

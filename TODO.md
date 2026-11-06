@@ -504,48 +504,50 @@ Sebuah fitur hanya boleh dianggap selesai jika semua hal berikut terpenuhi:
 
 ## 07.01 Mata pelajaran
 
-- [ ] CRUD mapel.
-- [ ] Kode mapel.
-- [ ] Nama mapel.
-- [ ] Nama singkat mapel.
-- [ ] Kategori mapel.
-- [ ] Urutan default.
-- [ ] Status aktif/nonaktif.
-- [ ] Validasi kode unik per institusi.
-- [ ] Validasi nama singkat wajib untuk leger.
-- [ ] Preview header leger.
+- [x] CRUD mapel.
+- [x] Kode mapel.
+- [x] Nama mapel.
+- [x] Nama singkat mapel.
+- [x] Kategori mapel.
+- [x] Urutan default.
+- [x] Status aktif/nonaktif.
+- [x] Validasi kode unik per institusi.
+- [x] Validasi nama singkat wajib untuk leger.
+- [x] Preview header leger.
 
 ## 07.02 Mapping mapel
 
-- [ ] Mapping mapel ke kelas.
-- [ ] Tambah mapel dari kelas.
-- [ ] Hapus mapel dari kelas tanpa menghapus master.
-- [ ] Atur urutan mapel.
-- [ ] Atur Guru pengampu.
-- [ ] Atur KKM.
-- [ ] Salin konfigurasi mapel dari kelas lain.
-- [ ] Bulk add mapel ke beberapa kelas.
-- [ ] Bulk assign Guru.
+- [x] Mapping mapel ke kelas.
+- [x] Tambah mapel dari kelas.
+- [x] Hapus mapel dari kelas tanpa menghapus master.
+- [x] Atur urutan mapel.
+- [x] Atur Guru pengampu.
+- [x] Atur KKM.
+- [x] Salin konfigurasi mapel dari kelas lain.
+- [x] Bulk add mapel ke beberapa kelas.
+- [x] Bulk assign Guru.
 
 ## 07.03 KKM dan predikat
 
-- [ ] Input KKM 0–100.
-- [ ] Validasi KKM 0–100.
-- [ ] Simpan KKM sebagai assignment.
-- [ ] Konfigurasi rentang predikat.
-- [ ] Validasi rentang tidak overlap.
-- [ ] Preview konversi nilai ke predikat.
-- [ ] Snapshot KKM saat report grade dibuat.
-- [ ] Snapshot predikat saat report grade dibuat.
+- [x] Input KKM 0–100.
+- [x] Validasi KKM 0–100.
+- [x] Simpan KKM sebagai assignment.
+- [x] Konfigurasi rentang predikat.
+- [x] Validasi rentang tidak overlap.
+- [x] Preview konversi nilai ke predikat.
+- [x] Snapshot KKM saat report grade dibuat.
+- [x] Snapshot predikat saat report grade dibuat.
 
 ## 07.04 Gate mapel
 
-- [ ] Mapel dapat ditambah.
-- [ ] Mapel dapat dikurangi dari kelas.
-- [ ] Mapel dapat diurutkan.
-- [ ] KKM tampil pada input nilai.
-- [ ] Nama singkat tampil pada leger.
-- [ ] Perubahan master tidak mengubah rapor terkunci.
+- [x] Mapel dapat ditambah.
+- [x] Mapel dapat dikurangi dari kelas.
+- [x] Mapel dapat diurutkan.
+- [x] KKM tampil pada input nilai.
+- [x] Nama singkat tampil pada leger.
+- [x] Perubahan master tidak mengubah rapor terkunci.
+
+**Gate 07:** Lulus. Master mapel, mapping kelas, bulk operation, KKM, rentang predikat, dan snapshot rapor sudah tersedia.
 
 ---
 

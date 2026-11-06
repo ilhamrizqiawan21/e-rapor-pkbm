@@ -10,6 +10,8 @@
             </div>
             <div class="flex flex-wrap gap-2">
                 @can('create', App\Models\SubjectAssignment::class)
+                    <x-button href="{{ route('admin.academic-classes.subject-assignments.copy-create', $academicClass) }}" variant="secondary">Salin konfigurasi</x-button>
+                    <x-button href="{{ route('admin.academic-classes.subject-assignments.reorder-create', $academicClass) }}" variant="secondary">Atur urutan</x-button>
                     <x-button href="{{ route('admin.academic-classes.subject-assignments.create', $academicClass) }}">Tambah penugasan</x-button>
                 @endcan
                 <x-button href="{{ route('admin.academic-classes.show', $academicClass) }}" variant="secondary">Kembali ke kelas</x-button>

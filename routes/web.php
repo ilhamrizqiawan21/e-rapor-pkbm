@@ -9,12 +9,15 @@ use App\Http\Controllers\Admin\InstitutionController;
 use App\Http\Controllers\Admin\InstitutionFormatSettingsController;
 use App\Http\Controllers\Admin\InstitutionPreviewController;
 use App\Http\Controllers\Admin\LevelController;
+use App\Http\Controllers\Admin\PredicateRangeController;
 use App\Http\Controllers\Admin\ProgramController;
 use App\Http\Controllers\Admin\SemesterController;
 use App\Http\Controllers\Admin\SignatorySettingsController;
 use App\Http\Controllers\Admin\StudentController;
 use App\Http\Controllers\Admin\StudentImportController;
 use App\Http\Controllers\Admin\SubjectAssignmentController;
+use App\Http\Controllers\Admin\SubjectAssignmentMappingController;
+use App\Http\Controllers\Admin\SubjectController;
 use App\Http\Controllers\Admin\TeacherController;
 use App\Http\Controllers\Admin\UserPasswordController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
@@ -62,7 +65,18 @@ Route::middleware('auth')->group(function (): void {
         Route::get('enrollments/{enrollment}', [EnrollmentController::class, 'show'])->name('enrollments.show');
         Route::delete('enrollments/{enrollment}', [EnrollmentController::class, 'withdraw'])->name('enrollments.withdraw');
         Route::resource('enrollments.transfers', ClassTransferController::class)->only(['index', 'create', 'store']);
+        Route::get('academic-classes/subject-assignments/bulk', [SubjectAssignmentMappingController::class, 'bulkCreate'])->name('academic-classes.subject-assignments.bulk-create');
+        Route::post('academic-classes/subject-assignments/bulk', [SubjectAssignmentMappingController::class, 'bulkStore'])->name('academic-classes.subject-assignments.bulk-store');
+        Route::get('academic-classes/{academic_class}/subject-assignments/copy', [SubjectAssignmentMappingController::class, 'copyCreate'])->name('academic-classes.subject-assignments.copy-create');
+        Route::post('academic-classes/{academic_class}/subject-assignments/copy', [SubjectAssignmentMappingController::class, 'copyStore'])->name('academic-classes.subject-assignments.copy-store');
+        Route::get('academic-classes/{academic_class}/subject-assignments/reorder', [SubjectAssignmentMappingController::class, 'reorderCreate'])->name('academic-classes.subject-assignments.reorder-create');
+        Route::patch('academic-classes/{academic_class}/subject-assignments/reorder', [SubjectAssignmentMappingController::class, 'reorder'])->name('academic-classes.subject-assignments.reorder');
+        Route::get('academic-classes/subject-assignments/bulk-teacher', [SubjectAssignmentMappingController::class, 'bulkAssignCreate'])->name('academic-classes.subject-assignments.bulk-assign-teacher.create');
+        Route::post('academic-classes/subject-assignments/bulk-teacher', [SubjectAssignmentMappingController::class, 'bulkAssignTeacher'])->name('academic-classes.subject-assignments.bulk-assign-teacher');
         Route::resource('academic-classes.subject-assignments', SubjectAssignmentController::class)->except(['show']);
+        Route::get('predicate-ranges/preview', [PredicateRangeController::class, 'preview'])->name('predicate-ranges.preview');
+        Route::resource('predicate-ranges', PredicateRangeController::class)->except(['show']);
+        Route::resource('subjects', SubjectController::class);
     });
 
     Route::middleware('role:ADMIN')->prefix('admin/users/{user}/password')->name('admin.users.password.')->group(function (): void {
