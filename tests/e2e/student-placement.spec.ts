@@ -14,9 +14,14 @@ test.describe('06 student and placement browser flows', () => {
 
         await page.goto('/admin/students');
         await expect(page.getByRole('heading', { name: 'Peserta didik', exact: true })).toBeVisible();
-        await expect(page.getByRole('link', { name: 'Import Excel' })).toBeVisible();
+        await expect(page.getByRole('link', { name: 'Import data' })).toBeVisible();
+        await expect(page.getByRole('heading', { name: 'Direktori peserta didik', exact: true })).toBeVisible();
+        await expect(page.getByLabel('Cari peserta didik')).toBeVisible();
 
         await page.goto('/admin/students/import');
-        await expect(page.getByRole('heading', { name: 'Import Peserta Didik', exact: true })).toBeVisible();
+        await expect(page.getByRole('heading', { name: 'Import peserta didik', exact: true })).toBeVisible();
+        await expect(page.getByRole('heading', { name: 'Upload file peserta didik', exact: true })).toBeVisible();
+        await expect(page.getByText('Upload & validasi', { exact: true })).toBeVisible();
+        await expect(page.getByLabel('File XLSX atau CSV')).toBeVisible();
     });
 });

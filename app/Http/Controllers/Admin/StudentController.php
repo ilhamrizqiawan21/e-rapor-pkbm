@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreStudentRequest;
 use App\Http\Requests\Admin\UpdateStudentRequest;
+use App\Models\AcademicYear;
 use App\Models\Student;
 use App\Services\AuditLogger;
 use Illuminate\Database\Eloquent\Builder;
@@ -20,9 +21,38 @@ class StudentController extends Controller
     {
         Gate::authorize('viewAny', Student::class);
 
+        $activeAcademicYear = AcademicYear::query()
+            ->where('institution_id', $request->user()->institution_id)
+            ->where('status', 'ACTIVE')
+            ->latest('start_date')
+            ->latest('id')
+            ->first();
+        $activeAcademicYearId = $activeAcademicYear?->getKey();
+        $visibleStudents = Student::query()->visibleTo($request->user());
+
         $students = Student::query()
             ->visibleTo($request->user())
-            ->withCount('enrollments')
+            ->withCount([
+                'enrollments',
+                'enrollments as active_enrollments_count' => function (Builder $query) use ($activeAcademicYearId): void {
+                    $query->where('enrollment_status', 'ACTIVE');
+
+                    if ($activeAcademicYearId !== null) {
+                        $query->where('academic_year_id', $activeAcademicYearId);
+                    } else {
+                        $query->whereRaw('1 = 0');
+                    }
+                },
+            ])
+            ->when($activeAcademicYearId !== null, function (Builder $query) use ($activeAcademicYearId): void {
+                $query->with([
+                    'enrollments' => fn ($enrollmentQuery) => $enrollmentQuery
+                        ->where('academic_year_id', $activeAcademicYearId)
+                        ->where('enrollment_status', 'ACTIVE')
+                        ->with(['academicClass.program', 'academicClass.level'])
+                        ->latest('start_date'),
+                ]);
+            })
             ->when($request->filled('status'), function (Builder $query) use ($request): void {
                 $status = strtoupper($request->string('status')->toString());
 
@@ -44,7 +74,19 @@ class StudentController extends Controller
             ->paginate(15)
             ->withQueryString();
 
-        return view('admin.students.index', compact('students'));
+        $summary = [
+            'total' => (clone $visibleStudents)->count(),
+            'active' => (clone $visibleStudents)->where('status', 'ACTIVE')->count(),
+            'unplaced' => $activeAcademicYearId === null ? null : (clone $visibleStudents)
+                ->where('status', 'ACTIVE')
+                ->whereDoesntHave('enrollments', fn (Builder $query) => $query
+                    ->where('academic_year_id', $activeAcademicYearId)
+                    ->where('enrollment_status', 'ACTIVE'))
+                ->count(),
+            'otherStatuses' => (clone $visibleStudents)->whereIn('status', ['INACTIVE', 'GRADUATED', 'TRANSFERRED'])->count(),
+        ];
+
+        return view('admin.students.index', compact('students', 'summary', 'activeAcademicYear'));
     }
 
     public function create(): View
