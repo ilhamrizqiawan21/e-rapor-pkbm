@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreTeacherRequest;
 use App\Http\Requests\Admin\UpdateTeacherRequest;
 use App\Models\AcademicClass;
+use App\Models\AcademicYear;
 use App\Models\HomeroomAssignment;
 use App\Models\ReportSignature;
 use App\Models\Role;
@@ -28,9 +29,39 @@ class TeacherController extends Controller
     {
         Gate::authorize('viewAny', User::class);
 
+        $activeAcademicYear = AcademicYear::query()
+            ->where('institution_id', $request->user()->institution_id)
+            ->where('status', 'ACTIVE')
+            ->latest('start_date')
+            ->latest('id')
+            ->first();
+        $activeAcademicYearId = $activeAcademicYear?->getKey();
+        $teacherScope = $this->teacherQuery($request->user());
+
         $teachers = $this->teacherQuery($request->user())
             ->with('staffProfile')
-            ->withCount(['subjectAssignments', 'homeroomClasses'])
+            ->withCount([
+                'subjectAssignments as active_subject_assignments_count' => function (Builder $query) use ($activeAcademicYearId): void {
+                    $query->where('active', true);
+
+                    if ($activeAcademicYearId !== null) {
+                        $query->whereHas('academicClass', fn (Builder $classQuery) => $classQuery
+                            ->where('academic_year_id', $activeAcademicYearId)
+                            ->where('status', 'ACTIVE'));
+                    } else {
+                        $query->whereRaw('1 = 0');
+                    }
+                },
+                'homeroomClasses as active_homeroom_classes_count' => function (Builder $query) use ($activeAcademicYearId): void {
+                    $query->where('status', 'ACTIVE');
+
+                    if ($activeAcademicYearId !== null) {
+                        $query->where('academic_year_id', $activeAcademicYearId);
+                    } else {
+                        $query->whereRaw('1 = 0');
+                    }
+                },
+            ])
             ->when($request->filled('status'), function (Builder $query) use ($request): void {
                 $status = strtoupper($request->string('status')->toString());
 
@@ -53,7 +84,43 @@ class TeacherController extends Controller
             ->paginate(15)
             ->withQueryString();
 
-        return view('admin.teachers.index', compact('teachers'));
+        $summary = [
+            'total' => (clone $teacherScope)->count(),
+            'active' => (clone $teacherScope)->where('status', UserStatus::Active)->count(),
+            'assigned' => $activeAcademicYearId === null ? null : (clone $teacherScope)
+                ->where('status', UserStatus::Active)
+                ->where(function (Builder $query) use ($activeAcademicYearId): void {
+                    $query
+                        ->whereHas('subjectAssignments', fn (Builder $assignmentQuery) => $assignmentQuery
+                            ->where('active', true)
+                            ->whereHas('academicClass', fn (Builder $classQuery) => $classQuery
+                                ->where('academic_year_id', $activeAcademicYearId)
+                                ->where('status', 'ACTIVE')))
+                        ->orWhereHas('homeroomClasses', fn (Builder $classQuery) => $classQuery
+                            ->where('academic_year_id', $activeAcademicYearId)
+                            ->where('status', 'ACTIVE'));
+                })
+                ->count(),
+            'subjectAssignments' => $activeAcademicYearId === null ? null : SubjectAssignment::query()
+                ->where('active', true)
+                ->whereHas('teacher', fn (Builder $teacherQuery) => $teacherQuery
+                    ->where('institution_id', $request->user()->institution_id))
+                ->whereHas('academicClass', fn (Builder $classQuery) => $classQuery
+                    ->where('academic_year_id', $activeAcademicYearId)
+                    ->where('status', 'ACTIVE')
+                    ->whereHas('program', fn (Builder $programQuery) => $programQuery
+                        ->where('institution_id', $request->user()->institution_id)))
+                ->count(),
+            'homeroomClasses' => $activeAcademicYearId === null ? null : AcademicClass::query()
+                ->where('academic_year_id', $activeAcademicYearId)
+                ->where('status', 'ACTIVE')
+                ->whereNotNull('homeroom_teacher_id')
+                ->whereHas('program', fn (Builder $programQuery) => $programQuery
+                    ->where('institution_id', $request->user()->institution_id))
+                ->count(),
+        ];
+
+        return view('admin.teachers.index', compact('teachers', 'summary', 'activeAcademicYear'));
     }
 
     public function create(): View

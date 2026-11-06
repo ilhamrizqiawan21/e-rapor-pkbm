@@ -14,7 +14,9 @@ test.describe('05 teacher and assignment browser flows', () => {
 
         await page.goto('/admin/teachers');
         await expect(page.getByRole('heading', { name: 'Guru', exact: true })).toBeVisible();
-        await expect(page.getByText('Guru Demo', { exact: true })).toBeVisible();
+        await expect(page.getByRole('heading', { name: 'Direktori Guru', exact: true })).toBeVisible();
+        await expect(page.getByRole('link', { name: 'Tambah Guru', exact: true })).toBeVisible();
+        await expect(page.getByLabel('Cari Guru')).toBeVisible();
 
         await page.goto('/admin/academic-classes');
         await expect(page.getByRole('heading', { name: 'Kelas / Rombel', exact: true })).toBeVisible();
