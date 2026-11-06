@@ -1,22 +1,22 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="mx-auto max-w-6xl">
-        <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-            <div>
-                <p class="text-sm font-semibold uppercase tracking-[0.18em] text-accent-700">Master data</p>
-                <h2 class="mt-2 text-3xl font-semibold tracking-tight text-slate-950">Tahun Pelajaran</h2>
-                <p class="mt-2 text-sm text-slate-600">Kelola periode akademik dan semester PKBM.</p>
-            </div>
-            @can('create', App\Models\AcademicYear::class)
-                <x-button href="{{ route('admin.academic-years.create') }}">Tambah tahun pelajaran</x-button>
-            @endcan
-        </div>
+    <div class="mx-auto max-w-7xl space-y-6">
+        <x-page-header eyebrow="Data inti / periode akademik" title="Tahun Pelajaran" description="Kelola periode akademik dan semester PKBM sebagai dasar kelas, nilai, dan rapor.">
+            @can('create', App\Models\AcademicYear::class)<x-button href="{{ route('admin.academic-years.create') }}">Tambah tahun pelajaran</x-button>@endcan
+        </x-page-header>
 
         @if ($academicYears->isEmpty())
-            <x-empty-state title="Belum ada tahun pelajaran" description="Buat tahun pelajaran pertama untuk mulai mengelola semester dan kelas." />
+            @can('create', App\Models\AcademicYear::class)
+                <x-empty-state title="Belum ada tahun pelajaran" description="Buat tahun pelajaran pertama untuk mulai mengelola semester dan kelas.">
+                    <x-slot:actions><x-button href="{{ route('admin.academic-years.create') }}" size="sm">Tambah tahun pelajaran</x-button></x-slot:actions>
+                </x-empty-state>
+            @else
+                <x-empty-state title="Belum ada tahun pelajaran" description="Belum ada periode akademik pada institusi ini." />
+            @endcan
         @else
-            <div class="space-y-4">
+            <section class="space-y-4" aria-labelledby="academic-year-list-heading">
+                <div class="flex items-center justify-between gap-3"><div><h2 id="academic-year-list-heading" class="text-lg font-semibold text-slate-950">Daftar periode</h2><p class="mt-1 text-sm text-slate-500">Periode terbaru ditampilkan lebih dahulu.</p></div><span class="inline-flex items-center rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-600">{{ $academicYears->count() }} periode</span></div>
                 @foreach ($academicYears as $academicYear)
                     <section class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
                         <div class="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
@@ -40,7 +40,7 @@
                         </div>
                     </section>
                 @endforeach
-            </div>
+            </section>
         @endif
     </div>
 @endsection

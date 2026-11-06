@@ -17,7 +17,8 @@ test.describe('04 academic foundation browser flows', () => {
 
         await page.goto('/admin/programs');
         await expect(page.getByRole('heading', { name: 'Program pendidikan' })).toBeVisible();
-        await expect(page.getByRole('cell', { name: 'Paket A', exact: true })).toBeVisible();
+        // The directory has one semantic item in the desktop table and one in the mobile card layout.
+        await expect(page.getByText('Paket A', { exact: true })).toHaveCount(2);
 
         await page.goto('/admin/academic-classes');
         await expect(page.getByRole('heading', { name: 'Kelas / Rombel' })).toBeVisible();
