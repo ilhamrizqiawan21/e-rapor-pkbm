@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-#[Fillable(['student_id', 'class_id', 'academic_year_id', 'start_date', 'end_date', 'enrollment_status', 'notes'])]
+#[Fillable(['student_id', 'class_id', 'academic_year_id', 'start_date', 'end_date', 'enrollment_status', 'reporting_enrollment_id', 'notes'])]
 class Enrollment extends Model
 {
     protected function casts(): array
@@ -28,5 +28,20 @@ class Enrollment extends Model
     public function reportCards(): HasMany
     {
         return $this->hasMany(ReportCard::class);
+    }
+
+    public function reportingEnrollment(): BelongsTo
+    {
+        return $this->belongsTo(self::class, 'reporting_enrollment_id');
+    }
+
+    public function outgoingTransfers(): HasMany
+    {
+        return $this->hasMany(ClassTransfer::class, 'from_enrollment_id');
+    }
+
+    public function incomingTransfers(): HasMany
+    {
+        return $this->hasMany(ClassTransfer::class, 'to_enrollment_id');
     }
 }

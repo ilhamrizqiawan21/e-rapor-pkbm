@@ -1,0 +1,13 @@
+@extends('layouts.app')
+
+@section('content')
+    <div class="mx-auto max-w-6xl">
+        <div class="mb-6 flex flex-wrap items-end justify-between gap-4">
+            <div><p class="text-sm font-semibold uppercase tracking-[0.18em] text-accent-700">Penempatan siswa</p><h2 class="mt-2 text-3xl font-semibold text-slate-950">{{ $academicClass->name }}</h2><p class="mt-2 text-sm text-slate-600">{{ $academicClass->program->name }} · {{ $academicClass->level->name }} · {{ $academicClass->academicYear->name }}</p></div>
+            <div class="flex gap-2"><x-button href="{{ route('admin.academic-classes.enrollments.create', $academicClass) }}">Tambah siswa</x-button><x-button variant="secondary" href="{{ route('admin.academic-classes.show', $academicClass) }}">Kembali</x-button></div>
+        </div>
+        @if (session('status'))<div class="mb-5 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">{{ session('status') }}</div>@endif
+        <div class="mb-4 flex flex-wrap gap-2 text-sm"><a class="rounded-lg px-3 py-2 {{ $statusFilter === '' ? 'bg-slate-900 text-white' : 'bg-slate-100 text-slate-700' }}" href="{{ route('admin.academic-classes.enrollments.index', $academicClass) }}">Semua</a>@foreach (['ACTIVE' => 'Aktif', 'WITHDRAWN' => 'Dikeluarkan', 'TRANSFERRED' => 'Dipindahkan'] as $value => $label)<a class="rounded-lg px-3 py-2 {{ $statusFilter === $value ? 'bg-slate-900 text-white' : 'bg-slate-100 text-slate-700' }}" href="{{ route('admin.academic-classes.enrollments.index', [$academicClass, 'status' => $value]) }}">{{ $label }}</a>@endforeach</div>
+        <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm"><div class="overflow-x-auto"><table class="min-w-full divide-y divide-slate-200 text-sm"><thead class="bg-slate-50"><tr><x-table.th>No. induk</x-table.th><x-table.th>Nama</x-table.th><x-table.th>Mulai</x-table.th><x-table.th>Status</x-table.th><x-table.th align="right">Aksi</x-table.th></tr></thead><tbody class="divide-y divide-slate-100">@forelse ($enrollments as $enrollment)<tr><x-table.td>{{ $enrollment->student->student_number }}</x-table.td><x-table.td>{{ $enrollment->student->full_name }}</x-table.td><x-table.td>{{ $enrollment->start_date?->format('d/m/Y') }}</x-table.td><x-table.td><x-badge :variant="$enrollment->enrollment_status" dot>{{ $enrollment->enrollment_status }}</x-badge></x-table.td><x-table.td align="right"><x-button size="sm" variant="secondary" href="{{ route('admin.enrollments.show', $enrollment) }}">Detail</x-button></x-table.td></tr>@empty<tr><x-table.td colspan="5">Belum ada histori penempatan pada kelas ini.</x-table.td></tr>@endforelse</tbody></table></div></div>
+    </div>
+@endsection
