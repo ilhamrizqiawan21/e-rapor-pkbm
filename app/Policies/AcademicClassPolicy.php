@@ -75,6 +75,7 @@ class AcademicClassPolicy
     private function belongsToInstitution(User $user, AcademicClass $academicClass): bool
     {
         return $user->isActive()
-            && $academicClass->program()->where('institution_id', $user->institution_id)->exists();
+            && $academicClass->program()->where('institution_id', $user->institution_id)->exists()
+            && $academicClass->academicYear()->where('institution_id', $user->institution_id)->exists();
     }
 }
