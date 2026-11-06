@@ -6,6 +6,7 @@ use App\Models\Student;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
+/** Validates student PII and tenant-unique identifiers for creation. */
 class StoreStudentRequest extends FormRequest
 {
     public function authorize(): bool

@@ -5,6 +5,9 @@ namespace App\Policies;
 use App\Models\Enrollment;
 use App\Models\User;
 
+/**
+ * Applies the class access boundary to student placement records.
+ */
 class EnrollmentPolicy
 {
     public function viewAny(User $user): bool
@@ -14,6 +17,8 @@ class EnrollmentPolicy
 
     public function view(User $user, Enrollment $enrollment): bool
     {
+        // Delegating class scope to AcademicClassPolicy keeps enrollment access
+        // consistent with the class and teaching relationships used elsewhere.
         return $user->isActive()
             && $enrollment->academicClass?->program?->institution_id === $user->institution_id
             && $user->can('view', $enrollment->academicClass);

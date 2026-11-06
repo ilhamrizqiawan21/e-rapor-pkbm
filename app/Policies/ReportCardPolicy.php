@@ -5,6 +5,9 @@ namespace App\Policies;
 use App\Models\ReportCard;
 use App\Models\User;
 
+/**
+ * Encodes report-card workflow permissions and the immutable LOCKED boundary.
+ */
 class ReportCardPolicy
 {
     /**
@@ -36,6 +39,8 @@ class ReportCardPolicy
      */
     public function update(User $user, ReportCard $reportCard): bool
     {
+        // Locked cards are final output; no role may edit them through normal
+        // entry endpoints, including Admin.
         if (! $this->belongsToInstitution($user, $reportCard) || $reportCard->status === 'LOCKED') {
             return false;
         }
@@ -132,6 +137,7 @@ class ReportCardPolicy
 
     public function lock(User $user, ReportCard $reportCard): bool
     {
+        // Locking is an explicit Admin action and is valid only after approval.
         return $reportCard->status === 'APPROVED'
             && $this->belongsToInstitution($user, $reportCard)
             && $user->hasRole('ADMIN');
@@ -139,6 +145,8 @@ class ReportCardPolicy
 
     public function unlock(User $user, ReportCard $reportCard): bool
     {
+        // Reopening final output is restricted to Admin and remains auditable by
+        // the workflow service.
         return $reportCard->status === 'LOCKED'
             && $this->belongsToInstitution($user, $reportCard)
             && $user->hasRole('ADMIN');

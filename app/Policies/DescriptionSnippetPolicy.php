@@ -5,6 +5,9 @@ namespace App\Policies;
 use App\Models\DescriptionSnippet;
 use App\Models\User;
 
+/**
+ * Separates institution-wide reusable snippets from teacher-owned private text.
+ */
 class DescriptionSnippetPolicy
 {
     public function viewAny(User $user): bool
@@ -19,6 +22,8 @@ class DescriptionSnippetPolicy
         }
 
         if ($snippet->isShared()) {
+            // Shared snippets are reusable within the same institution, including
+            // for teachers who did not create them.
             return true;
         }
 

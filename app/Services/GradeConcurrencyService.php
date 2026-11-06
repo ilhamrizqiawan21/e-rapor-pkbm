@@ -10,6 +10,9 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\DB;
 use InvalidArgumentException;
 
+/**
+ * Prevents stale grade-entry screens from overwriting a newer teacher edit.
+ */
 final class GradeConcurrencyService
 {
     /**
@@ -65,6 +68,8 @@ final class GradeConcurrencyService
 
             $this->assertTimestampMatches($current, $expected);
 
+            // The lock and timestamp check must occur in the same transaction as
+            // the write; otherwise two concurrent requests can both pass stale data.
             $current->fill($attributes);
             $current->saveOrFail();
 

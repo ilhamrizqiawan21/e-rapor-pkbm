@@ -8,6 +8,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Validator;
 
+/** Revalidates class relations on update to prevent tenant reassignment. */
 class UpdateAcademicClassRequest extends FormRequest
 {
     public function authorize(): bool

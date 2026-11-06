@@ -6,6 +6,7 @@ use App\Enums\RoleCode;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\Password;
 
+/** Allows only Admins to set a strong replacement password for a user account. */
 class ResetUserPasswordRequest extends FormRequest
 {
     /**

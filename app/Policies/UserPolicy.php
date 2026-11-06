@@ -5,6 +5,9 @@ namespace App\Policies;
 use App\Enums\RoleCode;
 use App\Models\User;
 
+/**
+ * Admin-only management of Guru accounts, scoped to the current institution.
+ */
 class UserPolicy
 {
     public function viewAny(User $user): bool
@@ -34,6 +37,8 @@ class UserPolicy
 
     private function canManageTeacher(User $user, User $teacher): bool
     {
+        // The managed account must remain a Guru in the same tenant; this blocks
+        // role escalation and cross-institution user-id probing.
         return $this->isAdminInInstitution($user)
             && $user->institution_id === $teacher->institution_id
             && $teacher->hasRole(RoleCode::Guru);

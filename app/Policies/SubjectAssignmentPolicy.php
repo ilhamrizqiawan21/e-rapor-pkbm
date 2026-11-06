@@ -6,6 +6,10 @@ use App\Models\SubjectAssignment;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 
+/**
+ * Limits subject-assignment visibility to Admin/Kepala PKBM or the assigned
+ * teacher while retaining institution isolation.
+ */
 class SubjectAssignmentPolicy
 {
     /**

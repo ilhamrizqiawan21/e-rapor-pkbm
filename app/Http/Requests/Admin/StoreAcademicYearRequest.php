@@ -9,6 +9,7 @@ use Illuminate\Support\Fluent;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Validator;
 
+/** Validates academic-period dates and explicit closure confirmation. */
 class StoreAcademicYearRequest extends FormRequest
 {
     protected function prepareForValidation(): void

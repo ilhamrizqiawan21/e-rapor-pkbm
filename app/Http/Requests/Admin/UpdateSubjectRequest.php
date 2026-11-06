@@ -6,6 +6,7 @@ use App\Models\Subject;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Validation\Rule;
 
+/** Reuses subject validation while excluding the current subject from uniqueness. */
 class UpdateSubjectRequest extends StoreSubjectRequest
 {
     public function authorize(): bool

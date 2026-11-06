@@ -41,7 +41,7 @@
 
         <section class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xs">
             <div class="border-b border-slate-100 px-6 py-5"><h3 class="font-semibold text-slate-950">Arsip backup</h3><p class="mt-1 text-sm text-slate-500">File berada pada penyimpanan private dan tidak dapat diakses dari URL publik.</p></div>
-            <div class="overflow-x-auto">
+            <div class="hidden overflow-x-auto md:block">
                 <table class="min-w-[760px] divide-y divide-slate-200 text-sm">
                     <thead class="bg-slate-50"><tr><x-table.th>Nama file</x-table.th><x-table.th>Ukuran</x-table.th><x-table.th>Diubah</x-table.th><x-table.th>SHA-256</x-table.th><x-table.th align="right">Aksi</x-table.th></tr></thead>
                     <tbody class="divide-y divide-slate-100">
@@ -52,6 +52,18 @@
                         @endforelse
                     </tbody>
                 </table>
+            </div>
+            <div class="space-y-3 p-4 md:hidden">
+                @forelse ($backups as $backup)
+                    <article class="rounded-xl border border-slate-200 p-4" data-responsive-card>
+                        <div class="flex items-start justify-between gap-3"><p class="break-all text-sm font-semibold text-slate-900">{{ $backup['name'] }}</p><span class="shrink-0 text-xs text-slate-500">{{ number_format($backup['size'] / 1024, 1, ',', '.') }} KB</span></div>
+                        <p class="mt-2 text-xs text-slate-500">Diubah {{ $backup['modified_at']->format('d/m/Y H:i') }}</p>
+                        <div class="mt-3 rounded-lg bg-slate-50 p-3"><p class="text-[11px] font-semibold uppercase tracking-wide text-slate-500">SHA-256</p><code class="mt-1 block break-all text-[11px] text-slate-600">{{ $backup['checksum'] }}</code></div>
+                        <div class="mt-3"><x-button href="{{ route('admin.backups.download', ['backup' => $backup['name']]) }}" size="sm" variant="secondary">Unduh backup</x-button></div>
+                    </article>
+                @empty
+                    <p class="px-2 py-8 text-center text-sm text-slate-500">Belum ada backup database.</p>
+                @endforelse
             </div>
         </section>
     </div>

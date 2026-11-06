@@ -6,6 +6,9 @@ use App\Models\AuditLog;
 use App\Models\Institution;
 use App\Models\User;
 
+/**
+ * Writes immutable operational events while avoiding records without a tenant.
+ */
 final class AuditLogger
 {
     /**
@@ -25,6 +28,8 @@ final class AuditLogger
         $institutionId ??= $actor?->institution_id;
 
         if ($institutionId === null) {
+            // A tenant-less event cannot be safely attributed and is discarded
+            // rather than creating an audit row with an ambiguous owner.
             return;
         }
 

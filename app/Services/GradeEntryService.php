@@ -27,6 +27,10 @@ use Illuminate\Validation\ValidationException;
 use InvalidArgumentException;
 use LogicException;
 
+/**
+ * Coordinates grade-grid reads and writes while enforcing period, assignment,
+ * workflow, and audit invariants.
+ */
 final class GradeEntryService
 {
     public function __construct(
@@ -88,6 +92,8 @@ final class GradeEntryService
      */
     public function saveRow(User $actor, array $data): ReportGrade
     {
+        // Context is resolved from tenant-scoped relations before the row is
+        // written, so submitted ids cannot redirect a grade to another class.
         $this->assertCanEdit($actor);
         $context = $this->contextForWrite($actor, $data);
         $this->validateRowInput($data);

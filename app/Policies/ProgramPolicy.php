@@ -5,6 +5,9 @@ namespace App\Policies;
 use App\Models\Program;
 use App\Models\User;
 
+/**
+ * Authorizes PKBM program configuration within the current institution.
+ */
 class ProgramPolicy
 {
     public function viewAny(User $user): bool
@@ -29,6 +32,8 @@ class ProgramPolicy
 
     public function delete(User $user, Program $program): bool
     {
+        // Programs are configuration roots; existing levels/classes make a hard
+        // delete unsafe and therefore require an explicit archival workflow.
         return $this->belongsToInstitution($user, $program)
             && $user->hasRole('ADMIN')
             && ! $program->levels()->exists()

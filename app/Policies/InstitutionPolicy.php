@@ -5,6 +5,10 @@ namespace App\Policies;
 use App\Models\Institution;
 use App\Models\User;
 
+/**
+ * Prevents cross-institution access and intentionally disallows institution
+ * deletion because it is the tenant boundary for all operational records.
+ */
 class InstitutionPolicy
 {
     /**
@@ -44,6 +48,8 @@ class InstitutionPolicy
      */
     public function delete(User $user, Institution $institution): bool
     {
+        // Institutions are retained as the ownership root for audit and report
+        // history; removal is an operational procedure, not a CRUD action.
         return false;
     }
 

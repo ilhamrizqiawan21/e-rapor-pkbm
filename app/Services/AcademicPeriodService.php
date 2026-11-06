@@ -11,6 +11,9 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
+/**
+ * Applies period lifecycle invariants for academic years and semesters.
+ */
 final class AcademicPeriodService
 {
     /**
@@ -116,6 +119,8 @@ final class AcademicPeriodService
      */
     private function assertClosureConfirmed(string $status, array $data): void
     {
+        // Closing a period is irreversible for normal users, so it requires an
+        // explicit confirmation field in addition to the status value.
         if ($status === AcademicYearStatus::Closed->value || $status === SemesterStatus::Closed->value) {
             if (! filter_var($data['confirm_closure'] ?? false, FILTER_VALIDATE_BOOLEAN)) {
                 throw ValidationException::withMessages([

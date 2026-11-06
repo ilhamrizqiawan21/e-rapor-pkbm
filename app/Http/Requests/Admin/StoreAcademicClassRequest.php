@@ -8,6 +8,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Validator;
 
+/** Validates class relations and keeps every referenced record in one institution. */
 class StoreAcademicClassRequest extends FormRequest
 {
     public function authorize(): bool

@@ -8,6 +8,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Validator;
 
+/** Revalidates mapping ownership and blocks edits after academic closure. */
 class UpdateSubjectAssignmentRequest extends FormRequest
 {
     public function authorize(): bool

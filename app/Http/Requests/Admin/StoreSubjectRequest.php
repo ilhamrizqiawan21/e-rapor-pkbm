@@ -7,6 +7,7 @@ use Illuminate\Database\Query\Builder;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
+/** Validates customizable subject metadata scoped to the current institution. */
 class StoreSubjectRequest extends FormRequest
 {
     public function authorize(): bool

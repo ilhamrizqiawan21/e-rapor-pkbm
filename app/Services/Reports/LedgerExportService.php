@@ -16,6 +16,10 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
+/**
+ * Builds ledger exports from printable report cards visible to the actor's
+ * institution and teaching scope.
+ */
 final class LedgerExportService
 {
     public const PRINTABLE_STATUSES = ['APPROVED', 'LOCKED'];
@@ -102,6 +106,8 @@ final class LedgerExportService
     /** @return Collection<int, AcademicClass> */
     private function permittedClasses(User $actor, Semester $semester): Collection
     {
+        // The institution predicate is applied before the optional teacher
+        // assignment filter to prevent cross-tenant class-id probing.
         $query = AcademicClass::query()
             ->with(['academicYear', 'program.institution', 'level', 'homeroomTeacher.staffProfile'])
             ->where('academic_year_id', $semester->academic_year_id)
@@ -175,6 +181,8 @@ final class LedgerExportService
             $reportingId = (int) ($enrollment->reporting_enrollment_id ?: $enrollment->getKey());
             $reportCard = $reportCards->get($reportingId);
 
+            // A transfer may point to a reporting enrollment; verify the student
+            // identity again before including a card in the exported ledger.
             if (! $reportCard instanceof ReportCard || $reportCard->enrollment?->student_id !== $enrollment->student_id) {
                 continue;
             }

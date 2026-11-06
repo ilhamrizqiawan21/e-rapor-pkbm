@@ -7,6 +7,10 @@ use App\Exceptions\PdfEngineUnavailable;
 use Symfony\Component\Process\ExecutableFinder;
 use Symfony\Component\Process\Process;
 
+/**
+ * Renders trusted application HTML in an isolated temporary directory and
+ * removes all intermediate files after the PDF is produced.
+ */
 final class ChromePdfEngine implements PdfEngine
 {
     public function __construct(
@@ -36,6 +40,8 @@ final class ChromePdfEngine implements PdfEngine
         $pdfPath = $directory.DIRECTORY_SEPARATOR.'report.pdf';
 
         try {
+            // The HTML and PDF are private temporary artifacts and must not remain
+            // on disk after the request, including when the renderer fails.
             if (file_put_contents($htmlPath, $html, LOCK_EX) === false) {
                 throw new PdfEngineUnavailable('HTML rapor tidak dapat ditulis ke folder sementara.');
             }

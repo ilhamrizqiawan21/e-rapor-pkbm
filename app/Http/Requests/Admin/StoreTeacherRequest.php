@@ -7,6 +7,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
 
+/** Validates a new Guru account and its institution-owned staff metadata. */
 class StoreTeacherRequest extends FormRequest
 {
     public function authorize(): bool

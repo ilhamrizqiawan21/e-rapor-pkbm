@@ -9,6 +9,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Validator;
 
+/** Validates a subject-teacher mapping and its 0–100 minimum score. */
 class StoreSubjectAssignmentRequest extends FormRequest
 {
     public function authorize(): bool

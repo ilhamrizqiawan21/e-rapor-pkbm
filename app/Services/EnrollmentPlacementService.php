@@ -13,6 +13,10 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
+/**
+ * Maintains one active placement per student and academic year, including the
+ * audit trail required for withdrawals and class transfers.
+ */
 class EnrollmentPlacementService
 {
     public function enroll(
@@ -48,6 +52,8 @@ class EnrollmentPlacementService
                 ]);
             }
 
+            // The reporting enrollment is initialized to the first placement so
+            // later transfers can choose a deterministic report source.
             $enrollment = Enrollment::query()->create([
                 'student_id' => $lockedStudent->getKey(),
                 'class_id' => $lockedClass->getKey(),
@@ -200,6 +206,8 @@ class EnrollmentPlacementService
                 ? $newEnrollment->getKey()
                 : (int) $reportingEnrollmentId;
 
+            // Only the two enrollments in this transaction may supply the report;
+            // accepting another id would make transfer history ambiguous.
             if (! in_array($reportingId, [$source->getKey(), $newEnrollment->getKey()], true)) {
                 throw ValidationException::withMessages([
                     'reporting_enrollment_id' => 'Sumber rapor harus enrollment asal atau enrollment tujuan transfer ini.',

@@ -8,6 +8,9 @@ use App\Models\AcademicYear;
 use App\Models\Semester;
 use App\Models\User;
 
+/**
+ * Prevents edits to semesters after either the semester or parent year closes.
+ */
 class SemesterPolicy
 {
     public function viewAny(User $user): bool
@@ -30,6 +33,8 @@ class SemesterPolicy
 
     public function update(User $user, Semester $semester): bool
     {
+        // Parent-period closure is inherited by its semesters to protect the
+        // historical meaning of published grades.
         return $this->belongsToInstitution($user, $semester)
             && $user->hasRole('ADMIN')
             && $semester->status !== SemesterStatus::Closed

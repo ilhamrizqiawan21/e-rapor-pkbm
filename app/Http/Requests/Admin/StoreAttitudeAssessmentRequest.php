@@ -6,6 +6,7 @@ use App\Models\ReportCard;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
+/** Validates the two supported attitude dimensions on an editable report card. */
 class StoreAttitudeAssessmentRequest extends FormRequest
 {
     public function authorize(): bool

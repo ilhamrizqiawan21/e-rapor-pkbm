@@ -9,6 +9,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Validator;
 
+/** Validates account/manual signer selection within the current institution. */
 class UpdateSignatorySettingsRequest extends FormRequest
 {
     public function authorize(): bool

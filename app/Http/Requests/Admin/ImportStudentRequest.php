@@ -5,6 +5,7 @@ namespace App\Http\Requests\Admin;
 use App\Models\Student;
 use Illuminate\Foundation\Http\FormRequest;
 
+/** Accepts only a server-issued preview token for the final student import. */
 class ImportStudentRequest extends FormRequest
 {
     public function authorize(): bool

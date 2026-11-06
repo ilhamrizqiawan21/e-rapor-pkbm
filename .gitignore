@@ -26,6 +26,7 @@
 /database/*.sqlite
 /playwright-report
 /test-results
+/ui-audit-artifacts
 /vendor
 _ide_helper.php
 Homestead.json

@@ -5,6 +5,7 @@ namespace App\Http\Requests\Admin;
 use App\Models\ReportCard;
 use Illuminate\Foundation\Http\FormRequest;
 
+/** Validates one 0–100 report-grade mutation against its routed card. */
 class StoreReportGradeRequest extends FormRequest
 {
     public function authorize(): bool

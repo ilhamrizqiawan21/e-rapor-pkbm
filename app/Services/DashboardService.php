@@ -15,6 +15,10 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 
+/**
+ * Builds role-specific dashboard projections from authorized tenant context;
+ * it does not grant access to records by itself.
+ */
 final class DashboardService
 {
     /** @return array<string, mixed> */
@@ -257,6 +261,8 @@ final class DashboardService
 
     private function resolveRole(User $user, ?string $requestedRole): ?string
     {
+        // A requested role is accepted only when the account actually owns it;
+        // the dashboard selector must never become a privilege-escalation path.
         if ($requestedRole !== null && $user->hasRole($requestedRole)) {
             return $requestedRole;
         }

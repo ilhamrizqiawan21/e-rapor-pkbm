@@ -6,6 +6,7 @@ use App\Models\AcademicClass;
 use App\Models\SubjectAssignment;
 use Illuminate\Foundation\Http\FormRequest;
 
+/** Requires access to the target and source class before copying configuration. */
 class CopySubjectAssignmentRequest extends FormRequest
 {
     public function authorize(): bool

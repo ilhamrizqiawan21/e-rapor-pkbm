@@ -7,6 +7,7 @@ use Illuminate\Database\Query\Builder;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
+/** Validates a level within the selected PKBM program. */
 class StoreLevelRequest extends FormRequest
 {
     public function authorize(): bool

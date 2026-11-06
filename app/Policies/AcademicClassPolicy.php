@@ -5,6 +5,9 @@ namespace App\Policies;
 use App\Models\AcademicClass;
 use App\Models\User;
 
+/**
+ * Authorizes class access within the user's institution and teaching scope.
+ */
 class AcademicClassPolicy
 {
     /**
@@ -20,6 +23,8 @@ class AcademicClassPolicy
      */
     public function view(User $user, AcademicClass $academicClass): bool
     {
+        // Admin and headmaster may inspect all local classes; teachers are
+        // limited to homeroom or subject-assignment relationships.
         if (! $this->belongsToInstitution($user, $academicClass)) {
             return false;
         }
@@ -74,6 +79,8 @@ class AcademicClassPolicy
 
     private function belongsToInstitution(User $user, AcademicClass $academicClass): bool
     {
+        // Checking both relations prevents an arbitrary class/year id from
+        // crossing institution boundaries through route model binding.
         return $user->isActive()
             && $academicClass->program()->where('institution_id', $user->institution_id)->exists()
             && $academicClass->academicYear()->where('institution_id', $user->institution_id)->exists();

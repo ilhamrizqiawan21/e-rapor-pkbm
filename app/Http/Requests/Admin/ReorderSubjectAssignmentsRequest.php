@@ -6,6 +6,7 @@ use App\Models\AcademicClass;
 use App\Models\SubjectAssignment;
 use Illuminate\Foundation\Http\FormRequest;
 
+/** Normalizes either assignment ids or display orders into one safe ordering. */
 class ReorderSubjectAssignmentsRequest extends FormRequest
 {
     public function authorize(): bool

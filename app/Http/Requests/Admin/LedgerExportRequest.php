@@ -4,6 +4,7 @@ namespace App\Http\Requests\Admin;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+/** Restricts ledger output to supported, auditable export formats. */
 final class LedgerExportRequest extends FormRequest
 {
     public function authorize(): bool

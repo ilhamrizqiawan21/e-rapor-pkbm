@@ -5,6 +5,7 @@ namespace App\Http\Requests\Admin;
 use App\Models\ReportCard;
 use Illuminate\Foundation\Http\FormRequest;
 
+/** Requires the Admin-only reason recorded when a locked report is reopened. */
 class UnlockReportCardRequest extends FormRequest
 {
     public function authorize(): bool

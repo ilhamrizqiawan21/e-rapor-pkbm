@@ -11,6 +11,10 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\ValidationException;
 
+/**
+ * Manages report-card extracurricular and homeroom-note content within the
+ * same editability boundary as grades.
+ */
 final class ReportCardExtrasService
 {
     public const HOMEROOM_NOTE_MAX_LENGTH = 500;
@@ -88,6 +92,8 @@ final class ReportCardExtrasService
 
     private function lockEditableReportCard(ReportCard $reportCard, User $actor): ReportCard
     {
+        // A row lock keeps extras consistent with simultaneous workflow or grade
+        // updates and ensures the locked status is checked on current data.
         $locked = ReportCard::query()
             ->with(['enrollment.academicClass.program'])
             ->lockForUpdate()

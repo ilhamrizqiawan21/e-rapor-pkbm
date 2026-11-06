@@ -14,8 +14,13 @@ test.describe('11 workflow audit browser flows', () => {
 
         await page.goto('/admin/audit-logs');
         await expect(page.getByRole('heading', { name: 'Histori audit', exact: true })).toBeVisible();
-        await expect(page.getByLabel('Actor')).toBeVisible();
+        await expect(page.getByLabel('Pengguna')).toBeVisible();
         await expect(page.getByLabel('Aksi')).toBeVisible();
-        await expect(page.getByRole('table').getByText('Login', { exact: true }).first()).toBeVisible();
+
+        const loginAction = test.info().project.name === 'mobile-chrome'
+            ? page.locator('[data-responsive-card]').getByText('Login', { exact: true }).first()
+            : page.getByRole('table').getByText('Login', { exact: true }).first();
+
+        await expect(loginAction).toBeVisible();
     });
 });

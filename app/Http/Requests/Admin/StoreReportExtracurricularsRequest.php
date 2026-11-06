@@ -6,6 +6,7 @@ use App\Models\ReportCard;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Validator;
 
+/** Validates repeatable extracurricular rows for an editable report card. */
 class StoreReportExtracurricularsRequest extends FormRequest
 {
     public function authorize(): bool

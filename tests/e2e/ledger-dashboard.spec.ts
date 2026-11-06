@@ -26,7 +26,7 @@ test.describe('13-14 leger and dashboard browser flows', () => {
         await page.getByRole('menuitem', { name: 'Keluar' }).click();
         await login(page, 'guru', '/dashboard/guru');
         await expect(page.getByRole('heading', { name: 'Ruang kerja penilaian', exact: true })).toBeVisible();
-        await expect(page.getByText('Progress input nilai per mapel', { exact: true })).toBeVisible();
+        await expect(page.getByText('Progres input nilai per mapel', { exact: true })).toBeVisible();
 
         await page.locator('header').getByRole('button', { name: /Akun|Admin Demo|Guru Demo|Kepala PKBM/ }).click();
         await page.getByRole('menuitem', { name: 'Keluar' }).click();

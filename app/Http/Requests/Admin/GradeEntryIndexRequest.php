@@ -5,6 +5,7 @@ namespace App\Http\Requests\Admin;
 use App\Models\ReportCard;
 use Illuminate\Foundation\Http\FormRequest;
 
+/** Validates grade-grid filters while leaving relation scoping to the service. */
 class GradeEntryIndexRequest extends FormRequest
 {
     public function authorize(): bool

@@ -5,6 +5,10 @@ namespace App\Policies;
 use App\Models\ClassTransfer;
 use App\Models\User;
 
+/**
+ * Controls visibility of class-transfer records without granting teachers the
+ * ability to approve or create transfers.
+ */
 class ClassTransferPolicy
 {
     public function viewAny(User $user): bool
@@ -14,6 +18,8 @@ class ClassTransferPolicy
 
     public function view(User $user, ClassTransfer $transfer): bool
     {
+        // Relations are loaded before authorization because a transfer itself
+        // does not carry every institution/class boundary needed for the check.
         $transfer->loadMissing('student', 'fromEnrollment.academicClass', 'toEnrollment.academicClass');
 
         return $user->isActive()

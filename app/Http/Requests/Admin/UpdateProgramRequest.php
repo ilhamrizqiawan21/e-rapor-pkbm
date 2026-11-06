@@ -6,6 +6,7 @@ use App\Models\Program;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Validation\Rule;
 
+/** Revalidates program metadata while excluding the current program id. */
 class UpdateProgramRequest extends StoreProgramRequest
 {
     public function authorize(): bool

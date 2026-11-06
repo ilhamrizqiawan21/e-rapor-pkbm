@@ -5,6 +5,10 @@ namespace App\Policies;
 use App\Models\AuditLog;
 use App\Models\User;
 
+/**
+ * Audit history is read-only operational evidence, visible only to Admin and
+ * Kepala PKBM within the active institution.
+ */
 class AuditLogPolicy
 {
     public function viewAny(User $user): bool
@@ -21,6 +25,8 @@ class AuditLogPolicy
 
     public function update(): bool
     {
+        // Audit entries must remain immutable so the history cannot be rewritten
+        // by the same interface that displays it.
         return false;
     }
 

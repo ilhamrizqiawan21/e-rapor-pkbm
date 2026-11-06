@@ -8,6 +8,9 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 use LogicException;
 
+/**
+ * Validates the 0–100 minimum score used by grade-entry and predicate logic.
+ */
 final class KkmAssignmentService
 {
     public function assertValid(int|float|string $minimumScore): int
@@ -49,6 +52,8 @@ final class KkmAssignmentService
 
     public function hasLockedGrades(SubjectAssignment $assignment): bool
     {
+        // KKM changes are blocked once output is locked because the old threshold
+        // is part of the meaning of the published report.
         return ReportGrade::query()
             ->where('subject_assignment_id', $assignment->getKey())
             ->whereHas('reportCard', fn ($query) => $query->where('status', 'LOCKED'))

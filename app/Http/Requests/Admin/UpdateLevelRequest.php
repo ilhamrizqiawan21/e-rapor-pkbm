@@ -7,6 +7,7 @@ use App\Models\Program;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Validation\Rule;
 
+/** Revalidates level ownership and uniqueness without changing its parent scope. */
 class UpdateLevelRequest extends StoreLevelRequest
 {
     public function authorize(): bool

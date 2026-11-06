@@ -5,6 +5,7 @@ namespace App\Http\Requests\Admin;
 use App\Models\SubjectAssignment;
 use Illuminate\Foundation\Http\FormRequest;
 
+/** Validates an Admin-only teacher assignment batch without duplicate ids. */
 class BulkAssignSubjectTeacherRequest extends FormRequest
 {
     public function authorize(): bool

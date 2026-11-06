@@ -6,6 +6,7 @@ use App\Models\ReportCard;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Validator;
 
+/** Limits attendance components to a coherent calendar-year total. */
 class StoreAttendanceSummaryRequest extends FormRequest
 {
     public function authorize(): bool

@@ -13,6 +13,10 @@ use Illuminate\Support\Str;
 use Symfony\Component\Process\Process;
 use Throwable;
 
+/**
+ * Creates private, optionally encrypted database artifacts and restores them
+ * only after format, size, and post-restore checks succeed.
+ */
 final class DatabaseBackupService
 {
     private const ENCRYPTION_PREFIX = 'ERAPOR-BACKUP-ENC-1:';
@@ -20,6 +24,8 @@ final class DatabaseBackupService
     /** @return array{name: string, path: string, driver: string, size: int, checksum: string, created_at: Carbon, pruned: int} */
     public function create(): array
     {
+        // The filename carries driver and microsecond timestamp so artifacts are
+        // sortable and do not collide during manual/scheduled runs.
         $driver = (string) config('database.connections.'.config('database.default').'.driver');
         $now = now();
         $extension = in_array($driver, ['sqlite'], true) ? 'sqlite' : 'sql.gz';
@@ -96,6 +102,8 @@ final class DatabaseBackupService
             throw new BackupException('File backup melebihi batas ukuran yang diizinkan.');
         }
 
+        // A safety backup is created before replacing the live database, making
+        // a destructive restore recoverable even when the supplied dump is bad.
         [$restorePath, $temporaryRestorePath] = $this->materializeRestoreSource($sourcePath, $originalName);
         $safetyBackup = $this->create();
         $driver = (string) config('database.connections.'.config('database.default').'.driver');
@@ -178,6 +186,8 @@ final class DatabaseBackupService
 
     private function dumpMysql(): string
     {
+        // MYSQL_PWD is passed only to the child process; credentials are never
+        // appended to the command line where process listings could expose them.
         $connection = config('database.connections.'.config('database.default'));
         $process = new Process([
             (string) config('backup.binaries.mysqldump', 'mysqldump'),
@@ -237,6 +247,8 @@ final class DatabaseBackupService
 
         $target = $this->resolveDatabasePath($database);
         $temporary = $target.'.restore-'.Str::uuid();
+        // Replace through a temporary file so a failed copy does not truncate the
+        // live SQLite database.
         if (! @copy($sourcePath, $temporary) || ! @rename($temporary, $target)) {
             @unlink($temporary);
             throw new BackupException('File database SQLite tidak dapat diganti.');
@@ -312,6 +324,8 @@ final class DatabaseBackupService
 
     private function smokeTest(): void
     {
+        // Reconnect before checking tables because SQLite and long-lived workers
+        // may still hold a connection to the pre-restore file.
         DB::purge(config('database.default'));
         DB::reconnect(config('database.default'));
         DB::select('select 1');
@@ -363,6 +377,8 @@ final class DatabaseBackupService
     private function writeBackup(Filesystem $disk, string $relativePath, string $contents): void
     {
         if (config('backup.encryption')) {
+            // Encryption covers the complete dump before it reaches the storage
+            // adapter; the prefix lets restore reject unrelated APP_KEY payloads.
             try {
                 $contents = Crypt::encryptString(self::ENCRYPTION_PREFIX.$contents);
             } catch (Throwable $exception) {

@@ -12,6 +12,10 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\ValidationException;
 
+/**
+ * Persists homeroom attitude and attendance data through editable report-card
+ * surfaces and records the resulting operational change.
+ */
 final class ReportCardAssessmentService
 {
     public const ATTITUDE_TYPES = ['SPIRITUAL', 'SOCIAL'];
@@ -92,6 +96,8 @@ final class ReportCardAssessmentService
     /** @param array<string, mixed> $days */
     private function assertAttendanceDays(array $days): void
     {
+        // The component totals describe days within one calendar year; accepting
+        // more than 366 would make the report internally inconsistent.
         foreach (['sick_days', 'leave_days', 'unexcused_days'] as $key) {
             $value = $days[$key] ?? null;
 

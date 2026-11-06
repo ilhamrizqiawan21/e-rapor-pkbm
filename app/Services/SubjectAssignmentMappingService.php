@@ -13,6 +13,10 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
+/**
+ * Performs bulk subject-assignment changes while preserving class/period scope
+ * and locking affected class configuration.
+ */
 final class SubjectAssignmentMappingService
 {
     /**
@@ -322,6 +326,8 @@ final class SubjectAssignmentMappingService
 
     private function assertUnlockedAssignment(SubjectAssignment $assignment): void
     {
+        // An assignment with grades already locked is part of published output;
+        // changing its mapping would invalidate that output.
         $hasLockedGrades = ReportGrade::query()
             ->where('subject_assignment_id', $assignment->getKey())
             ->whereIn('report_card_id', ReportCard::query()->select('id')->where('status', 'LOCKED'))

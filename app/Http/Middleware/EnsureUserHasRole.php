@@ -6,6 +6,10 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Keeps role checks at the HTTP boundary so unauthorized users never reach
+ * controller actions that may expose or mutate institution data.
+ */
 class EnsureUserHasRole
 {
     /**
@@ -13,6 +17,7 @@ class EnsureUserHasRole
      */
     public function handle(Request $request, Closure $next, string ...$roles): Response
     {
+        // A missing user and an inactive user both fail closed through hasAnyRole().
         abort_unless($request->user()?->hasAnyRole($roles), 403);
 
         return $next($request);

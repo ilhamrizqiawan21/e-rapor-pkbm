@@ -16,6 +16,9 @@
     $inputId = $id ?? ($name ? 'input-' . $name : 'input-' . uniqid());
     $errorMessage = $error ?? (isset($errors) && $name && $errors->has($name) ? $errors->first($name) : null);
     $hasError = !empty($errorMessage);
+    $hintId = $inputId . '-hint';
+    $errorId = $inputId . '-error';
+    $describedBy = $attributes->get('aria-describedby') ?: ($hasError ? $errorId : ($hint ? $hintId : null));
 
     $inputClasses = 'block w-full rounded-lg border bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 transition focus:outline-hidden disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-500';
 
@@ -47,7 +50,8 @@
             @if ($type === 'password') x-bind:type="showPassword ? 'text' : 'password'" @else type="{{ $type }}" @endif
             @if ($name) name="{{ $name }}" @endif
             id="{{ $inputId }}"
-            @if ($hasError) aria-invalid="true" aria-describedby="{{ $inputId }}-error" @endif
+            @if ($hasError) aria-invalid="true" @endif
+            @if ($describedBy) aria-describedby="{{ $describedBy }}" @endif
             @if ($value !== null) value="{{ $value }}" @endif
             @if ($placeholder) placeholder="{{ $placeholder }}" @endif
             @if ($required) required @endif
@@ -83,6 +87,6 @@
             <span>{{ $errorMessage }}</span>
         </p>
     @elseif ($hint)
-        <p class="text-xs text-slate-500">{{ $hint }}</p>
+        <p id="{{ $hintId }}" class="text-xs text-slate-500">{{ $hint }}</p>
     @endif
 </div>

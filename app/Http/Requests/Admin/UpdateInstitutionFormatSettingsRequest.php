@@ -5,6 +5,7 @@ namespace App\Http\Requests\Admin;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
+/** Validates institution-owned report formatting and display preferences. */
 class UpdateInstitutionFormatSettingsRequest extends FormRequest
 {
     public function authorize(): bool

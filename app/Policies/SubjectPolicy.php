@@ -5,6 +5,9 @@ namespace App\Policies;
 use App\Models\Subject;
 use App\Models\User;
 
+/**
+ * Authorizes customizable subject configuration within one institution.
+ */
 class SubjectPolicy
 {
     public function viewAny(User $user): bool
@@ -29,6 +32,8 @@ class SubjectPolicy
 
     public function delete(User $user, Subject $subject): bool
     {
+        // Assigned subjects are historical/reporting dependencies and cannot be
+        // removed while any class still references them.
         return $this->belongsToInstitution($user, $subject)
             && $user->hasRole('ADMIN')
             && ! $subject->assignments()->exists();

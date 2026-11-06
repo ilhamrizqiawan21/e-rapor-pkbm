@@ -5,6 +5,7 @@ namespace App\Http\Requests\Admin;
 use App\Models\ReportCard;
 use Illuminate\Foundation\Http\FormRequest;
 
+/** Validates the manually managed document number on an editable report card. */
 class UpdateReportCardIdentityRequest extends FormRequest
 {
     public function authorize(): bool

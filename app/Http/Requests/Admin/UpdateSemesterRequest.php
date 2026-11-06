@@ -10,6 +10,7 @@ use Illuminate\Support\Fluent;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Validator;
 
+/** Revalidates semester sequencing and closure rules for the routed period. */
 class UpdateSemesterRequest extends FormRequest
 {
     protected function prepareForValidation(): void

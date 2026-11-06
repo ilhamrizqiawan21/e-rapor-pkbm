@@ -8,6 +8,9 @@ use App\Models\ReportCard;
 use App\Models\ReportGrade;
 use Illuminate\Validation\ValidationException;
 
+/**
+ * Computes the minimum data set required before a report card can advance.
+ */
 final class ReportCardCompletenessService
 {
     /**
@@ -105,6 +108,8 @@ final class ReportCardCompletenessService
 
     public function assertComplete(ReportCard $reportCard): void
     {
+        // Workflow transitions call this gate before submission/approval so an
+        // incomplete card cannot become printable output.
         $summary = $this->summary($reportCard);
 
         if ($summary['complete']) {

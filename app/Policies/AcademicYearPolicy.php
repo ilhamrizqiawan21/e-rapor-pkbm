@@ -5,6 +5,9 @@ namespace App\Policies;
 use App\Models\AcademicYear;
 use App\Models\User;
 
+/**
+ * Keeps academic-period visibility and mutation scoped to one institution.
+ */
 class AcademicYearPolicy
 {
     public function viewAny(User $user): bool
@@ -14,6 +17,8 @@ class AcademicYearPolicy
 
     public function view(User $user, AcademicYear $academicYear): bool
     {
+        // Teachers see a year only when they participate in one of its classes;
+        // this avoids leaking unrelated periods through list/detail endpoints.
         if (! $this->belongsToInstitution($user, $academicYear)) {
             return false;
         }

@@ -6,6 +6,7 @@ use App\Models\Student;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
+/** Validates student PII updates with tenant-scoped identifier uniqueness. */
 class UpdateStudentRequest extends FormRequest
 {
     public function authorize(): bool

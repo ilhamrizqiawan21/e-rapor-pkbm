@@ -5,6 +5,7 @@ namespace App\Http\Requests\Admin;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
+/** Validates one score predicate range before overlap checks in the service. */
 class StorePredicateRangeRequest extends FormRequest
 {
     public function authorize(): bool

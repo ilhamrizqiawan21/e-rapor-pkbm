@@ -12,6 +12,9 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
+/**
+ * Maintains the single homeroom-teacher assignment for an academic class.
+ */
 final class HomeroomAssignmentService
 {
     public function assign(AcademicClass $academicClass, User $teacher, User $assignedBy): HomeroomAssignment
@@ -96,6 +99,8 @@ final class HomeroomAssignmentService
 
     private function lockClass(AcademicClass $academicClass): AcademicClass
     {
+        // Assignment changes serialize on the class row to preserve one current
+        // homeroom relationship under concurrent Admin actions.
         return AcademicClass::query()
             ->with('academicYear')
             ->whereKey($academicClass->getKey())

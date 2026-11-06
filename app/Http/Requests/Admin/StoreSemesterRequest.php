@@ -11,6 +11,7 @@ use Illuminate\Support\Fluent;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Validator;
 
+/** Validates semester sequence/status and explicit closure confirmation. */
 class StoreSemesterRequest extends FormRequest
 {
     protected function prepareForValidation(): void

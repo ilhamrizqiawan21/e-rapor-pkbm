@@ -5,6 +5,7 @@ namespace App\Http\Requests\Admin;
 use App\Models\ReportCard;
 use Illuminate\Foundation\Http\FormRequest;
 
+/** Validates a grade batch while preserving per-row score bounds. */
 class StoreReportGradesRequest extends FormRequest
 {
     public function authorize(): bool

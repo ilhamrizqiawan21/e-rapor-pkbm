@@ -9,6 +9,10 @@ use Illuminate\Support\Facades\DB;
 use InvalidArgumentException;
 use LogicException;
 
+/**
+ * Captures subject and KKM context so later configuration changes do not
+ * rewrite the historical interpretation of a report.
+ */
 final class ReportGradeSnapshotService
 {
     public function __construct(
@@ -70,6 +74,8 @@ final class ReportGradeSnapshotService
 
     private function ensureEditable(ReportCard $reportCard): void
     {
+        // Locked cards are the published record and cannot receive a new grade
+        // snapshot or score mutation.
         if (! in_array($reportCard->status, ['DRAFT', 'NEEDS_REVISION'], true)) {
             throw new LogicException('Nilai hanya dapat diubah saat rapor berstatus Draft atau Perlu Perbaikan.');
         }

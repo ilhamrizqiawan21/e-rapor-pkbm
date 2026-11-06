@@ -6,6 +6,7 @@ use App\Models\PredicateRange;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
+/** Validates an edited predicate range before overlap protection runs. */
 class UpdatePredicateRangeRequest extends FormRequest
 {
     public function authorize(): bool

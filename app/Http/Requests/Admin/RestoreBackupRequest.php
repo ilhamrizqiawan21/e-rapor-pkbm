@@ -4,6 +4,7 @@ namespace App\Http\Requests\Admin;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+/** Requires an Admin and explicit RESTORE confirmation for destructive recovery. */
 final class RestoreBackupRequest extends FormRequest
 {
     public function authorize(): bool

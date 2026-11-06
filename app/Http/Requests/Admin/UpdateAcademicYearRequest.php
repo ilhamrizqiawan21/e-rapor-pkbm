@@ -9,6 +9,7 @@ use Illuminate\Support\Fluent;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Validator;
 
+/** Revalidates period lifecycle fields and closure confirmation on update. */
 class UpdateAcademicYearRequest extends FormRequest
 {
     protected function prepareForValidation(): void

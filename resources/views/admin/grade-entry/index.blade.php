@@ -4,6 +4,7 @@
     $filters = $filters ?? [];
     $gradeErrors = session('grade_errors', []);
     $hasAssignment = $assignment !== null;
+    $hasFilterOptions = $academicYears->isNotEmpty() && $semesters->isNotEmpty() && $academicClasses->isNotEmpty() && $subjects->isNotEmpty();
     $filterParams = collect($filters)->filter(fn ($value) => $value !== null && $value !== '')->all();
 @endphp
 
@@ -29,25 +30,34 @@
 
         <section class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
             <form method="GET" action="{{ route('admin.grade-entry.index') }}" class="grid gap-4 md:grid-cols-2 xl:grid-cols-6 xl:items-end">
-                <x-select name="academic_year_id" label="Tahun pelajaran" :selected="$academicYear?->id" required>
+                <x-select name="academic_year_id" label="Tahun pelajaran" :selected="$academicYear?->id" :disabled="$academicYears->isEmpty()" hint="Pilih periode aktif untuk melanjutkan." required>
                     @foreach ($academicYears as $year)<option value="{{ $year->id }}" @selected($academicYear?->id === $year->id)>{{ $year->name }} · {{ $year->status->label() }}</option>@endforeach
                 </x-select>
-                <x-select name="semester_id" label="Semester" :selected="$semester?->id" required>
+                <x-select name="semester_id" label="Semester" :selected="$semester?->id" :disabled="$semesters->isEmpty()" required>
                     @foreach ($semesters as $item)<option value="{{ $item->id }}" @selected($semester?->id === $item->id)>{{ $item->name }} · {{ $item->status->label() }}</option>@endforeach
                 </x-select>
-                <x-select name="class_id" label="Kelas" :selected="$academicClass?->id" required>
+                <x-select name="class_id" label="Kelas" :selected="$academicClass?->id" :disabled="$academicClasses->isEmpty()" required>
                     @foreach ($academicClasses as $class)<option value="{{ $class->id }}" @selected($academicClass?->id === $class->id)>{{ $class->name }}</option>@endforeach
                 </x-select>
-                <x-select name="subject_id" label="Mata pelajaran" :selected="$assignment?->subject_id" required>
+                <x-select name="subject_id" label="Mata pelajaran" :selected="$assignment?->subject_id" :disabled="$subjects->isEmpty()" required>
                     @foreach ($subjects as $subject)<option value="{{ $subject->id }}" @selected($assignment?->subject_id === $subject->id)>{{ $subject->name }}</option>@endforeach
                 </x-select>
                 <x-input name="search" label="Cari siswa" :value="$filters['search'] ?? ''" placeholder="Nama, NIPD, atau NISN" />
-                <div class="flex gap-2"><x-button type="submit">Tampilkan</x-button><x-button href="{{ route('admin.grade-entry.index') }}" variant="ghost">Reset</x-button></div>
+                <div class="flex flex-wrap gap-2"><x-button type="submit" :disabled="! $hasFilterOptions">Tampilkan</x-button><x-button href="{{ route('admin.grade-entry.index') }}" variant="ghost">Reset</x-button></div>
             </form>
+            @if (! $hasFilterOptions)<p class="mt-4 rounded-lg bg-amber-50 px-3 py-2 text-xs text-amber-900">Pilihan belum tersedia. Admin perlu menyiapkan periode, kelas, dan mata pelajaran terlebih dahulu.</p>@endif
         </section>
 
         @if (! $hasAssignment)
-            <x-empty-state title="Belum ada assignment nilai" description="Pilih konteks yang memiliki penugasan mata pelajaran aktif. Admin perlu memetakan mapel dan Guru terlebih dahulu." />
+            <x-empty-state title="Penugasan nilai belum tersedia" description="Pilih konteks yang memiliki penugasan mata pelajaran aktif. Admin perlu memetakan mapel dan Guru terlebih dahulu.">
+                <x-slot:actions>
+                    @if (auth()->user()->hasRole('ADMIN'))
+                        <x-button href="{{ route('admin.academic-classes.index') }}" variant="primary" size="sm">Atur kelas dan mapel</x-button>
+                    @else
+                        <x-button href="{{ route('dashboard') }}" variant="secondary" size="sm">Kembali ke dashboard</x-button>
+                    @endif
+                </x-slot:actions>
+            </x-empty-state>
         @else
             <form id="grade-entry-form" method="POST" action="{{ route('admin.grade-entry.store-all') }}" class="space-y-4" @submit="dirty = false">
                 @csrf
@@ -61,7 +71,8 @@
                 </div>
 
                 <section class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-                    <div class="overflow-x-auto"><table class="min-w-[1100px] divide-y divide-slate-200 text-sm">
+                    <div class="border-b border-slate-100 bg-slate-50 px-4 py-3 text-xs text-slate-600 md:hidden">Geser tabel ke kanan untuk melihat kolom deskripsi dan aksi.</div>
+                    <div class="overflow-x-auto" role="region" tabindex="0" aria-label="Tabel input nilai peserta didik"><table class="min-w-[1100px] divide-y divide-slate-200 text-sm">
                         <thead class="bg-slate-50"><tr><x-table.th>No.</x-table.th><x-table.th>Peserta didik</x-table.th><x-table.th width="130">Nilai (0–100)</x-table.th><x-table.th width="120">Predikat</x-table.th><x-table.th>Deskripsi capaian</x-table.th><x-table.th>Status</x-table.th><x-table.th align="right">Aksi</x-table.th></tr></thead>
                         <tbody class="divide-y divide-slate-100">
                             @forelse ($students as $index => $enrollment)

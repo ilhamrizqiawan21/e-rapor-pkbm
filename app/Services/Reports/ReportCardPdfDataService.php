@@ -14,6 +14,10 @@ use App\Services\ReportCardIdentityService;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
+/**
+ * Prepares printable report-card data only for approved/locked cards and keeps
+ * institution-specific identity/signatory snapshots in the output context.
+ */
 final class ReportCardPdfDataService
 {
     public const PRINTABLE_STATUSES = ['APPROVED', 'LOCKED'];
@@ -28,6 +32,8 @@ final class ReportCardPdfDataService
     /** @return array<string, mixed> */
     public function data(ReportCard $reportCard): array
     {
+        // Completeness is checked at export time because data may have changed
+        // since workflow approval and a PDF must never hide missing sections.
         $this->assertPrintable($reportCard);
         $this->completeness->assertComplete($reportCard);
 

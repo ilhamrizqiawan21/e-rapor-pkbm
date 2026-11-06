@@ -14,6 +14,10 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 use XMLReader;
 use ZipArchive;
 
+/**
+ * Parses bounded CSV/XLSX uploads into a tenant-scoped preview before any
+ * student rows are persisted.
+ */
 class StudentImportService
 {
     private const MAX_ROWS = 50000;
@@ -67,6 +71,8 @@ class StudentImportService
      */
     public function preview(UploadedFile $file, Institution $institution): array
     {
+        // Preview is intentionally separate from import so operators can review
+        // row-level errors without partially writing personal data.
         $this->assertSafeFile($file);
 
         $rawRows = $this->readRows($file);
@@ -129,6 +135,8 @@ class StudentImportService
      */
     public function import(array $preview, Institution $institution): array
     {
+        // Only rows marked valid by the preview are accepted; the preview token
+        // is not a substitute for the final institution-scoped duplicate checks.
         $validRows = array_values(array_filter(
             $preview['rows'],
             static fn (array $row): bool => $row['errors'] === [],

@@ -16,6 +16,10 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use LogicException;
 
+/**
+ * Applies reusable descriptions without bypassing grade ownership or workflow
+ * editability rules.
+ */
 final class DescriptionSnippetUsageService
 {
     /**
@@ -132,6 +136,8 @@ final class DescriptionSnippetUsageService
 
     private function lockGrade(ReportGrade $grade): ReportGrade
     {
+        // Locking the row for the complete read-modify-write sequence prevents
+        // two tutors from silently overwriting a description update.
         return ReportGrade::query()
             ->whereKey($grade->getKey())
             ->with([

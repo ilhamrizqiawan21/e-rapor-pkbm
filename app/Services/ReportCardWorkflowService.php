@@ -9,6 +9,9 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\ValidationException;
 
+/**
+ * Implements the report-card state machine and its actor/timestamp audit trail.
+ */
 final class ReportCardWorkflowService
 {
     public function __construct(
@@ -150,6 +153,8 @@ final class ReportCardWorkflowService
         callable $changes,
         ?string $reason = null,
     ): ReportCard {
+        // Every transition is serialized and re-authorized against the locked
+        // row so a stale screen cannot skip a workflow state.
         Gate::forUser($actor)->authorize($ability, $reportCard);
 
         return DB::transaction(function () use ($reportCard, $actor, $ability, $fromStatuses, $toStatus, $changes, $reason): ReportCard {

@@ -4,6 +4,7 @@ namespace App\Http\Requests\Admin;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+/** Validates a score preview without permitting persistence through this request. */
 class PreviewPredicateRequest extends FormRequest
 {
     public function authorize(): bool

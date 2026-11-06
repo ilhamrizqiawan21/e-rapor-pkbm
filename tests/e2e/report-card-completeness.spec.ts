@@ -14,6 +14,10 @@ test.describe('10 report card completeness browser flows', () => {
 
         await page.goto('/admin/report-cards');
         await expect(page.getByRole('heading', { name: 'Daftar rapor peserta didik', exact: true })).toBeVisible();
-        await expect(page.getByText('Belum ada rapor pada institusi ini.', { exact: true })).toBeVisible();
+        const emptyState = test.info().project.name === 'mobile-chrome'
+            ? page.locator('p', { hasText: 'Belum ada rapor pada institusi ini.' })
+            : page.getByRole('cell', { name: 'Belum ada rapor pada institusi ini.' });
+
+        await expect(emptyState).toBeVisible();
     });
 });

@@ -9,6 +9,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Validator;
 
+/** Validates same-institution, same-year class transfers approved by Admin. */
 class StoreClassTransferRequest extends FormRequest
 {
     public function authorize(): bool

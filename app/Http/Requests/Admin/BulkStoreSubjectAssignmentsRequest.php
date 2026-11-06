@@ -5,6 +5,7 @@ namespace App\Http\Requests\Admin;
 use App\Models\SubjectAssignment;
 use Illuminate\Foundation\Http\FormRequest;
 
+/** Validates the bounded matrix used to create class-subject assignments. */
 class BulkStoreSubjectAssignmentsRequest extends FormRequest
 {
     public function authorize(): bool

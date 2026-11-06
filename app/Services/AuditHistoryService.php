@@ -14,6 +14,9 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Gate;
 
+/**
+ * Provides tenant-scoped, read-only audit history with bounded pagination.
+ */
 final class AuditHistoryService
 {
     /** @var array<string, class-string|string> */
@@ -31,6 +34,8 @@ final class AuditHistoryService
     /** @return array{auditLogs: LengthAwarePaginator, actors: Collection<int, User>, actions: Collection<int, string>, entityTypes: array<string, class-string|string>, filters: array<string, mixed>} */
     public function page(User $actor, array $filters = []): array
     {
+        // The actor's institution is the mandatory base filter; request filters
+        // can narrow history but never broaden it.
         Gate::forUser($actor)->authorize('viewAny', AuditLog::class);
 
         $base = AuditLog::query()->where('institution_id', $actor->institution_id);

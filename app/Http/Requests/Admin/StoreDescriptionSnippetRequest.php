@@ -8,6 +8,7 @@ use Illuminate\Database\Query\Builder;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
+/** Validates reusable description text and its institution/private visibility. */
 class StoreDescriptionSnippetRequest extends FormRequest
 {
     public function authorize(): bool

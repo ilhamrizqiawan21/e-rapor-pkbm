@@ -5,6 +5,7 @@ namespace App\Http\Requests\Admin;
 use App\Models\AuditLog;
 use Illuminate\Foundation\Http\FormRequest;
 
+/** Validates bounded, tenant-scoped filters for immutable audit history. */
 class AuditHistoryIndexRequest extends FormRequest
 {
     public function authorize(): bool

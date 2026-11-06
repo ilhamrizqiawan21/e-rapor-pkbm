@@ -5,6 +5,7 @@ namespace App\Http\Requests\Admin;
 use App\Models\Institution;
 use Illuminate\Foundation\Http\FormRequest;
 
+/** Validates the tenant identity fields used as the data-ownership boundary. */
 class StoreInstitutionRequest extends FormRequest
 {
     public function authorize(): bool

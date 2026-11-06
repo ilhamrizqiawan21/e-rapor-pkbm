@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
+/** Handles credential validation, active-user checks, and login throttling. */
 class LoginRequest extends FormRequest
 {
     /**
@@ -37,6 +38,8 @@ class LoginRequest extends FormRequest
 
     public function authenticate(): void
     {
+        // Rate limiting uses a normalized login/IP key and runs before the user
+        // lookup to reduce credential-enumeration and brute-force pressure.
         $this->ensureIsNotRateLimited();
 
         $login = $this->string('login')->trim()->toString();

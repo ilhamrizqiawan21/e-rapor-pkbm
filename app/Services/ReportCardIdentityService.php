@@ -8,6 +8,9 @@ use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 
+/**
+ * Handles report identity fields and snapshots used by printable output.
+ */
 final class ReportCardIdentityService
 {
     /**
@@ -51,6 +54,8 @@ final class ReportCardIdentityService
 
     public function updateDocumentNumber(ReportCard $reportCard, ?string $documentNumber, User $actor): ReportCard
     {
+        // The document number is institution-owned metadata and is changed
+        // through the report-card workflow, not arbitrary mass assignment.
         Gate::forUser($actor)->authorize('manageCompleteness', $reportCard);
 
         return DB::transaction(function () use ($reportCard, $documentNumber, $actor): ReportCard {

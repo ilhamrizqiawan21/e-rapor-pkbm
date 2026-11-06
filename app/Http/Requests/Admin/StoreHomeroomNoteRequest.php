@@ -6,6 +6,7 @@ use App\Models\ReportCard;
 use App\Services\ReportCardExtrasService;
 use Illuminate\Foundation\Http\FormRequest;
 
+/** Bounds homeroom narrative text and ties it to an editable report card. */
 class StoreHomeroomNoteRequest extends FormRequest
 {
     public function authorize(): bool

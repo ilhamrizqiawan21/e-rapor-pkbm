@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
+/** Validates Guru account updates without exposing role mutation to this form. */
 class UpdateTeacherRequest extends FormRequest
 {
     public function authorize(): bool

@@ -4,6 +4,7 @@ namespace App\Http\Requests\Admin;
 
 use App\Models\DescriptionSnippet;
 
+/** Applies the same visibility contract as creation while excluding its own id. */
 class UpdateDescriptionSnippetRequest extends StoreDescriptionSnippetRequest
 {
     public function authorize(): bool

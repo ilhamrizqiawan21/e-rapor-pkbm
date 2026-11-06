@@ -13,10 +13,16 @@ use Carbon\CarbonInterface;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 
+/**
+ * Freezes signer identity at report-lock time so later account changes do not
+ * alter the meaning of an already published report.
+ */
 final class ReportSignatureSnapshotService
 {
     public function snapshotForLockedReportCard(ReportCard $reportCard, ?CarbonInterface $signedAt = null): Collection
     {
+        // Signatures are snapshots of final output, not editable profile links;
+        // therefore the operation is valid only after the card is locked.
         if ($reportCard->status !== 'LOCKED') {
             throw new MissingReportSignatory('Snapshot penandatangan hanya dapat dibuat untuk rapor yang sudah dikunci.');
         }

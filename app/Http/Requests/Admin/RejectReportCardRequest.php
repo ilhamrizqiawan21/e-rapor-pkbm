@@ -5,6 +5,7 @@ namespace App\Http\Requests\Admin;
 use App\Models\ReportCard;
 use Illuminate\Foundation\Http\FormRequest;
 
+/** Validates a workflow rejection reason tied to the routed report card. */
 class RejectReportCardRequest extends FormRequest
 {
     public function authorize(): bool

@@ -5,6 +5,9 @@ namespace App\Policies;
 use App\Models\Student;
 use App\Models\User;
 
+/**
+ * Restricts student records to the tenant-aware Student::visibleTo scope.
+ */
 class StudentPolicy
 {
     /**
@@ -20,6 +23,8 @@ class StudentPolicy
      */
     public function view(User $user, Student $student): bool
     {
+        // Use the model scope rather than trusting the bound record's foreign
+        // keys; this keeps detail access aligned with list/search privacy rules.
         return $student->newQuery()
             ->whereKey($student->getKey())
             ->visibleTo($user)

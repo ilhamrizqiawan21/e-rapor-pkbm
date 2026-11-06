@@ -7,6 +7,7 @@ use App\Models\Enrollment;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
+/** Validates initial student placement inputs before service-level locking. */
 class StoreEnrollmentRequest extends FormRequest
 {
     public function authorize(): bool

@@ -9,6 +9,9 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
+/**
+ * Manages non-overlapping institution-specific predicate ranges and snapshots.
+ */
 final class PredicateRangeService
 {
     /**
@@ -68,6 +71,8 @@ final class PredicateRangeService
 
     public function assertNoOverlap(Institution $institution, int $minimumScore, int $maximumScore, ?PredicateRange $ignore = null): void
     {
+        // Overlap would make a score resolve to multiple predicates, so ranges
+        // are rejected before persistence rather than resolved arbitrarily.
         $this->validateScores($minimumScore, $maximumScore);
 
         $overlap = $this->query($institution)

@@ -7,6 +7,7 @@ use Illuminate\Database\Query\Builder;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
+/** Validates configurable Paket/program metadata within the current institution. */
 class StoreProgramRequest extends FormRequest
 {
     public function authorize(): bool

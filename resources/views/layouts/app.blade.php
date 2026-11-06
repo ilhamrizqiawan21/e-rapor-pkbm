@@ -9,12 +9,18 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="min-h-screen bg-slate-50 font-sans text-slate-900 antialiased" x-data="{ mobileSidebarOpen: false }">
+@php
+    $activePeriodLabel = data_get($period ?? null, 'label', 'Periode belum aktif');
+    $periodReady = (bool) ($hasPeriod ?? false);
+@endphp
+<body class="min-h-screen bg-slate-50 font-sans text-slate-900 antialiased" x-data="mobileNavigation()">
     <!-- Responsive Drawer untuk Tablet & Mobile (< lg) -->
     <div
         x-cloak
         x-show="mobileSidebarOpen"
-        @keydown.escape.window="mobileSidebarOpen = false"
+        @keydown.escape.window="closeMobileSidebar()"
+        @keydown="trapFocus($event)"
+        x-ref="drawer"
         class="relative z-50 lg:hidden"
         role="dialog"
         aria-label="Menu navigasi aplikasi"
@@ -48,7 +54,8 @@
                 <div class="absolute top-0 right-0 -mr-12 pt-4">
                     <button
                         type="button"
-                        @click="mobileSidebarOpen = false"
+                        @click="closeMobileSidebar()"
+                        x-ref="closeButton"
                         class="flex h-10 w-10 items-center justify-center rounded-full text-white hover:bg-white/10 focus:outline-hidden focus-visible:ring-2 focus-visible:ring-white"
                         aria-label="Tutup menu"
                     >
@@ -62,12 +69,11 @@
                 <div class="border-b border-white/10 px-6 py-6">
                     <p class="text-xs font-semibold uppercase tracking-[0.2em] text-accent-300">PKBM</p>
                     <h1 class="mt-2 text-xl font-semibold">E-Rapor</h1>
-                    <p class="mt-1 text-sm text-slate-300">Fondasi aplikasi akademik</p>
+                    <p class="mt-1 text-sm text-slate-300">Administrasi akademik PKBM</p>
                 </div>
-                <nav class="flex-1 space-y-1 overflow-y-auto px-4 py-5 text-sm">
+                <nav class="flex-1 space-y-1 overflow-y-auto px-4 py-5 text-sm" @click="closeMobileSidebar()">
                     <a class="block rounded-lg {{ request()->routeIs('dashboard*') ? 'bg-white/10 font-medium' : 'text-slate-300 hover:bg-white/5' }} px-3 py-2" href="{{ route('dashboard') }}" @if (request()->routeIs('dashboard*')) aria-current="page" @endif>Dashboard</a>
-                    <a class="block rounded-lg {{ request()->routeIs('components.showcase') ? 'bg-white/10 font-medium' : 'text-slate-300 hover:bg-white/5' }} px-3 py-2" href="{{ route('components.showcase') }}" @if (request()->routeIs('components.showcase')) aria-current="page" @endif>Komponen UI</a>
-                    <span class="block px-3 pt-5 text-xs font-semibold uppercase tracking-wider text-slate-400">Fondasi</span>
+                    <span class="block px-3 pt-5 text-xs font-semibold uppercase tracking-wider text-slate-400">Fondasi data inti</span>
                     <span class="block px-3 py-2 text-slate-300">Master Data</span>
                     @auth
                         @if (auth()->user()->hasRole('ADMIN'))
@@ -123,12 +129,11 @@
             <div class="border-b border-white/10 px-6 py-6">
                 <p class="text-xs font-semibold uppercase tracking-[0.2em] text-accent-300">PKBM</p>
                 <h1 class="mt-2 text-xl font-semibold">E-Rapor</h1>
-                <p class="mt-1 text-sm text-slate-300">Fondasi aplikasi akademik</p>
+                <p class="mt-1 text-sm text-slate-300">Administrasi akademik PKBM</p>
             </div>
             <nav class="flex-1 space-y-1 px-4 py-5 text-sm">
                 <a class="block rounded-lg {{ request()->routeIs('dashboard*') ? 'bg-white/10 font-medium' : 'text-slate-300 hover:bg-white/5' }} px-3 py-2" href="{{ route('dashboard') }}" @if (request()->routeIs('dashboard*')) aria-current="page" @endif>Dashboard</a>
-                <a class="block rounded-lg {{ request()->routeIs('components.showcase') ? 'bg-white/10 font-medium' : 'text-slate-300 hover:bg-white/5' }} px-3 py-2" href="{{ route('components.showcase') }}" @if (request()->routeIs('components.showcase')) aria-current="page" @endif>Komponen UI</a>
-                <span class="block px-3 pt-5 text-xs font-semibold uppercase tracking-wider text-slate-400">Fondasi</span>
+                <span class="block px-3 pt-5 text-xs font-semibold uppercase tracking-wider text-slate-400">Fondasi data inti</span>
                 <span class="block px-3 py-2 text-slate-300">Master Data</span>
                 @auth
                     @if (auth()->user()->hasRole('ADMIN'))
@@ -171,14 +176,14 @@
         </aside>
 
         <!-- Area Konten Utama -->
-        <main class="min-w-0 flex-1">
+        <main class="min-w-0 flex-1" x-bind:inert="mobileSidebarOpen" x-bind:aria-hidden="mobileSidebarOpen ? 'true' : 'false'">
             <!-- Header -->
             <header class="border-b border-slate-200 bg-white">
                 <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
                     <div class="flex items-center gap-3">
                         <button
                             type="button"
-                            @click="mobileSidebarOpen = true"
+                            @click="openMobileSidebar($event)"
                             class="inline-flex items-center justify-center rounded-lg p-2 text-slate-600 hover:bg-slate-100 hover:text-slate-900 focus:outline-hidden focus-visible:ring-2 focus-visible:ring-brand-500 lg:hidden"
                             aria-label="Buka menu navigasi"
                         >
@@ -188,11 +193,11 @@
                         </button>
                         <div>
                             <p class="text-xs text-slate-500">Periode aktif</p>
-                            <p class="text-sm font-semibold text-slate-900">Belum dikonfigurasi</p>
+                            <p class="text-sm font-semibold text-slate-900">{{ $activePeriodLabel }}</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-3 sm:gap-4">
-                        <x-badge variant="warning" dot>Fondasi awal</x-badge>
+                        <x-badge :variant="$periodReady ? 'success' : 'warning'" dot>{{ $periodReady ? 'Periode aktif' : 'Perlu konfigurasi' }}</x-badge>
                         @auth
                             <div class="hidden text-right sm:block">
                                 <p class="text-sm font-semibold text-slate-900">{{ auth()->user()->name }}</p>

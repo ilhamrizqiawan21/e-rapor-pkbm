@@ -4,6 +4,7 @@ namespace App\Http\Requests\Auth;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+/** Validates the identifier used to request a password-reset message. */
 class PasswordResetLinkRequest extends FormRequest
 {
     /**
