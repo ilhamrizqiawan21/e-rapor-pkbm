@@ -21,6 +21,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use InvalidArgumentException;
@@ -108,6 +109,7 @@ final class GradeEntryService
             ], [
                 'status' => 'DRAFT',
             ]);
+            Gate::forUser($actor)->authorize('update', $reportCard);
 
             $grade = $reportCard->grades()->where('subject_assignment_id', $assignment->getKey())->first();
 

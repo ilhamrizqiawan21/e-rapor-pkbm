@@ -9,7 +9,7 @@ class UnlockReportCardRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        $reportCard = $this->route('reportCard');
+        $reportCard = $this->route('report_card') ?? $this->route('reportCard');
 
         return $reportCard instanceof ReportCard
             && ($this->user()?->can('unlock', $reportCard) ?? false);
@@ -17,7 +17,7 @@ class UnlockReportCardRequest extends FormRequest
 
     public function rules(): array
     {
-        return ['reason' => ['nullable', 'string', 'max:2000']];
+        return ['reason' => ['required', 'string', 'min:3', 'max:2000']];
     }
 
     protected function prepareForValidation(): void

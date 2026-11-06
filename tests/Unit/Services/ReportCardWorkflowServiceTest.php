@@ -19,6 +19,7 @@ use App\Models\Subject;
 use App\Models\SubjectAssignment;
 use App\Models\User;
 use App\Services\ReportCardWorkflowService;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\ValidationException;
@@ -36,13 +37,13 @@ class ReportCardWorkflowServiceTest extends TestCase
 
         $this->assertSame('SUBMITTED', $service->submit($reportCard, $fixture['guru'])->status);
         $this->assertSame('IN_REVIEW', $service->review($reportCard->refresh(), $fixture['guru'])->status);
-        $this->assertSame('NEEDS_REVISION', $service->reject($reportCard->refresh(), $fixture['guru'], 'Lengkapi deskripsi capaian.')->status);
+        $this->assertSame('NEEDS_REVISION', $service->reject($reportCard->refresh(), $fixture['kepsek'], 'Lengkapi deskripsi capaian.')->status);
 
         $resubmitted = $service->submit($reportCard->refresh(), $fixture['guru']);
         $this->assertSame('SUBMITTED', $resubmitted->status);
         $this->assertNull($resubmitted->rejection_reason);
 
-        $this->assertSame('IN_REVIEW', $service->review($resubmitted, $fixture['kepsek'])->status);
+        $this->assertSame('IN_REVIEW', $service->review($resubmitted, $fixture['guru'])->status);
         $approved = $service->approve($reportCard->refresh(), $fixture['kepsek']);
         $this->assertSame('APPROVED', $approved->status);
         $this->assertSame($fixture['kepsek']->id, $approved->approved_by_user_id);
@@ -53,7 +54,7 @@ class ReportCardWorkflowServiceTest extends TestCase
         $this->assertSame($fixture['admin']->id, $locked->locked_by_user_id);
 
         $unlocked = $service->unlock($locked, $fixture['admin'], 'Perbaikan administrasi nomor dokumen.');
-        $this->assertSame('APPROVED', $unlocked->status);
+        $this->assertSame('DRAFT', $unlocked->status);
         $this->assertNull($unlocked->locked_at);
         $this->assertSame($fixture['admin']->id, $unlocked->unlocked_by_user_id);
         $this->assertSame('Perbaikan administrasi nomor dokumen.', $unlocked->unlock_reason);
@@ -78,6 +79,24 @@ class ReportCardWorkflowServiceTest extends TestCase
 
         $this->expectException(ValidationException::class);
         $service->reject($fixture['reportCard'], $fixture['guru'], '');
+    }
+
+    public function test_unlock_requires_reason_and_illegal_status_transitions_are_rejected(): void
+    {
+        $fixture = $this->fixture();
+        $service = app(ReportCardWorkflowService::class);
+
+        $this->expectException(ValidationException::class);
+        $service->unlock($fixture['reportCard']->forceFill(['status' => 'LOCKED']), $fixture['admin']);
+    }
+
+    public function test_workflow_keeps_transition_history_and_rejects_non_sequential_actions(): void
+    {
+        $fixture = $this->fixture();
+        $service = app(ReportCardWorkflowService::class);
+
+        $this->expectException(AuthorizationException::class);
+        $service->approve($fixture['reportCard'], $fixture['kepsek']);
     }
 
     public function test_only_allowed_roles_can_execute_workflow_actions(): void

@@ -66,6 +66,8 @@
             <div class="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800" role="status">{{ session('status') }}</div>
         @endif
 
+        @include('admin.report-cards.partials.workflow-actions', ['reportCard' => $reportCard])
+
         <section
             class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6"
             x-data="extracurricularEditor(@js($initialRows))"

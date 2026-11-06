@@ -70,8 +70,8 @@ final class ReportGradeSnapshotService
 
     private function ensureEditable(ReportCard $reportCard): void
     {
-        if ($reportCard->status === 'LOCKED' || $reportCard->locked_at !== null) {
-            throw new LogicException('Rapor terkunci dan snapshot nilai tidak dapat diubah.');
+        if (! in_array($reportCard->status, ['DRAFT', 'NEEDS_REVISION'], true)) {
+            throw new LogicException('Nilai hanya dapat diubah saat rapor berstatus Draft atau Perlu Perbaikan.');
         }
     }
 

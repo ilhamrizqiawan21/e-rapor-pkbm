@@ -149,8 +149,8 @@ final class DescriptionSnippetUsageService
 
     private function assertEditable(ReportCard $reportCard): void
     {
-        if ($reportCard->status === 'LOCKED' || $reportCard->locked_at !== null) {
-            throw new LogicException('Rapor terkunci dan deskripsi nilai tidak dapat diubah.');
+        if (! in_array($reportCard->status, ['DRAFT', 'NEEDS_REVISION'], true)) {
+            throw new LogicException('Deskripsi nilai hanya dapat diubah saat rapor berstatus Draft atau Perlu Perbaikan.');
         }
     }
 

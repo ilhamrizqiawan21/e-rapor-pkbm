@@ -118,14 +118,18 @@ final class ReportCardWorkflowService
 
     public function unlock(ReportCard $reportCard, User $actor, ?string $reason = null): ReportCard
     {
-        $reason = $reason === null ? null : trim($reason);
+        $reason = $reason === null ? '' : trim($reason);
+
+        if ($reason === '') {
+            throw ValidationException::withMessages(['reason' => 'Alasan membuka kunci wajib diisi.']);
+        }
 
         return $this->transition(
             $reportCard,
             $actor,
             'unlock',
             ['LOCKED'],
-            'APPROVED',
+            'DRAFT',
             fn (ReportCard $locked, User $user): array => [
                 'locked_at' => null,
                 'unlocked_at' => now(),

@@ -58,6 +58,9 @@
                                         <x-button href="{{ route('admin.report-cards.assessments.show', $reportCard) }}" size="sm" variant="secondary">Sikap & absensi</x-button>
                                         <x-button href="{{ route('admin.report-cards.completeness.edit', $reportCard) }}" size="sm">Kelengkapan</x-button>
                                     </div>
+                                    <div class="mt-3 text-left">
+                                        @include('admin.report-cards.partials.workflow-actions', ['reportCard' => $reportCard])
+                                    </div>
                                 </x-table.td>
                             </tr>
                         @empty

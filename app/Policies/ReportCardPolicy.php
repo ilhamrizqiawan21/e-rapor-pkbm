@@ -7,8 +7,6 @@ use App\Models\User;
 
 class ReportCardPolicy
 {
-    private const EDITABLE_STATUSES = ['DRAFT', 'SUBMITTED', 'IN_REVIEW', 'NEEDS_REVISION'];
-
     /**
      * Determine whether the user can view any models.
      */
@@ -38,26 +36,7 @@ class ReportCardPolicy
      */
     public function update(User $user, ReportCard $reportCard): bool
     {
-        return in_array($reportCard->status, self::EDITABLE_STATUSES, true)
-            && $this->hasClassAccess($user, $reportCard);
-    }
-
-    public function updateAttitude(User $user, ReportCard $reportCard): bool
-    {
-        return in_array($reportCard->status, self::EDITABLE_STATUSES, true)
-            && $this->hasHomeroomSurfaceAccess($user, $reportCard);
-    }
-
-    public function updateAttendance(User $user, ReportCard $reportCard): bool
-    {
-        return in_array($reportCard->status, self::EDITABLE_STATUSES, true)
-            && $this->hasHomeroomSurfaceAccess($user, $reportCard);
-    }
-
-    public function manageCompleteness(User $user, ReportCard $reportCard): bool
-    {
-        if (! in_array($reportCard->status, self::EDITABLE_STATUSES, true)
-            || ! $this->belongsToInstitution($user, $reportCard)) {
+        if (! $this->belongsToInstitution($user, $reportCard) || $reportCard->status === 'LOCKED') {
             return false;
         }
 
@@ -66,6 +45,34 @@ class ReportCardPolicy
         }
 
         return $user->hasRole('GURU')
+            && in_array($reportCard->status, ['DRAFT', 'NEEDS_REVISION'], true)
+            && $this->hasClassAccess($user, $reportCard);
+    }
+
+    public function updateAttitude(User $user, ReportCard $reportCard): bool
+    {
+        return $this->isDataEntryStatus($user, $reportCard)
+            && $this->hasHomeroomSurfaceAccess($user, $reportCard);
+    }
+
+    public function updateAttendance(User $user, ReportCard $reportCard): bool
+    {
+        return $this->isDataEntryStatus($user, $reportCard)
+            && $this->hasHomeroomSurfaceAccess($user, $reportCard);
+    }
+
+    public function manageCompleteness(User $user, ReportCard $reportCard): bool
+    {
+        if (! $this->belongsToInstitution($user, $reportCard) || $reportCard->status === 'LOCKED') {
+            return false;
+        }
+
+        if ($user->hasRole('ADMIN')) {
+            return true;
+        }
+
+        return $user->hasRole('GURU')
+            && in_array($reportCard->status, ['DRAFT', 'NEEDS_REVISION'], true)
             && $reportCard->enrollment?->academicClass?->homeroom_teacher_id === $user->getKey();
     }
 
@@ -97,9 +104,9 @@ class ReportCardPolicy
 
     public function review(User $user, ReportCard $reportCard): bool
     {
-        return in_array($reportCard->status, ['SUBMITTED', 'IN_REVIEW'], true)
-            && $this->hasClassAccess($user, $reportCard)
-            && $user->hasAnyRole(['GURU', 'KEPSEK']);
+        return $reportCard->status === 'SUBMITTED'
+            && $user->hasRole('GURU')
+            && $this->hasHomeroomSurfaceAccess($user, $reportCard);
     }
 
     public function submit(User $user, ReportCard $reportCard): bool
@@ -113,12 +120,12 @@ class ReportCardPolicy
     {
         return $reportCard->status === 'IN_REVIEW'
             && $this->hasClassAccess($user, $reportCard)
-            && $user->hasAnyRole(['GURU', 'KEPSEK']);
+            && $user->hasRole('KEPSEK');
     }
 
     public function approve(User $user, ReportCard $reportCard): bool
     {
-        return in_array($reportCard->status, ['SUBMITTED', 'IN_REVIEW'], true)
+        return $reportCard->status === 'IN_REVIEW'
             && $this->hasClassAccess($user, $reportCard)
             && $user->hasRole('KEPSEK');
     }
@@ -160,7 +167,7 @@ class ReportCardPolicy
             return false;
         }
 
-        if ($user->hasAnyRole(['ADMIN', 'KEPSEK'])) {
+        if ($user->hasRole('ADMIN')) {
             return true;
         }
 
@@ -169,6 +176,16 @@ class ReportCardPolicy
         return $user->hasRole('GURU')
             && $academicClass !== null
             && $academicClass->homeroom_teacher_id === $user->getKey();
+    }
+
+    private function isDataEntryStatus(User $user, ReportCard $reportCard): bool
+    {
+        if (! $this->belongsToInstitution($user, $reportCard) || $reportCard->status === 'LOCKED') {
+            return false;
+        }
+
+        return $user->hasRole('ADMIN')
+            || ($user->hasRole('GURU') && in_array($reportCard->status, ['DRAFT', 'NEEDS_REVISION'], true));
     }
 
     private function belongsToInstitution(User $user, ReportCard $reportCard): bool

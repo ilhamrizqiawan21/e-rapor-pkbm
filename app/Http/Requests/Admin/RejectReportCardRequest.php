@@ -9,7 +9,7 @@ class RejectReportCardRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        $reportCard = $this->route('reportCard');
+        $reportCard = $this->route('report_card') ?? $this->route('reportCard');
 
         return $reportCard instanceof ReportCard
             && ($this->user()?->can('reject', $reportCard) ?? false);
