@@ -385,43 +385,45 @@ Sebuah fitur hanya boleh dianggap selesai jika semua hal berikut terpenuhi:
 
 ## 05.01 Data Guru
 
-- [ ] CRUD user Guru.
-- [ ] Nama lengkap.
-- [ ] Email/username.
-- [ ] NIP/NIY/nomor identitas.
-- [ ] Nomor telepon.
-- [ ] Status aktif/nonaktif.
-- [ ] Reset password oleh Admin.
-- [ ] Aktivasi/nonaktivasi akun.
-- [ ] Filter Guru aktif/nonaktif.
+- [x] CRUD user Guru.
+- [x] Nama lengkap.
+- [x] Email/username.
+- [x] NIP/NIY/nomor identitas.
+- [x] Nomor telepon.
+- [x] Status aktif/nonaktif.
+- [x] Reset password oleh Admin.
+- [x] Aktivasi/nonaktivasi akun.
+- [x] Filter Guru aktif/nonaktif.
 
 ## 05.02 Wali kelas
 
-- [ ] Pilih Guru wali kelas pada kelas.
-- [ ] Satu kelas memiliki maksimal satu wali kelas aktif.
-- [ ] Satu Guru dapat menjadi wali beberapa kelas jika diizinkan.
-- [ ] Riwayat wali kelas disimpan bila berubah.
-- [ ] Guru wali kelas dapat membuka kelengkapan rapor kelas.
+- [x] Pilih Guru wali kelas pada kelas.
+- [x] Satu kelas memiliki maksimal satu wali kelas aktif.
+- [x] Satu Guru dapat menjadi wali beberapa kelas jika diizinkan.
+- [x] Riwayat wali kelas disimpan bila berubah.
+- [x] Guru wali kelas dapat membuka kelengkapan rapor kelas.
 
 ## 05.03 Penugasan mapel
 
-- [ ] Assign Guru ke mapel pada kelas.
-- [ ] Satu mapel pada satu kelas memiliki Guru utama.
-- [ ] Validasi Guru aktif.
-- [ ] Validasi mapel aktif.
-- [ ] KKM per assignment.
-- [ ] Urutan mapel per assignment.
-- [ ] Aktivasi/nonaktivasi assignment.
-- [ ] Tampilan daftar assignment Guru.
-- [ ] Tampilan daftar assignment kelas.
+- [x] Assign Guru ke mapel pada kelas.
+- [x] Satu mapel pada satu kelas memiliki Guru utama.
+- [x] Validasi Guru aktif.
+- [x] Validasi mapel aktif.
+- [x] KKM per assignment.
+- [x] Urutan mapel per assignment.
+- [x] Aktivasi/nonaktivasi assignment.
+- [x] Tampilan daftar assignment Guru.
+- [x] Tampilan daftar assignment kelas.
 
 ## 05.04 Gate Guru
 
-- [ ] Admin dapat membuat akun Guru.
-- [ ] Admin dapat menetapkan wali kelas.
-- [ ] Admin dapat menetapkan Guru mapel.
-- [ ] Guru hanya melihat assignment sendiri.
-- [ ] Perubahan assignment tidak merusak nilai terkunci.
+- [x] Admin dapat membuat akun Guru.
+- [x] Admin dapat menetapkan wali kelas.
+- [x] Admin dapat menetapkan Guru mapel.
+- [x] Guru hanya melihat assignment sendiri.
+- [x] Perubahan assignment tidak merusak nilai terkunci.
+
+**Gate 05:** Lulus. Master Guru, histori wali kelas, penugasan Guru–mapel–kelas, KKM, filter akses Guru, reset password, dan proteksi nilai terkunci sudah tersedia. Master mata pelajaran tetap dikerjakan pada Tahap 07.
 
 ---
 

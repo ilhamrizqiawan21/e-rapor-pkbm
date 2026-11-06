@@ -10,6 +10,7 @@ use App\Models\AcademicYear;
 use App\Models\Level;
 use App\Models\Program;
 use App\Models\User;
+use App\Services\HomeroomAssignmentService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\RedirectResponse;
@@ -50,14 +51,26 @@ class AcademicClassController extends Controller
         ]);
     }
 
-    public function store(StoreAcademicClassRequest $request): RedirectResponse
+    public function store(StoreAcademicClassRequest $request, HomeroomAssignmentService $homeroomService): RedirectResponse
     {
         Gate::authorize('create', AcademicClass::class);
 
         $academicYear = $this->institutionAcademicYear($request->user(), $request->validated('academic_year_id'));
         $this->ensurePeriodOpen($academicYear);
 
-        $academicClass = AcademicClass::query()->create($request->validated());
+        $data = $request->validated();
+        $teacherId = $data['homeroom_teacher_id'] ?? null;
+        unset($data['homeroom_teacher_id']);
+
+        $academicClass = AcademicClass::query()->create($data);
+
+        if ($teacherId !== null && $teacherId !== '') {
+            $homeroomService->assign(
+                $academicClass,
+                User::query()->findOrFail($teacherId),
+                $request->user(),
+            );
+        }
 
         return redirect()
             ->route('admin.academic-classes.show', $academicClass)
@@ -73,6 +86,7 @@ class AcademicClassController extends Controller
             'program',
             'level',
             'homeroomTeacher.staffProfile',
+            'homeroomAssignments.teacher.staffProfile',
             'enrollments' => fn ($query) => $query->where('enrollment_status', 'ACTIVE')->with('student')->orderBy('id'),
             'enrollments.reportCards.grades',
             'subjectAssignments' => fn ($query) => $query->where('active', true)->with(['subject', 'teacher']),
@@ -93,7 +107,7 @@ class AcademicClassController extends Controller
         ]);
     }
 
-    public function update(UpdateAcademicClassRequest $request, AcademicClass $academicClass): RedirectResponse
+    public function update(UpdateAcademicClassRequest $request, AcademicClass $academicClass, HomeroomAssignmentService $homeroomService): RedirectResponse
     {
         Gate::authorize('update', $academicClass);
 
@@ -101,7 +115,24 @@ class AcademicClassController extends Controller
         $academicYear = $this->institutionAcademicYear($request->user(), $request->validated('academic_year_id'));
         $this->ensurePeriodOpen($academicYear);
 
-        $academicClass->update($request->validated());
+        $data = $request->validated();
+        $teacherId = $data['homeroom_teacher_id'] ?? null;
+        $previousTeacherId = $academicClass->homeroom_teacher_id;
+        unset($data['homeroom_teacher_id']);
+
+        $academicClass->update($data);
+
+        if ((string) $teacherId !== (string) $previousTeacherId) {
+            if ($teacherId === null || $teacherId === '') {
+                $homeroomService->remove($academicClass, $request->user());
+            } else {
+                $homeroomService->reassign(
+                    $academicClass,
+                    User::query()->findOrFail($teacherId),
+                    $request->user(),
+                );
+            }
+        }
 
         return redirect()
             ->route('admin.academic-classes.show', $academicClass)

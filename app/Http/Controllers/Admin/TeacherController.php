@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreTeacherRequest;
 use App\Http\Requests\Admin\UpdateTeacherRequest;
 use App\Models\AcademicClass;
+use App\Models\HomeroomAssignment;
 use App\Models\ReportSignature;
 use App\Models\Role;
 use App\Models\StaffProfile;
@@ -185,6 +186,7 @@ class TeacherController extends Controller
     {
         return SubjectAssignment::query()->where('teacher_id', $teacher->getKey())->exists()
             || AcademicClass::query()->where('homeroom_teacher_id', $teacher->getKey())->exists()
+            || HomeroomAssignment::query()->where('teacher_id', $teacher->getKey())->exists()
             || ReportSignature::query()->where('user_id', $teacher->getKey())->exists();
     }
 }

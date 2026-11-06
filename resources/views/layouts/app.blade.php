@@ -70,6 +70,9 @@
                     <span class="block px-3 pt-5 text-xs font-semibold uppercase tracking-wider text-slate-400">Fondasi</span>
                     <span class="block px-3 py-2 text-slate-300">Master Data</span>
                     @auth
+                        @if (auth()->user()->hasRole('ADMIN'))
+                            <a class="block rounded-lg {{ request()->routeIs('admin.teachers.*') ? 'bg-white/10 font-medium' : 'text-slate-300 hover:bg-white/5' }} px-3 py-2" href="{{ route('admin.teachers.index') }}">Data Guru</a>
+                        @endif
                         <a class="block rounded-lg {{ request()->routeIs('admin.academic-years.*') ? 'bg-white/10 font-medium' : 'text-slate-300 hover:bg-white/5' }} px-3 py-2" href="{{ route('admin.academic-years.index') }}">Tahun pelajaran</a>
                         <a class="block rounded-lg {{ request()->routeIs('admin.programs.*') ? 'bg-white/10 font-medium' : 'text-slate-300 hover:bg-white/5' }} px-3 py-2" href="{{ route('admin.programs.index') }}">Program & tingkat</a>
                         <a class="block rounded-lg {{ request()->routeIs('admin.academic-classes.*') ? 'bg-white/10 font-medium' : 'text-slate-300 hover:bg-white/5' }} px-3 py-2" href="{{ route('admin.academic-classes.index') }}">Kelas / rombel</a>
@@ -115,6 +118,9 @@
                 <span class="block px-3 pt-5 text-xs font-semibold uppercase tracking-wider text-slate-400">Fondasi</span>
                 <span class="block px-3 py-2 text-slate-300">Master Data</span>
                 @auth
+                    @if (auth()->user()->hasRole('ADMIN'))
+                        <a class="block rounded-lg {{ request()->routeIs('admin.teachers.*') ? 'bg-white/10 font-medium' : 'text-slate-300 hover:bg-white/5' }} px-3 py-2" href="{{ route('admin.teachers.index') }}">Data Guru</a>
+                    @endif
                     <a class="block rounded-lg {{ request()->routeIs('admin.academic-years.*') ? 'bg-white/10 font-medium' : 'text-slate-300 hover:bg-white/5' }} px-3 py-2" href="{{ route('admin.academic-years.index') }}">Tahun pelajaran</a>
                     <a class="block rounded-lg {{ request()->routeIs('admin.programs.*') ? 'bg-white/10 font-medium' : 'text-slate-300 hover:bg-white/5' }} px-3 py-2" href="{{ route('admin.programs.index') }}">Program & tingkat</a>
                     <a class="block rounded-lg {{ request()->routeIs('admin.academic-classes.*') ? 'bg-white/10 font-medium' : 'text-slate-300 hover:bg-white/5' }} px-3 py-2" href="{{ route('admin.academic-classes.index') }}">Kelas / rombel</a>

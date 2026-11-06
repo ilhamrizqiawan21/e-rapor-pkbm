@@ -10,6 +10,8 @@ use App\Http\Controllers\Admin\LevelController;
 use App\Http\Controllers\Admin\ProgramController;
 use App\Http\Controllers\Admin\SemesterController;
 use App\Http\Controllers\Admin\SignatorySettingsController;
+use App\Http\Controllers\Admin\SubjectAssignmentController;
+use App\Http\Controllers\Admin\TeacherController;
 use App\Http\Controllers\Admin\UserPasswordController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\NewPasswordController;
@@ -46,6 +48,7 @@ Route::middleware('auth')->group(function (): void {
         Route::resource('programs', ProgramController::class);
         Route::resource('programs.levels', LevelController::class);
         Route::resource('academic-classes', AcademicClassController::class);
+        Route::resource('academic-classes.subject-assignments', SubjectAssignmentController::class)->except(['show']);
     });
 
     Route::middleware('role:ADMIN')->prefix('admin/users/{user}/password')->name('admin.users.password.')->group(function (): void {
@@ -54,6 +57,7 @@ Route::middleware('auth')->group(function (): void {
     });
 
     Route::middleware('role:ADMIN')->prefix('admin')->name('admin.')->group(function (): void {
+        Route::resource('teachers', TeacherController::class)->parameters(['teachers' => 'user']);
         Route::resource('institutions', InstitutionController::class);
         Route::get('institutions/{institution}/preview', [InstitutionPreviewController::class, 'show'])
             ->name('institutions.preview');

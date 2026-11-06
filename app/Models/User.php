@@ -64,6 +64,11 @@ class User extends Authenticatable implements CanResetPasswordContract
         return $this->hasMany(AcademicClass::class, 'homeroom_teacher_id');
     }
 
+    public function homeroomAssignments(): HasMany
+    {
+        return $this->hasMany(HomeroomAssignment::class, 'teacher_id');
+    }
+
     public function reportSignatures(): HasMany
     {
         return $this->hasMany(ReportSignature::class);

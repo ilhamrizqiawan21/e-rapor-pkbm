@@ -39,4 +39,9 @@ class AcademicClass extends Model
     {
         return $this->belongsTo(User::class, 'homeroom_teacher_id');
     }
+
+    public function homeroomAssignments(): HasMany
+    {
+        return $this->hasMany(HomeroomAssignment::class);
+    }
 }
