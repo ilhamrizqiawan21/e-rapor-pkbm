@@ -3,10 +3,13 @@
 namespace Database\Seeders;
 
 use App\Enums\RoleCode;
+use App\Enums\SignatorySource;
 use App\Models\Institution;
+use App\Models\InstitutionSignatorySetting;
 use App\Models\Role;
 use App\Models\StaffProfile;
 use App\Models\User;
+use App\Services\InstitutionFormatSettingsService;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -88,5 +91,20 @@ class DatabaseSeeder extends Seeder
                 ],
             );
         }
+
+        $kepsek = User::query()->where('username', 'kepsek')->firstOrFail();
+
+        InstitutionSignatorySetting::query()->updateOrCreate(
+            ['institution_id' => $institution->getKey()],
+            [
+                'headmaster_source' => SignatorySource::Account,
+                'headmaster_user_id' => $kepsek->getKey(),
+                'headmaster_name' => null,
+                'headmaster_title' => null,
+                'headmaster_employee_number' => null,
+            ],
+        );
+
+        app(InstitutionFormatSettingsService::class)->forInstitution($institution);
     }
 }

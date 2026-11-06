@@ -73,6 +73,16 @@
                     <span class="block px-3 py-2 text-slate-300">Rapor dan Leger</span>
                     <span class="block px-3 py-2 text-slate-300">Pengaturan</span>
                     @auth
+                        @if (auth()->user()->hasRole('ADMIN'))
+                            <span class="block px-3 pt-5 text-xs font-semibold uppercase tracking-wider text-slate-400">Pengaturan PKBM</span>
+                            <a class="block rounded-lg {{ request()->routeIs('admin.institutions.*') ? 'bg-white/10 font-medium' : 'text-slate-300 hover:bg-white/5' }} px-3 py-2" href="{{ route('admin.institutions.index') }}">Identitas PKBM</a>
+                            @if (auth()->user()->institution_id)
+                                <a class="block rounded-lg {{ request()->routeIs('admin.signatory-settings.*') ? 'bg-white/10 font-medium' : 'text-slate-300 hover:bg-white/5' }} px-3 py-2" href="{{ route('admin.signatory-settings.edit') }}">Penandatangan</a>
+                                <a class="block rounded-lg {{ request()->routeIs('admin.settings.format.*') ? 'bg-white/10 font-medium' : 'text-slate-300 hover:bg-white/5' }} px-3 py-2" href="{{ route('admin.settings.format.edit') }}">Format rapor</a>
+                            @endif
+                        @endif
+                    @endauth
+                    @auth
                         <span class="block px-3 pt-5 text-xs font-semibold uppercase tracking-wider text-slate-400">Akun</span>
                         <a class="block rounded-lg px-3 py-2 text-slate-300 hover:bg-white/5" href="{{ route('profile.edit') }}">Profil saya</a>
                         <a class="block rounded-lg px-3 py-2 text-slate-300 hover:bg-white/5" href="{{ route('password.edit') }}">Ubah password</a>
@@ -102,6 +112,16 @@
                 <span class="block px-3 py-2 text-slate-300">Penilaian</span>
                 <span class="block px-3 py-2 text-slate-300">Rapor dan Leger</span>
                 <span class="block px-3 py-2 text-slate-300">Pengaturan</span>
+                @auth
+                    @if (auth()->user()->hasRole('ADMIN'))
+                        <span class="block px-3 pt-5 text-xs font-semibold uppercase tracking-wider text-slate-400">Pengaturan PKBM</span>
+                        <a class="block rounded-lg {{ request()->routeIs('admin.institutions.*') ? 'bg-white/10 font-medium' : 'text-slate-300 hover:bg-white/5' }} px-3 py-2" href="{{ route('admin.institutions.index') }}">Identitas PKBM</a>
+                        @if (auth()->user()->institution_id)
+                            <a class="block rounded-lg {{ request()->routeIs('admin.signatory-settings.*') ? 'bg-white/10 font-medium' : 'text-slate-300 hover:bg-white/5' }} px-3 py-2" href="{{ route('admin.signatory-settings.edit') }}">Penandatangan</a>
+                            <a class="block rounded-lg {{ request()->routeIs('admin.settings.format.*') ? 'bg-white/10 font-medium' : 'text-slate-300 hover:bg-white/5' }} px-3 py-2" href="{{ route('admin.settings.format.edit') }}">Format rapor</a>
+                        @endif
+                    @endif
+                @endauth
             </nav>
             <div class="border-t border-white/10 px-6 py-5 text-xs text-slate-300">
                 Laravel {{ app()->version() }}

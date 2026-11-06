@@ -277,47 +277,49 @@ Sebuah fitur hanya boleh dianggap selesai jika semua hal berikut terpenuhi:
 
 ## 03.01 Institusi
 
-- [ ] CRUD identitas PKBM.
-- [ ] Nama PKBM.
-- [ ] Alamat.
-- [ ] Nomor telepon.
-- [ ] Email.
-- [ ] Logo.
-- [ ] NPSN/nomor izin bila diperlukan.
-- [ ] Kode pos.
-- [ ] Validasi format email.
-- [ ] Validasi ukuran dan tipe logo.
-- [ ] Preview logo.
-- [ ] Hapus/ganti logo.
+- [x] CRUD identitas PKBM.
+- [x] Nama PKBM.
+- [x] Alamat.
+- [x] Nomor telepon.
+- [x] Email.
+- [x] Logo.
+- [x] NPSN/nomor izin bila diperlukan.
+- [x] Kode pos.
+- [x] Validasi format email.
+- [x] Validasi ukuran dan tipe logo.
+- [x] Preview logo.
+- [x] Hapus/ganti logo.
 
 ## 03.02 Penandatangan
 
-- [ ] Data Kepsek.
-- [ ] Nama tampil pada rapor.
-- [ ] Jabatan tampil pada rapor.
-- [ ] NIP/NIY jika dipakai.
-- [ ] Guru wali kelas diambil dari user Guru.
-- [ ] Nama orang tua/wali diambil dari data siswa atau input rapor.
-- [ ] Snapshot penandatangan saat rapor dikunci.
+- [x] Data Kepala PKBM.
+- [x] Nama tampil pada preview rapor.
+- [x] Jabatan tampil pada preview rapor.
+- [x] NIP/NIY jika dipakai.
+- [x] Guru wali kelas diambil dari user Guru melalui snapshot service.
+- [x] Nama orang tua/wali diambil dari data Peserta Didik melalui snapshot service.
+- [x] Snapshot penandatangan saat rapor dikunci melalui `ReportSignatureSnapshotService`.
 
 ## 03.03 Pengaturan format
 
-- [ ] Format nama siswa.
-- [ ] Format nomor dokumen.
-- [ ] Format tanggal Indonesia.
-- [ ] Setting tanda tangan.
-- [ ] Setting logo pada rapor.
-- [ ] Setting margin PDF.
-- [ ] Setting header/footer.
-- [ ] Setting tampil/tidaknya KKM.
-- [ ] Setting tampil/tidaknya predikat.
+- [x] Format nama Peserta Didik.
+- [x] Format nomor dokumen.
+- [x] Format tanggal Indonesia.
+- [x] Setting tanda tangan.
+- [x] Setting logo pada rapor.
+- [x] Setting margin PDF.
+- [x] Setting header/footer.
+- [x] Setting tampil/tidaknya KKM.
+- [x] Setting tampil/tidaknya predikat.
 
 ## 03.04 Gate institusi
 
-- [ ] Admin dapat menyimpan identitas PKBM.
-- [ ] Identitas muncul pada preview rapor.
-- [ ] Logo tampil tanpa merusak layout.
-- [ ] Perubahan institusi tercatat bila audit diaktifkan.
+- [x] Admin dapat menyimpan identitas PKBM.
+- [x] Identitas muncul pada preview identitas rapor.
+- [x] Logo tampil tanpa merusak layout.
+- [x] Perubahan institusi tercatat pada audit log.
+
+**Gate 03:** Lulus. Identitas PKBM, penandatangan, konfigurasi format, preview identitas rapor, logo, dan audit perubahan sudah tersedia. Isi akademik rapor akan diisi pada modul rapor berikutnya.
 
 ---
 

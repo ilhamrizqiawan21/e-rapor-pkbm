@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreInstitutionRequest;
 use App\Http\Requests\Admin\UpdateInstitutionRequest;
+use App\Models\AuditLog;
 use App\Models\Institution;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -52,6 +53,8 @@ class InstitutionController extends Controller
             $request->user()->update(['institution_id' => $institution->getKey()]);
         }
 
+        $this->recordAudit($request, $institution, 'institution.created', null, $institution->getAttributes());
+
         return redirect()
             ->route('admin.institutions.edit', $institution)
             ->with('status', 'Identitas PKBM berhasil dibuat.');
@@ -75,6 +78,7 @@ class InstitutionController extends Controller
     {
         Gate::authorize('update', $institution);
 
+        $oldValues = Arr::only($institution->getAttributes(), $this->auditedFields());
         $oldLogoPath = $institution->logo_path;
         $institution->update(Arr::except($request->validated(), ['logo', 'remove_logo']));
 
@@ -87,6 +91,14 @@ class InstitutionController extends Controller
             $institution->update(['logo_path' => null]);
             $this->deleteLogo($oldLogoPath);
         }
+
+        $this->recordAudit(
+            $request,
+            $institution->refresh(),
+            'institution.updated',
+            $oldValues,
+            Arr::only($institution->getAttributes(), $this->auditedFields()),
+        );
 
         return redirect()
             ->route('admin.institutions.edit', $institution)
@@ -132,5 +144,26 @@ class InstitutionController extends Controller
         if ($oldPath !== null && $oldPath !== $newPath) {
             Storage::disk('public')->delete($oldPath);
         }
+    }
+
+    /** @return array<int, string> */
+    private function auditedFields(): array
+    {
+        return ['name', 'address', 'phone', 'email', 'logo_path', 'npsn', 'permit_number', 'postal_code'];
+    }
+
+    /** @param array<string, mixed>|null $oldValues */
+    /** @param array<string, mixed> $newValues */
+    private function recordAudit(Request $request, Institution $institution, string $action, ?array $oldValues, array $newValues): void
+    {
+        AuditLog::query()->create([
+            'institution_id' => $institution->getKey(),
+            'user_id' => $request->user()?->getKey(),
+            'action' => $action,
+            'entity_type' => Institution::class,
+            'entity_id' => $institution->getKey(),
+            'old_value_json' => $oldValues,
+            'new_value_json' => $newValues,
+        ]);
     }
 }

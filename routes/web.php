@@ -1,6 +1,10 @@
 <?php
 
 use App\Http\Controllers\Account\ProfileController;
+use App\Http\Controllers\Admin\InstitutionController;
+use App\Http\Controllers\Admin\InstitutionFormatSettingsController;
+use App\Http\Controllers\Admin\InstitutionPreviewController;
+use App\Http\Controllers\Admin\SignatorySettingsController;
 use App\Http\Controllers\Admin\UserPasswordController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\NewPasswordController;
@@ -34,6 +38,24 @@ Route::middleware('auth')->group(function (): void {
     Route::middleware('role:ADMIN')->prefix('admin/users/{user}/password')->name('admin.users.password.')->group(function (): void {
         Route::get('/', [UserPasswordController::class, 'edit'])->name('edit');
         Route::put('/', [UserPasswordController::class, 'update'])->name('update');
+    });
+
+    Route::middleware('role:ADMIN')->prefix('admin')->name('admin.')->group(function (): void {
+        Route::resource('institutions', InstitutionController::class);
+        Route::get('institutions/{institution}/preview', [InstitutionPreviewController::class, 'show'])
+            ->name('institutions.preview');
+        Route::delete('institutions/{institution}/logo', [InstitutionController::class, 'destroyLogo'])
+            ->name('institutions.logo.destroy');
+
+        Route::get('signatory-settings', [SignatorySettingsController::class, 'edit'])
+            ->name('signatory-settings.edit');
+        Route::put('signatory-settings', [SignatorySettingsController::class, 'update'])
+            ->name('signatory-settings.update');
+
+        Route::get('settings/format', [InstitutionFormatSettingsController::class, 'edit'])
+            ->name('settings.format.edit');
+        Route::put('settings/format', [InstitutionFormatSettingsController::class, 'update'])
+            ->name('settings.format.update');
     });
 });
 

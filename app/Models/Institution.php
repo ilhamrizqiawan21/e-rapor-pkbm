@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 #[Fillable([
     'name',
@@ -33,9 +34,8 @@ class Institution extends Model
         return $this->hasMany(Subject::class);
     }
 
-    public function signatorySetting(): \Illuminate\Database\Eloquent\Relations\HasOne
+    public function signatorySetting(): HasOne
     {
         return $this->hasOne(InstitutionSignatorySetting::class);
     }
-
 }

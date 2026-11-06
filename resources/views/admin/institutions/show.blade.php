@@ -7,9 +7,12 @@
                 <p class="text-sm font-semibold uppercase tracking-[0.18em] text-accent-700">Master data</p>
                 <h2 class="mt-2 text-3xl font-semibold tracking-tight text-slate-950">Detail identitas PKBM</h2>
             </div>
-            @can('update', $institution)
-                <x-button href="{{ route('admin.institutions.edit', $institution) }}">Edit identitas</x-button>
-            @endcan
+            <div class="flex flex-wrap gap-3">
+                <x-button href="{{ route('admin.institutions.preview', $institution) }}" variant="secondary">Preview rapor</x-button>
+                @can('update', $institution)
+                    <x-button href="{{ route('admin.institutions.edit', $institution) }}">Edit identitas</x-button>
+                @endcan
+            </div>
         </div>
 
         <section class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
