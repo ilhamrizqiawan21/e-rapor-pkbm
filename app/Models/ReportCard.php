@@ -34,4 +34,9 @@ class ReportCard extends Model
     {
         return $this->hasMany(ReportGrade::class);
     }
+
+    public function signatures(): HasMany
+    {
+        return $this->hasMany(ReportSignature::class);
+    }
 }

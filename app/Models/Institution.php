@@ -6,7 +6,16 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-#[Fillable(['name', 'address', 'phone', 'email', 'logo_path'])]
+#[Fillable([
+    'name',
+    'address',
+    'phone',
+    'email',
+    'logo_path',
+    'npsn',
+    'permit_number',
+    'postal_code',
+])]
 class Institution extends Model
 {
     public function users(): HasMany
