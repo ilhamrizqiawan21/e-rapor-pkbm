@@ -431,70 +431,72 @@ Sebuah fitur hanya boleh dianggap selesai jika semua hal berikut terpenuhi:
 
 ## 06.01 Data peserta didik
 
-- [ ] CRUD siswa.
-- [ ] NIPD/student number.
-- [ ] NISN/national student number.
-- [ ] Nama lengkap.
-- [ ] Jenis kelamin.
-- [ ] Tempat lahir.
-- [ ] Tanggal lahir.
-- [ ] Alamat.
-- [ ] Nama orang tua/wali.
-- [ ] Status aktif/nonaktif/lulus/pindah.
-- [ ] Search berdasarkan nama, NIPD, NISN.
-- [ ] Filter status.
-- [ ] Detail siswa.
-- [ ] Edit siswa.
-- [ ] Nonaktifkan siswa tanpa menghapus histori.
+- [x] CRUD siswa.
+- [x] NIPD/student number.
+- [x] NISN/national student number.
+- [x] Nama lengkap.
+- [x] Jenis kelamin.
+- [x] Tempat lahir.
+- [x] Tanggal lahir.
+- [x] Alamat.
+- [x] Nama orang tua/wali.
+- [x] Status aktif/nonaktif/lulus/pindah.
+- [x] Search berdasarkan nama, NIPD, NISN.
+- [x] Filter status.
+- [x] Detail siswa.
+- [x] Edit siswa.
+- [x] Nonaktifkan siswa tanpa menghapus histori.
 
 ## 06.02 Import siswa
 
-- [ ] Template Excel siswa.
-- [ ] Download template.
-- [ ] Upload file.
-- [ ] Validasi header.
-- [ ] Validasi baris kosong.
-- [ ] Validasi NIPD duplikat.
-- [ ] Validasi tanggal lahir.
-- [ ] Preview data sebelum import.
-- [ ] Ringkasan sukses/gagal per baris.
-- [ ] Import hanya membuat data valid.
-- [ ] Download error report.
+- [x] Template Excel siswa.
+- [x] Download template.
+- [x] Upload file.
+- [x] Validasi header.
+- [x] Validasi baris kosong.
+- [x] Validasi NIPD duplikat.
+- [x] Validasi tanggal lahir.
+- [x] Preview data sebelum import.
+- [x] Ringkasan sukses/gagal per baris.
+- [x] Import hanya membuat data valid.
+- [x] Download error report.
 
 ## 06.03 Enrollment awal
 
-- [ ] Tambahkan siswa ke kelas.
-- [ ] Tanggal mulai.
-- [ ] Status active.
-- [ ] Satu siswa tidak boleh memiliki dua penempatan aktif bersamaan.
-- [ ] Daftar siswa kelas.
-- [ ] Keluarkan siswa dari kelas dengan alasan.
+- [x] Tambahkan siswa ke kelas.
+- [x] Tanggal mulai.
+- [x] Status active.
+- [x] Satu siswa tidak boleh memiliki dua penempatan aktif bersamaan.
+- [x] Daftar siswa kelas.
+- [x] Keluarkan siswa dari kelas dengan alasan.
 
 ## 06.04 Perpindahan kelas
 
-- [ ] Form kelas asal.
-- [ ] Form kelas tujuan.
-- [ ] Tanggal efektif.
-- [ ] Alasan.
-- [ ] Catatan.
-- [ ] Admin sebagai approval.
-- [ ] Tutup enrollment lama.
-- [ ] Buat enrollment baru.
-- [ ] Buat class transfer.
-- [ ] Timeline histori siswa.
-- [ ] Filter histori berdasarkan tahun pelajaran.
-- [ ] Pilihan sumber rapor untuk transfer tengah semester.
-- [ ] Audit transfer.
-- [ ] Tidak ada hard delete enrollment lama.
+- [x] Form kelas asal.
+- [x] Form kelas tujuan.
+- [x] Tanggal efektif.
+- [x] Alasan.
+- [x] Catatan.
+- [x] Admin sebagai approval.
+- [x] Tutup enrollment lama.
+- [x] Buat enrollment baru.
+- [x] Buat class transfer.
+- [x] Timeline histori siswa.
+- [x] Filter histori berdasarkan tahun pelajaran.
+- [x] Pilihan sumber rapor untuk transfer tengah semester.
+- [x] Audit transfer.
+- [x] Tidak ada hard delete enrollment lama.
 
 ## 06.05 Gate siswa
 
-- [ ] CRUD siswa lulus.
-- [ ] Import Excel lulus dengan data valid dan invalid.
-- [ ] Siswa dapat ditempatkan ke kelas.
-- [ ] Siswa dapat dipindahkan tanpa kehilangan histori.
-- [ ] Test benturan enrollment lulus.
-- [ ] Test transfer tengah semester lulus.
+- [x] CRUD siswa lulus.
+- [x] Import Excel lulus dengan data valid dan invalid.
+- [x] Siswa dapat ditempatkan ke kelas.
+- [x] Siswa dapat dipindahkan tanpa kehilangan histori.
+- [x] Test benturan enrollment lulus.
+- [x] Test transfer tengah semester lulus.
+
+**Gate 06:** Lulus. Master peserta didik, import XLSX/CSV dengan preview dan error report, enrollment, transfer kelas, histori, audit, serta pilihan sumber rapor sudah tersedia.
 
 ---
 

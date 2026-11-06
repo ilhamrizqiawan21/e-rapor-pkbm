@@ -3,6 +3,8 @@
 use App\Http\Controllers\Account\ProfileController;
 use App\Http\Controllers\Admin\AcademicClassController;
 use App\Http\Controllers\Admin\AcademicYearController;
+use App\Http\Controllers\Admin\ClassTransferController;
+use App\Http\Controllers\Admin\EnrollmentController;
 use App\Http\Controllers\Admin\InstitutionController;
 use App\Http\Controllers\Admin\InstitutionFormatSettingsController;
 use App\Http\Controllers\Admin\InstitutionPreviewController;
@@ -10,6 +12,8 @@ use App\Http\Controllers\Admin\LevelController;
 use App\Http\Controllers\Admin\ProgramController;
 use App\Http\Controllers\Admin\SemesterController;
 use App\Http\Controllers\Admin\SignatorySettingsController;
+use App\Http\Controllers\Admin\StudentController;
+use App\Http\Controllers\Admin\StudentImportController;
 use App\Http\Controllers\Admin\SubjectAssignmentController;
 use App\Http\Controllers\Admin\TeacherController;
 use App\Http\Controllers\Admin\UserPasswordController;
@@ -43,11 +47,21 @@ Route::middleware('auth')->group(function (): void {
     Route::get('/account/profile', [ProfileController::class, 'edit'])->name('profile.edit');
 
     Route::prefix('admin')->name('admin.')->group(function (): void {
+        Route::get('students/import', [StudentImportController::class, 'create'])->name('students.import.create');
+        Route::get('students/import/template', [StudentImportController::class, 'template'])->name('students.import.template');
+        Route::post('students/import/preview', [StudentImportController::class, 'preview'])->name('students.import.preview');
+        Route::post('students/import', [StudentImportController::class, 'store'])->name('students.import.store');
+        Route::get('students/import/errors', [StudentImportController::class, 'errorReport'])->name('students.import.errors');
+        Route::resource('students', StudentController::class);
         Route::resource('academic-years', AcademicYearController::class);
         Route::resource('academic-years.semesters', SemesterController::class)->except(['show']);
         Route::resource('programs', ProgramController::class);
         Route::resource('programs.levels', LevelController::class);
         Route::resource('academic-classes', AcademicClassController::class);
+        Route::resource('academic-classes.enrollments', EnrollmentController::class)->only(['index', 'create', 'store']);
+        Route::get('enrollments/{enrollment}', [EnrollmentController::class, 'show'])->name('enrollments.show');
+        Route::delete('enrollments/{enrollment}', [EnrollmentController::class, 'withdraw'])->name('enrollments.withdraw');
+        Route::resource('enrollments.transfers', ClassTransferController::class)->only(['index', 'create', 'store']);
         Route::resource('academic-classes.subject-assignments', SubjectAssignmentController::class)->except(['show']);
     });
 
