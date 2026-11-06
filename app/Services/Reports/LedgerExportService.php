@@ -36,6 +36,7 @@ final class LedgerExportService
     /** @return array{classes: array<int, array<string, mixed>>, exported_at: string} */
     public function allData(User $actor, Semester $semester): array
     {
+        abort_unless($actor->hasAnyRole(['ADMIN', 'GURU', 'KEPSEK']), 403);
         Gate::forUser($actor)->authorize('view', $semester);
 
         $classes = $this->permittedClasses($actor, $semester);

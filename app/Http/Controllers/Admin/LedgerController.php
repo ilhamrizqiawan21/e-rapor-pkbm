@@ -9,11 +9,43 @@ use App\Http\Requests\Admin\LedgerExportRequest;
 use App\Models\AcademicClass;
 use App\Models\Semester;
 use App\Services\Reports\LedgerExportService;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 final class LedgerController extends Controller
 {
+    public function index(Request $request): View
+    {
+        $user = $request->user();
+        abort_unless($user->hasAnyRole(['ADMIN', 'GURU', 'KEPSEK']), 403);
+        $semesters = Semester::query()
+            ->with('academicYear')
+            ->whereHas('academicYear', fn (Builder $query): Builder => $query->where('institution_id', $user->institution_id))
+            ->orderByDesc('academic_year_id')
+            ->orderBy('sequence')
+            ->get();
+        $classes = AcademicClass::query()
+            ->with(['program', 'level', 'academicYear'])
+            ->whereHas('program', fn (Builder $query): Builder => $query->where('institution_id', $user->institution_id))
+            ->when($user->hasRole('GURU'), function (Builder $query) use ($user): void {
+                $query->where(function (Builder $class) use ($user): void {
+                    $class
+                        ->where('homeroom_teacher_id', $user->getKey())
+                        ->orWhereHas('subjectAssignments', fn (Builder $assignment): Builder => $assignment->where('teacher_id', $user->getKey()));
+                });
+            })
+            ->orderBy('academic_year_id')
+            ->orderBy('code')
+            ->orderBy('name')
+            ->get()
+            ->groupBy('academic_year_id');
+
+        return view('admin.ledger.index', compact('semesters', 'classes'));
+    }
+
     public function classExcel(LedgerExportRequest $request, AcademicClass $academicClass, Semester $semester, LedgerExportService $ledger): BinaryFileResponse|Response
     {
         try {

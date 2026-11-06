@@ -832,67 +832,69 @@ Sebuah fitur hanya boleh dianggap selesai jika semua hal berikut terpenuhi:
 
 ## 13.01 Format leger utama
 
-- [ ] Header PKBM.
-- [ ] Program.
-- [ ] Kelas.
-- [ ] Semester.
-- [ ] Tahun pelajaran.
-- [ ] Guru wali kelas.
-- [ ] No.
-- [ ] NIPD/NISN.
-- [ ] Nama Peserta Didik.
-- [ ] Kolom nilai per mapel memakai nama singkat.
-- [ ] Rata-rata per Peserta Didik.
-- [ ] Sakit.
-- [ ] Izin.
-- [ ] Tanpa keterangan.
-- [ ] Keterangan.
-- [ ] Footer tanggal/cetak.
-- [ ] Footer tanda tangan bila disepakati.
+- [x] Header PKBM.
+- [x] Program.
+- [x] Kelas.
+- [x] Semester.
+- [x] Tahun pelajaran.
+- [x] Guru wali kelas.
+- [x] No.
+- [x] NIPD/NISN.
+- [x] Nama Peserta Didik.
+- [x] Kolom nilai per mapel memakai nama singkat.
+- [x] Rata-rata per Peserta Didik.
+- [x] Sakit.
+- [x] Izin.
+- [x] Tanpa keterangan.
+- [x] Keterangan.
+- [x] Footer tanggal/cetak.
+- [x] Footer tanda tangan bila disepakati.
 
 ## 13.02 Sheet detail
 
-- [ ] Detail mapel.
-- [ ] KKM.
-- [ ] Nilai.
-- [ ] Predikat.
-- [ ] Status nilai.
-- [ ] Guru pengampu.
-- [ ] Deskripsi opsional.
-- [ ] Metadata periode.
+- [x] Detail mapel.
+- [x] KKM.
+- [x] Nilai.
+- [x] Predikat.
+- [x] Status nilai.
+- [x] Guru pengampu.
+- [x] Deskripsi opsional.
+- [x] Metadata periode.
 
 ## 13.03 Excel
 
-- [ ] Export satu kelas.
-- [ ] Export semua kelas sesuai permission.
-- [ ] Nama file.
-- [ ] Nama sheet aman dari karakter invalid.
-- [ ] Header freeze.
-- [ ] Auto width.
-- [ ] Number format nilai.
-- [ ] Border dan alignment.
-- [ ] Row average.
-- [ ] Summary sheet.
-- [ ] Data kosong ditandai.
+- [x] Export satu kelas.
+- [x] Export semua kelas sesuai permission.
+- [x] Nama file.
+- [x] Nama sheet aman dari karakter invalid.
+- [x] Header freeze.
+- [x] Auto width.
+- [x] Number format nilai.
+- [x] Border dan alignment.
+- [x] Row average.
+- [x] Summary sheet.
+- [x] Data kosong ditandai.
 
 ## 13.04 PDF leger
 
-- [ ] Landscape.
-- [ ] Repeat header.
-- [ ] Tabel banyak mapel.
-- [ ] Page break aman.
-- [ ] Font terbaca.
-- [ ] Export satu kelas.
-- [ ] Export seluruh kelas.
+- [x] Landscape.
+- [x] Repeat header.
+- [x] Tabel banyak mapel.
+- [x] Page break aman.
+- [x] Font terbaca.
+- [x] Export satu kelas.
+- [x] Export seluruh kelas.
 
 ## 13.05 Gate leger
 
-- [ ] Nilai leger sama dengan nilai rapor.
-- [ ] Nilai kosong terdeteksi.
-- [ ] Mapel memakai nama singkat.
-- [ ] KKM/predikat tersedia sesuai keputusan.
-- [ ] Export Excel bisa dibuka.
-- [ ] Export PDF bisa dibuka.
+- [x] Nilai leger sama dengan nilai rapor.
+- [x] Nilai kosong terdeteksi.
+- [x] Mapel memakai nama singkat.
+- [x] KKM/predikat tersedia sesuai keputusan.
+- [x] Export Excel bisa dibuka.
+- [x] Export PDF bisa dibuka.
+
+**Gate 13:** Lulus. Export leger Excel native dependency-free dan PDF landscape tersedia untuk satu kelas maupun seluruh kelas sesuai permission, dengan sumber nilai hanya dari rapor APPROVED/LOCKED.
 
 ---
 
@@ -900,41 +902,43 @@ Sebuah fitur hanya boleh dianggap selesai jika semua hal berikut terpenuhi:
 
 ## 14.01 Dashboard Admin
 
-- [ ] Jumlah kelas.
-- [ ] Jumlah siswa.
-- [ ] Jumlah Guru.
-- [ ] Periode aktif.
-- [ ] Progress nilai per kelas.
-- [ ] Rapor menunggu review.
-- [ ] Rapor siap lock.
-- [ ] Rapor terkunci.
-- [ ] Transfer kelas terbaru.
-- [ ] Link tindakan cepat.
+- [x] Jumlah kelas.
+- [x] Jumlah siswa.
+- [x] Jumlah Guru.
+- [x] Periode aktif.
+- [x] Progress nilai per kelas.
+- [x] Rapor menunggu review.
+- [x] Rapor siap lock.
+- [x] Rapor terkunci.
+- [x] Transfer kelas terbaru.
+- [x] Link tindakan cepat.
 
 ## 14.02 Dashboard Guru
 
-- [ ] Assignment mapel.
-- [ ] Progress input per mapel.
-- [ ] Draft belum submit.
-- [ ] Revisi dari review.
-- [ ] Kelas wali.
-- [ ] Shortcut bank deskripsi.
+- [x] Assignment mapel.
+- [x] Progress input per mapel.
+- [x] Draft belum submit.
+- [x] Revisi dari review.
+- [x] Kelas wali.
+- [x] Shortcut bank deskripsi.
 
 ## 14.03 Dashboard Kepsek
 
-- [ ] Rapor menunggu review.
-- [ ] Rapor disetujui.
-- [ ] Rapor ditolak.
-- [ ] Ringkasan per kelas.
-- [ ] Link preview.
-- [ ] Link approve/reject.
+- [x] Rapor menunggu review.
+- [x] Rapor disetujui.
+- [x] Rapor ditolak.
+- [x] Ringkasan per kelas.
+- [x] Link preview.
+- [x] Link approve/reject.
 
 ## 14.04 Gate dashboard
 
-- [ ] Semua angka berasal dari query aktual.
-- [ ] Dashboard menghormati permission.
-- [ ] Empty state tersedia.
-- [ ] Dashboard tidak gagal jika belum ada periode.
+- [x] Semua angka berasal dari query aktual.
+- [x] Dashboard menghormati permission.
+- [x] Empty state tersedia.
+- [x] Dashboard tidak gagal jika belum ada periode.
+
+**Gate 14:** Lulus. Dashboard Admin, Guru, dan Kepala PKBM memakai query aktual, dibatasi institusi/role, memiliki empty state, dan teruji pada data maupun periode kosong.
 
 ---
 

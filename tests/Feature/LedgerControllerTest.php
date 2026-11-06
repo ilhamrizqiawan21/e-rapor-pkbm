@@ -45,6 +45,18 @@ class LedgerControllerTest extends TestCase
             ->assertHeader('Content-Disposition', 'attachment; filename=leger-2025-2026-ganjil-a-1.xlsx');
     }
 
+    public function test_admin_can_open_the_ledger_selector_from_the_application_routes(): void
+    {
+        $fixture = $this->fixture();
+
+        $this->actingAs($fixture['admin'])
+            ->get(route('admin.ledger.index'))
+            ->assertOk()
+            ->assertSee('Generator leger nilai')
+            ->assertSee('Unduh semua Excel')
+            ->assertSee('Kelas 1');
+    }
+
     public function test_teacher_without_class_permission_is_forbidden(): void
     {
         $fixture = $this->fixture();

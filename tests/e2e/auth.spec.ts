@@ -44,7 +44,7 @@ test.describe('02.05 authentication and authorization browser flows', () => {
         test(`${name} can log in and sees the correct role`, async ({ page }) => {
             await login(page, account);
 
-            await expect(page.getByText('Fondasi project sudah siap')).toBeVisible();
+            await expect(page.getByText('Dashboard ' + account.roleLabel, { exact: true })).toBeVisible();
             await openAccountMenu(page);
             await expect(page.locator('[role="menu"]').getByText(account.roleLabel, { exact: true })).toBeVisible();
         });
@@ -76,7 +76,7 @@ test.describe('02.05 authentication and authorization browser flows', () => {
         const response = await page.goto('/dashboard/admin');
 
         expect(response?.status()).toBe(200);
-        await expect(page.getByText('Fondasi project sudah siap')).toBeVisible();
+        await expect(page.getByRole('heading', { name: 'Operasional PKBM dalam satu layar', exact: true })).toBeVisible();
     });
 
     test('guru is forbidden from the Admin dashboard', async ({ page }) => {
