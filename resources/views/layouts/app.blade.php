@@ -75,6 +75,7 @@
                         @endif
                         <a class="block rounded-lg {{ request()->routeIs('admin.students.*') ? 'bg-white/10 font-medium' : 'text-slate-300 hover:bg-white/5' }} px-3 py-2" href="{{ route('admin.students.index') }}">Peserta didik</a>
                         <a class="block rounded-lg {{ request()->routeIs('admin.subjects.*') ? 'bg-white/10 font-medium' : 'text-slate-300 hover:bg-white/5' }} px-3 py-2" href="{{ route('admin.subjects.index') }}">Mata pelajaran</a>
+                        <a class="block rounded-lg {{ request()->routeIs('admin.description-snippets.*') ? 'bg-white/10 font-medium' : 'text-slate-300 hover:bg-white/5' }} px-3 py-2" href="{{ route('admin.description-snippets.index') }}">Bank deskripsi</a>
                         @if (auth()->user()->hasRole('ADMIN'))
                             <a class="block rounded-lg {{ request()->routeIs('admin.predicate-ranges.*') ? 'bg-white/10 font-medium' : 'text-slate-300 hover:bg-white/5' }} px-3 py-2" href="{{ route('admin.predicate-ranges.index') }}">Rentang predikat</a>
                         @endif
@@ -128,6 +129,7 @@
                     @endif
                     <a class="block rounded-lg {{ request()->routeIs('admin.students.*') ? 'bg-white/10 font-medium' : 'text-slate-300 hover:bg-white/5' }} px-3 py-2" href="{{ route('admin.students.index') }}">Peserta didik</a>
                     <a class="block rounded-lg {{ request()->routeIs('admin.subjects.*') ? 'bg-white/10 font-medium' : 'text-slate-300 hover:bg-white/5' }} px-3 py-2" href="{{ route('admin.subjects.index') }}">Mata pelajaran</a>
+                    <a class="block rounded-lg {{ request()->routeIs('admin.description-snippets.*') ? 'bg-white/10 font-medium' : 'text-slate-300 hover:bg-white/5' }} px-3 py-2" href="{{ route('admin.description-snippets.index') }}">Bank deskripsi</a>
                     @if (auth()->user()->hasRole('ADMIN'))
                         <a class="block rounded-lg {{ request()->routeIs('admin.predicate-ranges.*') ? 'bg-white/10 font-medium' : 'text-slate-300 hover:bg-white/5' }} px-3 py-2" href="{{ route('admin.predicate-ranges.index') }}">Rentang predikat</a>
                     @endif

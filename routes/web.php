@@ -4,6 +4,8 @@ use App\Http\Controllers\Account\ProfileController;
 use App\Http\Controllers\Admin\AcademicClassController;
 use App\Http\Controllers\Admin\AcademicYearController;
 use App\Http\Controllers\Admin\ClassTransferController;
+use App\Http\Controllers\Admin\DescriptionSnippetController;
+use App\Http\Controllers\Admin\DescriptionSnippetPickerController;
 use App\Http\Controllers\Admin\EnrollmentController;
 use App\Http\Controllers\Admin\InstitutionController;
 use App\Http\Controllers\Admin\InstitutionFormatSettingsController;
@@ -77,6 +79,8 @@ Route::middleware('auth')->group(function (): void {
         Route::get('predicate-ranges/preview', [PredicateRangeController::class, 'preview'])->name('predicate-ranges.preview');
         Route::resource('predicate-ranges', PredicateRangeController::class)->except(['show']);
         Route::resource('subjects', SubjectController::class);
+        Route::get('description-snippets/picker', [DescriptionSnippetPickerController::class, 'index'])->name('description-snippets.picker');
+        Route::resource('description-snippets', DescriptionSnippetController::class);
     });
 
     Route::middleware('role:ADMIN')->prefix('admin/users/{user}/password')->name('admin.users.password.')->group(function (): void {

@@ -555,35 +555,37 @@ Sebuah fitur hanya boleh dianggap selesai jika semua hal berikut terpenuhi:
 
 ## 08.01 Data snippet
 
-- [ ] CRUD snippet.
-- [ ] Judul snippet.
-- [ ] Isi snippet.
-- [ ] Mapping mapel opsional.
-- [ ] Owner Guru opsional.
-- [ ] Visibility private/shared.
-- [ ] Status aktif/nonaktif.
-- [ ] Search judul dan isi.
-- [ ] Filter mapel.
-- [ ] Filter milik saya/dibagikan.
+- [x] CRUD snippet.
+- [x] Judul snippet.
+- [x] Isi snippet.
+- [x] Mapping mapel opsional.
+- [x] Owner Guru opsional.
+- [x] Visibility private/shared.
+- [x] Status aktif/nonaktif.
+- [x] Search judul dan isi.
+- [x] Filter mapel.
+- [x] Filter milik saya/dibagikan.
 
 ## 08.02 Pemakaian snippet
 
-- [ ] Tombol buka bank deskripsi pada input nilai.
-- [ ] Preview snippet.
-- [ ] Insert snippet ke deskripsi.
-- [ ] Deskripsi siswa dapat diedit setelah insert.
-- [ ] Perubahan deskripsi siswa tidak mengubah snippet asli.
-- [ ] Simpan deskripsi siswa sebagai snippet baru.
-- [ ] Permission snippet private.
-- [ ] Permission snippet shared.
+- [x] Tombol buka bank deskripsi pada input nilai.
+- [x] Preview snippet.
+- [x] Insert snippet ke deskripsi.
+- [x] Deskripsi siswa dapat diedit setelah insert.
+- [x] Perubahan deskripsi siswa tidak mengubah snippet asli.
+- [x] Simpan deskripsi siswa sebagai snippet baru.
+- [x] Permission snippet private.
+- [x] Permission snippet shared.
 
 ## 08.03 Gate deskripsi
 
-- [ ] Guru dapat membuat snippet private.
-- [ ] Admin dapat membuat snippet shared.
-- [ ] Guru dapat menggunakan snippet shared.
-- [ ] Guru tidak dapat mengubah snippet milik Guru lain tanpa izin.
-- [ ] Nilai rapor menyimpan teks final, bukan hanya referensi snippet.
+- [x] Guru dapat membuat snippet private.
+- [x] Admin dapat membuat snippet shared.
+- [x] Guru dapat menggunakan snippet shared.
+- [x] Guru tidak dapat mengubah snippet milik Guru lain tanpa izin.
+- [x] Nilai rapor menyimpan teks final, bukan hanya referensi snippet.
+
+**Gate 08:** Lulus. Bank deskripsi reusable, permission private/shared, picker, insert editable, serta snapshot teks final pada nilai sudah tersedia.
 
 ---
 
