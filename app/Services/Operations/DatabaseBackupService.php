@@ -5,6 +5,7 @@ namespace App\Services\Operations;
 use App\Exceptions\BackupException;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
@@ -14,12 +15,17 @@ use Throwable;
 
 final class DatabaseBackupService
 {
+    private const ENCRYPTION_PREFIX = 'ERAPOR-BACKUP-ENC-1:';
+
     /** @return array{name: string, path: string, driver: string, size: int, checksum: string, created_at: Carbon, pruned: int} */
     public function create(): array
     {
         $driver = (string) config('database.connections.'.config('database.default').'.driver');
         $now = now();
         $extension = in_array($driver, ['sqlite'], true) ? 'sqlite' : 'sql.gz';
+        if (config('backup.encryption')) {
+            $extension .= '.enc';
+        }
         $name = 'database-'.$driver.'-'.$now->format('Ymd-His-u').'.'.$extension;
         $relativePath = trim((string) config('backup.path', 'backups/database'), '/').'/'.$name;
         $disk = $this->disk();
@@ -84,16 +90,24 @@ final class DatabaseBackupService
             throw new BackupException('File backup tidak dapat dibaca.');
         }
 
+        $this->assertRestoreName($originalName);
+        $size = filesize($sourcePath);
+        if ($size === false || $size > (int) config('backup.max_restore_bytes', 536870912)) {
+            throw new BackupException('File backup melebihi batas ukuran yang diizinkan.');
+        }
+
+        [$restorePath, $temporaryRestorePath] = $this->materializeRestoreSource($sourcePath, $originalName);
         $safetyBackup = $this->create();
         $driver = (string) config('database.connections.'.config('database.default').'.driver');
+        $restoreName = $this->removeEncryptionSuffix($originalName);
 
         try {
             if ($driver === 'sqlite') {
-                $this->restoreSqlite($sourcePath);
+                $this->restoreSqlite($restorePath);
             } elseif (in_array($driver, ['mysql', 'mariadb'], true)) {
-                $this->restoreSql($sourcePath, $originalName, $this->mysqlRestoreCommand());
+                $this->restoreSql($restorePath, $restoreName, $this->mysqlRestoreCommand());
             } elseif ($driver === 'pgsql') {
-                $this->restoreSql($sourcePath, $originalName, $this->postgresRestoreCommand());
+                $this->restoreSql($restorePath, $restoreName, $this->postgresRestoreCommand());
             } else {
                 throw new BackupException('Driver database '.$driver.' belum didukung untuk restore.');
             }
@@ -103,6 +117,10 @@ final class DatabaseBackupService
             throw $exception;
         } catch (Throwable $exception) {
             throw new BackupException('Restore database gagal. Safety backup tersimpan sebagai '.$safetyBackup['name'].'.', previous: $exception);
+        } finally {
+            if ($temporaryRestorePath !== null) {
+                @unlink($temporaryRestorePath);
+            }
         }
 
         return [
@@ -140,17 +158,22 @@ final class DatabaseBackupService
             throw new BackupException('File database SQLite tidak ditemukan.');
         }
 
-        if (! $disk->put($relativePath, fopen($source, 'rb'))) {
-            throw new BackupException('File backup SQLite gagal disimpan.');
+        $contents = file_get_contents($source);
+        if ($contents === false) {
+            throw new BackupException('File database SQLite gagal dibaca.');
         }
+
+        $this->writeBackup($disk, $relativePath, $contents);
     }
 
     private function backupSql(Filesystem $disk, string $relativePath, string $sql): void
     {
         $compressed = gzencode($sql, 6);
-        if ($compressed === false || ! $disk->put($relativePath, $compressed)) {
+        if ($compressed === false) {
             throw new BackupException('Dump SQL gagal disimpan.');
         }
+
+        $this->writeBackup($disk, $relativePath, $compressed);
     }
 
     private function dumpMysql(): string
@@ -171,7 +194,7 @@ final class DatabaseBackupService
         $process->run();
 
         if (! $process->isSuccessful()) {
-            throw new BackupException('mysqldump gagal: '.trim($process->getErrorOutput()));
+            throw new BackupException('mysqldump gagal. Periksa konfigurasi database dan log server.');
         }
 
         return $process->getOutput();
@@ -194,7 +217,7 @@ final class DatabaseBackupService
         $process->run();
 
         if (! $process->isSuccessful()) {
-            throw new BackupException('pg_dump gagal: '.trim($process->getErrorOutput()));
+            throw new BackupException('pg_dump gagal. Periksa konfigurasi database dan log server.');
         }
 
         return $process->getOutput();
@@ -243,7 +266,7 @@ final class DatabaseBackupService
         $process->run();
 
         if (! $process->isSuccessful()) {
-            throw new BackupException('Restore SQL gagal: '.trim($process->getErrorOutput()));
+            throw new BackupException('Restore SQL gagal. Periksa format dump dan log server.');
         }
     }
 
@@ -334,7 +357,86 @@ final class DatabaseBackupService
 
     private function isBackupName(string $name): bool
     {
-        return preg_match('/^database-(sqlite|mysql|mariadb|pgsql)-[0-9]{8}-[0-9]{6}-[0-9]{6}\\.(sqlite|sql\\.gz)$/', $name) === 1;
+        return preg_match('/^database-(sqlite|mysql|mariadb|pgsql)-[0-9]{8}-[0-9]{6}-[0-9]{6}\\.(sqlite|sql\\.gz)(\\.enc)?$/', $name) === 1;
+    }
+
+    private function writeBackup(Filesystem $disk, string $relativePath, string $contents): void
+    {
+        if (config('backup.encryption')) {
+            try {
+                $contents = Crypt::encryptString(self::ENCRYPTION_PREFIX.$contents);
+            } catch (Throwable $exception) {
+                throw new BackupException('Enkripsi backup gagal. Pastikan APP_KEY tersedia.', previous: $exception);
+            }
+        }
+
+        if (! $disk->put($relativePath, $contents)) {
+            throw new BackupException('File backup gagal disimpan.');
+        }
+    }
+
+    /** @return array{0: string, 1: string|null} */
+    private function materializeRestoreSource(string $sourcePath, string $originalName): array
+    {
+        if (! $this->isEncryptedName($originalName)) {
+            return [$sourcePath, null];
+        }
+
+        $contents = file_get_contents($sourcePath);
+        if ($contents === false) {
+            throw new BackupException('Isi backup terenkripsi tidak dapat dibaca.');
+        }
+
+        try {
+            $decrypted = Crypt::decryptString($contents);
+        } catch (Throwable $exception) {
+            throw new BackupException('Backup terenkripsi tidak valid atau APP_KEY berbeda.', previous: $exception);
+        }
+
+        if (! str_starts_with($decrypted, self::ENCRYPTION_PREFIX)) {
+            throw new BackupException('Format backup terenkripsi tidak dikenal.');
+        }
+
+        $temporary = tempnam(sys_get_temp_dir(), 'erapor-restore-');
+        if ($temporary === false || file_put_contents($temporary, substr($decrypted, strlen(self::ENCRYPTION_PREFIX))) === false) {
+            if ($temporary !== false) {
+                @unlink($temporary);
+            }
+            throw new BackupException('File sementara restore tidak dapat dibuat.');
+        }
+
+        return [$temporary, $temporary];
+    }
+
+    private function assertRestoreName(string $originalName): void
+    {
+        if (basename($originalName) !== $originalName
+            || preg_match('/\\.(sqlite|db|sql\\.gz)(\\.enc)?$/i', $originalName) !== 1) {
+            throw new BackupException('Nama atau format file backup tidak valid.');
+        }
+
+        $driver = (string) config('database.connections.'.config('database.default').'.driver');
+        $lower = strtolower($originalName);
+        $sqliteFile = str_ends_with($lower, '.sqlite') || str_ends_with($lower, '.db') || str_ends_with($lower, '.sqlite.enc') || str_ends_with($lower, '.db.enc');
+        $sqlFile = str_ends_with($lower, '.sql.gz') || str_ends_with($lower, '.sql.gz.enc');
+
+        if ($driver === 'sqlite' && ! $sqliteFile) {
+            throw new BackupException('Restore SQLite membutuhkan file database SQLite.');
+        }
+
+        if ($driver !== 'sqlite' && ! $sqlFile) {
+            throw new BackupException('Restore online membutuhkan dump SQL terkompresi.');
+        }
+    }
+
+    private function isEncryptedName(string $name): bool
+    {
+        return str_ends_with(strtolower($name), '.enc');
+    }
+
+    private function removeEncryptionSuffix(string $name): string
+    {
+        return $this->isEncryptedName($name) ? substr($name, 0, -4) : $name;
     }
 
     private function checksum(Filesystem $disk, string $path): string

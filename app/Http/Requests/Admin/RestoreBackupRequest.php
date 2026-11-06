@@ -3,7 +3,6 @@
 namespace App\Http\Requests\Admin;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rules\File;
 
 final class RestoreBackupRequest extends FormRequest
 {
@@ -18,7 +17,9 @@ final class RestoreBackupRequest extends FormRequest
         return [
             'backup' => [
                 'required',
-                File::types(['sqlite', 'db', 'sql', 'gz'])->max((int) ceil(config('backup.max_restore_bytes', 536870912) / 1024)),
+                'file',
+                'max:'.(int) ceil(config('backup.max_restore_bytes', 536870912) / 1024),
+                'extensions:sqlite,db,gz,enc',
             ],
             'confirmation' => ['required', 'string', 'in:RESTORE'],
         ];

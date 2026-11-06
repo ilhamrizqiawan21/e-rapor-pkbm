@@ -71,9 +71,10 @@ class StudentController extends Controller
             ->with('status', 'Peserta didik berhasil ditambahkan.');
     }
 
-    public function show(Student $student): View
+    public function show(Student $student, Request $request, AuditLogger $audit): View
     {
         Gate::authorize('view', $student);
+        $audit->record($request->user(), 'student.viewed', Student::class, $student->getKey());
 
         $student->load([
             'institution',

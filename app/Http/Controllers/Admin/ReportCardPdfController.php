@@ -18,9 +18,10 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 final class ReportCardPdfController extends Controller
 {
-    public function preview(ReportCard $reportCard, ReportCardPdfDataService $pdf): View|Response
+    public function preview(Request $request, ReportCard $reportCard, ReportCardPdfDataService $pdf, AuditLogger $audit): View|Response
     {
         Gate::authorize('view', $reportCard);
+        $audit->record($request->user(), 'report_card.viewed', ReportCard::class, $reportCard->getKey());
 
         try {
             return response()->view('reports.report-card.pdf', $pdf->data($reportCard), 200, [
@@ -112,7 +113,11 @@ final class ReportCardPdfController extends Controller
 
     private function failure(\Throwable $exception, int $status): Response
     {
-        return response($exception->getMessage(), $status, [
+        $message = config('app.debug')
+            ? $exception->getMessage()
+            : 'Dokumen rapor belum dapat diproses. Hubungi Admin jika masalah berlanjut.';
+
+        return response($message, $status, [
             'Content-Type' => 'text/plain; charset=UTF-8',
         ]);
     }

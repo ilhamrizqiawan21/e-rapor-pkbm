@@ -32,7 +32,7 @@ class BackupOperationsTest extends TestCase
         $database = $this->sqliteFile(['marker' => 'current']);
         $this->configureSqlite($database);
         Storage::fake('backup-test');
-        config(['backup.disk' => 'backup-test']);
+        config(['backup.disk' => 'backup-test', 'backup.encryption' => false]);
 
         $result = app(DatabaseBackupService::class)->create();
 
@@ -48,7 +48,7 @@ class BackupOperationsTest extends TestCase
         $source = $this->sqliteFile(['marker' => 'restored']);
         $this->configureSqlite($target);
         Storage::fake('backup-test');
-        config(['backup.disk' => 'backup-test']);
+        config(['backup.disk' => 'backup-test', 'backup.encryption' => false]);
 
         $result = app(DatabaseBackupService::class)->restoreFromPath($source, 'client-backup.sqlite');
 
@@ -56,6 +56,30 @@ class BackupOperationsTest extends TestCase
         $this->assertNotSame($result['name'], $result['safety_backup']['name']);
         $this->assertSame('restored', $this->sqliteMarker($target));
         Storage::disk('backup-test')->assertExists($result['safety_backup']['path']);
+    }
+
+    public function test_sqlite_backup_can_be_encrypted_and_restored(): void
+    {
+        $target = $this->sqliteFile(['marker' => 'current']);
+        $source = $this->sqliteFile(['marker' => 'restored-encrypted']);
+        Storage::fake('backup-test');
+        config(['backup.disk' => 'backup-test', 'backup.encryption' => true]);
+
+        $this->configureSqlite($source);
+        $backup = app(DatabaseBackupService::class)->create();
+
+        $this->assertStringEndsWith('.sqlite.enc', $backup['name']);
+        $this->assertFalse(str_starts_with(Storage::disk('backup-test')->get($backup['path']), "SQLite format 3\000"));
+
+        $encrypted = tempnam(sys_get_temp_dir(), 'erapor-encrypted-');
+        $this->assertNotFalse($encrypted);
+        $this->temporaryFiles[] = $encrypted;
+        file_put_contents($encrypted, Storage::disk('backup-test')->get($backup['path']));
+
+        $this->configureSqlite($target);
+        app(DatabaseBackupService::class)->restoreFromPath($encrypted, $backup['name']);
+
+        $this->assertSame('restored-encrypted', $this->sqliteMarker($target));
     }
 
     public function test_only_admin_can_open_backup_operations(): void

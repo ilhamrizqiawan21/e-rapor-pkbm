@@ -44,7 +44,7 @@ final class BackupController extends Controller
         } catch (Throwable $exception) {
             report($exception);
 
-            return back()->withErrors(['backup' => $exception->getMessage()]);
+            return back()->withErrors(['backup' => $this->errorMessage($exception, 'Backup database gagal. Periksa log aplikasi atau hubungi Admin sistem.')]);
         }
     }
 
@@ -65,7 +65,7 @@ final class BackupController extends Controller
         } catch (Throwable $exception) {
             report($exception);
 
-            return back()->withErrors(['backup' => $exception->getMessage()]);
+            return back()->withErrors(['backup' => $this->errorMessage($exception, 'Restore database gagal. Safety backup mungkin sudah dibuat; periksa log aplikasi.')]);
         }
     }
 
@@ -77,5 +77,10 @@ final class BackupController extends Controller
         $audit->record($request->user(), 'backup.downloaded', 'backup', 0, null, ['name' => $file['name']]);
 
         return Storage::disk((string) config('backup.disk', 'local'))->download($file['path'], $file['name']);
+    }
+
+    private function errorMessage(Throwable $exception, string $fallback): string
+    {
+        return config('app.debug') ? $exception->getMessage() : $fallback;
     }
 }

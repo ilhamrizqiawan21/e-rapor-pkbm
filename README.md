@@ -45,7 +45,9 @@ Untuk localhost/SQLite, jalankan \`php artisan backup:database\`.
 
 Untuk online/MySQL atau PostgreSQL, pasang binary \`mysqldump\`/\`mysql\` atau \`pg_dump\`/\`psql\` pada server. Jalankan scheduler Laravel pada satu worker dengan \`php artisan schedule:work\`.
 
-Jadwal default adalah setiap hari pukul \`02:30\` waktu aplikasi. Atur disk private, retensi, batas ukuran restore, dan lokasi binary melalui variabel \`BACKUP_*\`.
+Jadwal default adalah setiap hari pukul \`02:30\` waktu aplikasi. Atur disk private, retensi, batas ukuran restore, lokasi binary, dan enkripsi melalui variabel \`BACKUP_*\`. Backup terenkripsi aktif secara default melalui \`BACKUP_ENCRYPTION=true\` dan \`APP_KEY\`; jangan memindahkan APP_KEY atau file backup melalui repository/chat.
+
+Detail klasifikasi data, role boundary, retensi, dan respons insiden ada di [PRIVACY-AND-DATA-SECURITY.md](PRIVACY-AND-DATA-SECURITY.md).
 
 ## Konfigurasi lingkungan
 
@@ -77,6 +79,7 @@ Data seed development menyediakan:
 - `database/migrations`: skema akademik, penempatan siswa, nilai, rapor, dan audit
 - `resources/views/layouts`: shell UI awal
 - `SCOPE-AND-GLOSSARY.md`: baseline scope, istilah canonical, role matrix, dan aturan bisnis
+- `PRIVACY-AND-DATA-SECURITY.md`: klasifikasi data, privacy, retensi, dan checklist keamanan deployment
 - `TODO.md`: master checklist eksekusi terukur
 - Dokumen PRD, ERD, dan design berada di folder `outputs` workspace induk.
 

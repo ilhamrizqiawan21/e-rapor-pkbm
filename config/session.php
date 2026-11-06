@@ -47,7 +47,7 @@ return [
     |
     */
 
-    'encrypt' => env('SESSION_ENCRYPT', false),
+    'encrypt' => (bool) env('SESSION_ENCRYPT', in_array((string) env('APP_ENV', 'local'), ['staging', 'production'], true)),
 
     /*
     |--------------------------------------------------------------------------
@@ -169,7 +169,7 @@ return [
     |
     */
 
-    'secure' => env('SESSION_SECURE_COOKIE'),
+    'secure' => (bool) env('SESSION_SECURE_COOKIE', in_array((string) env('APP_ENV', 'local'), ['staging', 'production'], true)),
 
     /*
     |--------------------------------------------------------------------------

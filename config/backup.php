@@ -7,6 +7,7 @@ return [
     'timeout_seconds' => (int) env('BACKUP_TIMEOUT_SECONDS', 300),
     'schedule' => env('BACKUP_SCHEDULE', '02:30'),
     'max_restore_bytes' => (int) env('BACKUP_MAX_RESTORE_BYTES', 536870912),
+    'encryption' => filter_var(env('BACKUP_ENCRYPTION', true), FILTER_VALIDATE_BOOL),
     'binaries' => [
         'mysqldump' => env('BACKUP_MYSQLDUMP_BINARY', 'mysqldump'),
         'mysql' => env('BACKUP_MYSQL_BINARY', 'mysql'),

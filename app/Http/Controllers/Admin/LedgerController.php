@@ -55,7 +55,7 @@ final class LedgerController extends Controller
                 'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
             ])->deleteFileAfterSend(true);
         } catch (LedgerExportException|PdfEngineUnavailable $exception) {
-            return response($exception->getMessage(), 422, ['Content-Type' => 'text/plain; charset=UTF-8']);
+            return response($this->errorMessage($exception), 422, ['Content-Type' => 'text/plain; charset=UTF-8']);
         }
     }
 
@@ -68,7 +68,7 @@ final class LedgerController extends Controller
                 'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
             ])->deleteFileAfterSend(true);
         } catch (LedgerExportException|PdfEngineUnavailable $exception) {
-            return response($exception->getMessage(), 422, ['Content-Type' => 'text/plain; charset=UTF-8']);
+            return response($this->errorMessage($exception), 422, ['Content-Type' => 'text/plain; charset=UTF-8']);
         }
     }
 
@@ -93,7 +93,14 @@ final class LedgerController extends Controller
                 'Content-Length' => (string) strlen($export['contents']),
             ]);
         } catch (LedgerExportException|PdfEngineUnavailable $exception) {
-            return response($exception->getMessage(), 422, ['Content-Type' => 'text/plain; charset=UTF-8']);
+            return response($this->errorMessage($exception), 422, ['Content-Type' => 'text/plain; charset=UTF-8']);
         }
+    }
+
+    private function errorMessage(\Throwable $exception): string
+    {
+        return config('app.debug')
+            ? $exception->getMessage()
+            : 'Export belum dapat diproses. Hubungi Admin jika masalah berlanjut.';
     }
 }

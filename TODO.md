@@ -990,39 +990,41 @@ Sebuah fitur hanya boleh dianggap selesai jika semua hal berikut terpenuhi:
 
 ## 16.01 Application security
 
-- [ ] CSRF aktif.
-- [ ] Authorization seluruh resource.
-- [ ] Mass assignment aman.
-- [ ] Validasi upload file.
-- [ ] Batas ukuran upload.
-- [ ] Sanitasi nama file.
-- [ ] Storage file private untuk dokumen sensitif.
-- [ ] Signed URL untuk download bila diperlukan.
-- [ ] Rate limit login.
-- [ ] Session timeout.
-- [ ] Password hashing.
-- [ ] Jangan log password/token.
-- [ ] Error production tidak membocorkan stack trace.
+- [x] CSRF aktif pada seluruh route web yang mengubah state.
+- [x] Authorization seluruh resource melalui policy, role middleware, dan query scope institusi.
+- [x] Mass assignment aman melalui atribut `Fillable` dan Form Request validated data.
+- [x] Validasi upload file untuk import Peserta Didik, logo, dan backup.
+- [x] Batas ukuran upload diterapkan pada request dan service parser.
+- [x] Sanitasi nama file melalui generated path, token acak, dan allowlist backup.
+- [x] Storage file private untuk dokumen sensitif.
+- [x] Signed URL tidak diperlukan pada MVP karena download memakai route Admin terautentikasi dan audit.
+- [x] Rate limit login lima percobaan per menit per login/IP.
+- [x] Session timeout 120 menit, HttpOnly, SameSite, dan encryption dapat dikonfigurasi per environment.
+- [x] Password hashing memakai cast `hashed` Laravel.
+- [x] Jangan log password/token; audit hanya menyimpan metadata operasional yang diperlukan.
+- [x] Error production tidak membocorkan stack trace atau detail command/database.
 
 ## 16.02 Data privacy
 
-- [ ] Data siswa tidak tampil di halaman publik.
-- [ ] Export dibatasi role.
-- [ ] Audit akses data sensitif.
-- [ ] Backup terenkripsi jika memungkinkan.
-- [ ] Kebijakan penghapusan/nonaktif data.
-- [ ] Kebijakan retensi rapor.
-- [ ] Dokumen privacy internal.
+- [x] Data siswa tidak tampil di halaman publik.
+- [x] Export dibatasi role dan institusi.
+- [x] Audit akses data sensitif untuk Peserta Didik dan rapor serta audit export.
+- [x] Backup terenkripsi menggunakan APP_KEY ketika `BACKUP_ENCRYPTION=true`.
+- [x] Kebijakan penghapusan/nonaktif data mengikuti histori enrollment/rapor.
+- [x] Kebijakan retensi rapor dan backup terdokumentasi.
+- [x] Dokumen privacy internal dibuat di `PRIVACY-AND-DATA-SECURITY.md`.
 
 ## 16.03 Security testing
 
-- [ ] Test IDOR student.
-- [ ] Test IDOR report card.
-- [ ] Test akses lintas institusi.
-- [ ] Test upload file.
-- [ ] Test session logout.
-- [ ] Test brute force login.
-- [ ] Test unauthorized export.
+- [x] Test IDOR student.
+- [x] Test IDOR report card.
+- [x] Test akses lintas institusi.
+- [x] Test upload file.
+- [x] Test session logout.
+- [x] Test brute force login.
+- [x] Test unauthorized export.
+
+**Gate 16:** Lulus. Security headers, session/cookie hardening, policy dan scope lintas institusi, upload validation, private/encrypted backup, audit akses, privacy policy internal, dependency audit, PHPUnit, dan Playwright telah diverifikasi.
 
 ---
 
