@@ -194,20 +194,22 @@ Sebuah fitur hanya boleh dianggap selesai jika semua hal berikut terpenuhi:
 
 ## 02.02 Alur auth
 
-- [ ] Halaman login.
-- [ ] Validasi username/email wajib.
-- [ ] Validasi password wajib.
-- [ ] Pesan error login gagal.
-- [ ] Logout.
-- [ ] Redirect setelah login berdasarkan role.
-- [ ] Redirect user yang belum login.
-- [ ] Redirect user yang tidak memiliki akses.
-- [ ] Nonaktifkan login user berstatus inactive.
-- [ ] Rate limit login.
-- [ ] Session regeneration setelah login.
-- [ ] Logout invalidates session.
-- [ ] Password reset minimal untuk Admin.
-- [ ] Ubah password sendiri.
+- [x] Halaman login.
+- [x] Validasi username/email wajib.
+- [x] Validasi password wajib.
+- [x] Pesan error login gagal.
+- [x] Logout.
+- [x] Redirect setelah login berdasarkan role.
+- [x] Redirect user yang belum login.
+- [x] Redirect user yang tidak memiliki akses melalui role middleware.
+- [x] Nonaktifkan login user berstatus inactive.
+- [x] Rate limit login lima percobaan per menit per login/IP.
+- [x] Session regeneration setelah login.
+- [x] Logout meng-invalidasi session dan meregenerasi CSRF token.
+- [x] Password reset minimal: Admin dapat mereset password pengguna satu institusi; tersedia juga reset link berbasis email.
+- [x] Ubah password sendiri dengan verifikasi password saat ini.
+
+**Gate 02.02:** Lulus. Alur autentikasi session web siap dipakai untuk implementasi authorization 02.03.
 
 ## 02.03 Authorization
 

@@ -6,6 +6,8 @@ namespace App\Models;
 use App\Enums\RoleCode;
 use App\Enums\UserStatus;
 use Database\Factories\UserFactory;
+use Illuminate\Auth\Passwords\CanResetPassword;
+use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -17,10 +19,10 @@ use Illuminate\Notifications\Notifiable;
 
 #[Fillable(['institution_id', 'name', 'username', 'email', 'password', 'status'])]
 #[Hidden(['password', 'remember_token'])]
-class User extends Authenticatable
+class User extends Authenticatable implements CanResetPasswordContract
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable;
+    use CanResetPassword, HasFactory, Notifiable;
 
     /**
      * Get the attributes that should be cast.
@@ -59,7 +61,7 @@ class User extends Authenticatable
     }
 
     /**
-     * @param array<int, RoleCode|string> $roles
+     * @param  array<int, RoleCode|string>  $roles
      */
     public function hasAnyRole(array $roles): bool
     {

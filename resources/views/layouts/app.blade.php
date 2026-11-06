@@ -123,7 +123,20 @@
                             <p class="text-sm font-semibold text-slate-900">Belum dikonfigurasi</p>
                         </div>
                     </div>
-                    <x-badge variant="warning" dot>Fondasi awal</x-badge>
+                    <div class="flex items-center gap-4">
+                        <x-badge variant="warning" dot>Fondasi awal</x-badge>
+                        @auth
+                            <div class="hidden text-right sm:block">
+                                <p class="text-sm font-semibold text-slate-900">{{ auth()->user()->name }}</p>
+                                <p class="text-xs text-slate-500">{{ auth()->user()->staffProfile?->title ?? 'Pengguna' }}</p>
+                            </div>
+                            <a href="{{ route('password.edit') }}" class="hidden text-sm font-medium text-brand-800 hover:text-brand-950 sm:inline">Ubah password</a>
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <button type="submit" class="text-sm font-medium text-rose-700 hover:text-rose-900">Keluar</button>
+                            </form>
+                        @endauth
+                    </div>
                 </div>
             </header>
 

@@ -2,14 +2,18 @@
 
 namespace Tests\Feature;
 
+use App\Models\User;
+use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Tests\TestCase;
 
 class UiComponentsTest extends TestCase
 {
+    use LazilyRefreshDatabase;
+
     public function test_dashboard_page_loads_with_responsive_drawer_and_tokens(): void
     {
-        $response = $this->get(route('dashboard'));
+        $response = $this->actingAs(User::factory()->create())->get(route('dashboard'));
 
         $response->assertStatus(200);
         $response->assertSee('E-Rapor PKBM');
@@ -146,4 +150,3 @@ class UiComponentsTest extends TestCase
         $error->assertSee('Ulangi');
     }
 }
-

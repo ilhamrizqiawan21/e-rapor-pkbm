@@ -1,0 +1,28 @@
+@extends('layouts.app')
+
+@section('content')
+    <div class="mx-auto max-w-2xl">
+        <div class="mb-6">
+            <p class="text-sm font-semibold uppercase tracking-[0.18em] text-accent-700">Akun</p>
+            <h2 class="mt-2 text-3xl font-semibold tracking-tight text-slate-950">Ubah password</h2>
+            <p class="mt-2 text-sm text-slate-600">Gunakan minimal 8 karakter dengan huruf besar, huruf kecil, dan angka.</p>
+        </div>
+
+        @if (session('status'))
+            <div class="mb-5 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800" role="status">{{ session('status') }}</div>
+        @endif
+
+        <section class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+            <form method="POST" action="{{ route('password.update') }}" class="space-y-5">
+                @csrf
+                @method('PUT')
+                <x-input name="current_password" type="password" label="Password saat ini" :error="$errors->first('current_password')" required autofocus />
+                <x-input name="password" type="password" label="Password baru" :error="$errors->first('password')" required />
+                <x-input name="password_confirmation" type="password" label="Ulangi password baru" required />
+                <div class="flex justify-end">
+                    <button type="submit" class="inline-flex items-center justify-center rounded-lg bg-brand-900 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-950 focus:outline-hidden focus:ring-2 focus:ring-brand-500 focus:ring-offset-2">Simpan perubahan</button>
+                </div>
+            </form>
+        </section>
+    </div>
+@endsection
