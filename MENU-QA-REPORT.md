@@ -57,12 +57,13 @@ Jumlah link unik yang ditemukan dari sidebar/drawer responsive:
 | Aspek | Penilaian | Bukti / catatan |
 |---|---|---|
 | Label domain | Baik | “Peserta didik”, “Bank deskripsi”, “Input nilai”, “Kelengkapan rapor”, “Generator leger”, “Histori audit”, dan “Backup database” cukup spesifik dan mudah dipahami |
-| Grouping | Baik | Urutan Fondasi → Master Data → Penilaian → Rapor dan Leger → Pengaturan konsisten dengan alur operasional PKBM |
+| Grouping | Baik | Urutan Data inti → Penilaian → Rapor & leger → Pengaturan PKBM → Akun konsisten dengan alur operasional PKBM |
 | Role visibility | Baik | Data Guru, Rentang predikat, Pengaturan PKBM, dan Backup database dibatasi ke Admin; Histori audit tersedia untuk Admin/Kepsek |
 | Account flow | Baik | Profil, ubah password, dan logout dipusatkan di account menu header; diuji pada desktop/mobile |
 | Mobile flow | Baik | Drawer dapat dibuka melalui “Buka menu navigasi”, ditutup melalui “Tutup menu”, dan seluruh destination tetap dapat dibuka |
-| Non-generik | Perlu penyempurnaan kecil | “Komponen UI” terasa teknis/generik untuk pengguna operasional dan lebih cocok dipindahkan ke area development/internal atau disembunyikan pada production |
-| Istilah umum | Dapat diterima | “Dashboard” dan “Pengaturan” bersifat umum, tetapi masih lazim dan ditempatkan dalam konteks grouping yang jelas |
+| Non-generik | Baik | Ikon domain, rail navy-teal, active marker, dan submenu bertahap menjaga sidebar tetap khas E-Rapor PKBM |
+| Toggle | Lulus | Sidebar desktop dapat diciutkan ke rail ikon dan dibuka kembali; pilihan tersimpan di browser. Setiap kelompok memiliki `aria-expanded` dan submenu toggle |
+| Istilah umum | Dapat diterima | “Dashboard” dan “Akun” bersifat umum, tetapi ditempatkan dalam konteks grouping yang jelas |
 
 ### Temuan UX non-blocking
 
@@ -81,6 +82,7 @@ Test ini melakukan hal berikut untuk Admin, Guru, dan Kepsek pada Chromium deskt
 3. Membuka semua destination dan memeriksa response akhir.
 4. Menolak status HTTP `>= 400`, redirect ke `/login`, serta halaman yang mengandung `Server Error`, `Whoops`, atau `SQLSTATE`.
 5. Memastikan grouping dan label penting tersedia.
+6. Menguji toggle submenu “Data inti” pada desktop dan mobile.
 6. Memastikan menu Admin-only tidak muncul pada Guru/Kepsek.
 7. Membuka drawer mobile dan memeriksa tombol tutup.
 8. Membuka account menu dan memeriksa Profil, Ubah password, dan Keluar.

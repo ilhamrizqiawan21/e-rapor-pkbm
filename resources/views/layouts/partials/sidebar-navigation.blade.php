@@ -1,0 +1,126 @@
+@php
+    // The same navigation contract renders in the desktop sidebar and mobile drawer.
+    $mobile = $mobile ?? false;
+    $isActive = fn (array $patterns): bool => request()->routeIs(...$patterns);
+    $linkBase = 'group flex min-h-10 items-center gap-3 rounded-xl text-sm transition-colors duration-150 focus:outline-hidden focus-visible:ring-2 focus-visible:ring-accent-300';
+    $linkIdle = 'text-slate-300 hover:bg-white/10 hover:text-white';
+    $linkActive = 'bg-accent-500/15 font-semibold text-white ring-1 ring-inset ring-accent-300/20';
+@endphp
+
+<nav id="{{ $mobile ? 'mobile-sidebar-navigation' : 'desktop-sidebar-navigation' }}" aria-label="Navigasi utama" class="flex min-h-0 flex-1 flex-col overflow-y-auto px-3 py-4 {{ $mobile ? 'text-sm' : '' }}">
+    <div class="mb-3 px-2 {{ $mobile ? '' : 'hidden' }}" @if (! $mobile) x-show="!sidebarCollapsed" @endif>
+        <p class="text-[10px] font-semibold uppercase tracking-[0.22em] text-accent-300">Ruang kerja</p>
+        <p class="mt-1 text-xs leading-5 text-slate-400">Kelola data sampai rapor siap disahkan.</p>
+    </div>
+
+    {{-- Dashboard stays visible as the stable home destination. --}}
+    <a href="{{ route('dashboard') }}" @if ($mobile) @click="closeMobileSidebar()" @endif @if (! $mobile) :class="sidebarCollapsed ? 'justify-center !px-2' : 'px-3'" @endif title="Dashboard" class="{{ $linkBase }} {{ $isActive(['dashboard*']) ? $linkActive : $linkIdle }} px-3 py-2.5">
+        <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg {{ $isActive(['dashboard*']) ? 'bg-accent-400/15 text-accent-200' : 'bg-white/5 text-slate-400 group-hover:text-accent-200' }}"><x-nav-icon name="dashboard" /></span>
+        @if ($mobile)<span>Dashboard</span>@else<span x-show="!sidebarCollapsed" x-transition.opacity>Dashboard</span>@endif
+    </a>
+
+    {{-- Data foundation is a collapsible submenu because it contains the largest menu group. --}}
+    <div class="mt-5" x-data>
+        <button type="button" @click="toggleNavGroup('foundation')" :aria-expanded="navGroups.foundation.toString()" @if (! $mobile) :class="sidebarCollapsed ? 'justify-center !px-2' : 'px-3'" @endif class="flex min-h-10 w-full items-center gap-3 rounded-xl px-3 py-2 text-left text-slate-300 transition-colors hover:bg-white/10 hover:text-white focus:outline-hidden focus-visible:ring-2 focus-visible:ring-accent-300" title="Data inti">
+            <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-white/5 text-accent-300"><x-nav-icon name="institution" /></span>
+            @if ($mobile)<span class="flex-1 font-semibold">Data inti</span>@else<span x-show="!sidebarCollapsed" class="flex-1 font-semibold">Data inti</span>@endif
+            <svg @if (! $mobile) x-show="!sidebarCollapsed" @endif :class="{ 'rotate-180': navGroups.foundation }" class="h-4 w-4 shrink-0 text-slate-500 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="m6 9 6 6 6-6" /></svg>
+        </button>
+        <div x-show="navGroups.foundation" x-transition.opacity class="mt-1 space-y-1 border-l border-white/10 pl-3" @if (! $mobile) :class="{ 'ml-0 border-0 pl-0': sidebarCollapsed }" @endif>
+            @auth
+                @if (auth()->user()->hasRole('ADMIN'))
+                    @php($active = $isActive(['admin.teachers.*']))
+                    <a href="{{ route('admin.teachers.index') }}" @if ($mobile) @click="closeMobileSidebar()" @endif @if (! $mobile) :class="sidebarCollapsed ? 'justify-center !px-2' : 'px-3'" @endif title="Data Guru" class="{{ $linkBase }} {{ $active ? $linkActive : $linkIdle }} px-3 py-2"><span class="{{ $active ? 'text-accent-200' : 'text-slate-400 group-hover:text-accent-200' }}"><x-nav-icon name="teachers" /></span>@if ($mobile)<span>Data Guru</span>@else<span x-show="!sidebarCollapsed">Data Guru</span>@endif</a>
+                @endif
+                @php($active = $isActive(['admin.students.*']))
+                <a href="{{ route('admin.students.index') }}" @if ($mobile) @click="closeMobileSidebar()" @endif @if (! $mobile) :class="sidebarCollapsed ? 'justify-center !px-2' : 'px-3'" @endif title="Peserta didik" class="{{ $linkBase }} {{ $active ? $linkActive : $linkIdle }} px-3 py-2"><span class="{{ $active ? 'text-accent-200' : 'text-slate-400 group-hover:text-accent-200' }}"><x-nav-icon name="students" /></span>@if ($mobile)<span>Peserta didik</span>@else<span x-show="!sidebarCollapsed">Peserta didik</span>@endif</a>
+                @php($active = $isActive(['admin.subjects.*']))
+                <a href="{{ route('admin.subjects.index') }}" @if ($mobile) @click="closeMobileSidebar()" @endif @if (! $mobile) :class="sidebarCollapsed ? 'justify-center !px-2' : 'px-3'" @endif title="Mata pelajaran" class="{{ $linkBase }} {{ $active ? $linkActive : $linkIdle }} px-3 py-2"><span class="{{ $active ? 'text-accent-200' : 'text-slate-400 group-hover:text-accent-200' }}"><x-nav-icon name="subjects" /></span>@if ($mobile)<span>Mata pelajaran</span>@else<span x-show="!sidebarCollapsed">Mata pelajaran</span>@endif</a>
+                @php($active = $isActive(['admin.description-snippets.*']))
+                <a href="{{ route('admin.description-snippets.index') }}" @if ($mobile) @click="closeMobileSidebar()" @endif @if (! $mobile) :class="sidebarCollapsed ? 'justify-center !px-2' : 'px-3'" @endif title="Bank deskripsi" class="{{ $linkBase }} {{ $active ? $linkActive : $linkIdle }} px-3 py-2"><span class="{{ $active ? 'text-accent-200' : 'text-slate-400 group-hover:text-accent-200' }}"><x-nav-icon name="descriptions" /></span>@if ($mobile)<span>Bank deskripsi</span>@else<span x-show="!sidebarCollapsed">Bank deskripsi</span>@endif</a>
+                @if (auth()->user()->hasRole('ADMIN'))
+                    @php($active = $isActive(['admin.predicate-ranges.*']))
+                    <a href="{{ route('admin.predicate-ranges.index') }}" @if ($mobile) @click="closeMobileSidebar()" @endif @if (! $mobile) :class="sidebarCollapsed ? 'justify-center !px-2' : 'px-3'" @endif title="Rentang predikat" class="{{ $linkBase }} {{ $active ? $linkActive : $linkIdle }} px-3 py-2"><span class="{{ $active ? 'text-accent-200' : 'text-slate-400 group-hover:text-accent-200' }}"><x-nav-icon name="predicate" /></span>@if ($mobile)<span>Rentang predikat</span>@else<span x-show="!sidebarCollapsed">Rentang predikat</span>@endif</a>
+                @endif
+                @php($active = $isActive(['admin.academic-years.*']))
+                <a href="{{ route('admin.academic-years.index') }}" @if ($mobile) @click="closeMobileSidebar()" @endif @if (! $mobile) :class="sidebarCollapsed ? 'justify-center !px-2' : 'px-3'" @endif title="Tahun pelajaran" class="{{ $linkBase }} {{ $active ? $linkActive : $linkIdle }} px-3 py-2"><span class="{{ $active ? 'text-accent-200' : 'text-slate-400 group-hover:text-accent-200' }}"><x-nav-icon name="academic-year" /></span>@if ($mobile)<span>Tahun pelajaran</span>@else<span x-show="!sidebarCollapsed">Tahun pelajaran</span>@endif</a>
+                @php($active = $isActive(['admin.programs.*']))
+                <a href="{{ route('admin.programs.index') }}" @if ($mobile) @click="closeMobileSidebar()" @endif @if (! $mobile) :class="sidebarCollapsed ? 'justify-center !px-2' : 'px-3'" @endif title="Program & tingkat" class="{{ $linkBase }} {{ $active ? $linkActive : $linkIdle }} px-3 py-2"><span class="{{ $active ? 'text-accent-200' : 'text-slate-400 group-hover:text-accent-200' }}"><x-nav-icon name="programs" /></span>@if ($mobile)<span>Program & tingkat</span>@else<span x-show="!sidebarCollapsed">Program & tingkat</span>@endif</a>
+                @php($active = $isActive(['admin.academic-classes.*']))
+                <a href="{{ route('admin.academic-classes.index') }}" @if ($mobile) @click="closeMobileSidebar()" @endif @if (! $mobile) :class="sidebarCollapsed ? 'justify-center !px-2' : 'px-3'" @endif title="Kelas / rombel" class="{{ $linkBase }} {{ $linkIdle }} px-3 py-2"><span class="{{ $active ? 'text-accent-200' : 'text-slate-400 group-hover:text-accent-200' }}"><x-nav-icon name="classes" /></span>@if ($mobile)<span>Kelas / rombel</span>@else<span x-show="!sidebarCollapsed">Kelas / rombel</span>@endif</a>
+            @endauth
+        </div>
+    </div>
+
+    {{-- Assessment is intentionally a separate step from data foundation. --}}
+    <div class="mt-3">
+        <button type="button" @click="toggleNavGroup('assessment')" :aria-expanded="navGroups.assessment.toString()" @if (! $mobile) :class="sidebarCollapsed ? 'justify-center !px-2' : 'px-3'" @endif class="flex min-h-10 w-full items-center gap-3 rounded-xl px-3 py-2 text-left text-slate-300 transition-colors hover:bg-white/10 hover:text-white focus:outline-hidden focus-visible:ring-2 focus-visible:ring-accent-300" title="Penilaian">
+            <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-white/5 text-accent-300"><x-nav-icon name="grades" /></span>
+            @if ($mobile)<span class="flex-1 font-semibold">Penilaian</span>@else<span x-show="!sidebarCollapsed" class="flex-1 font-semibold">Penilaian</span>@endif
+            <svg @if (! $mobile) x-show="!sidebarCollapsed" @endif :class="{ 'rotate-180': navGroups.assessment }" class="h-4 w-4 shrink-0 text-slate-500 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="m6 9 6 6 6-6" /></svg>
+        </button>
+        <div x-show="navGroups.assessment" x-transition.opacity class="mt-1 space-y-1 border-l border-white/10 pl-3" @if (! $mobile) :class="{ 'ml-0 border-0 pl-0': sidebarCollapsed }" @endif>
+            @php($active = $isActive(['admin.grade-entry.*']))
+            <a href="{{ route('admin.grade-entry.index') }}" @if ($mobile) @click="closeMobileSidebar()" @endif @if (! $mobile) :class="sidebarCollapsed ? 'justify-center !px-2' : 'px-3'" @endif title="Input nilai" class="{{ $linkBase }} {{ $active ? $linkActive : $linkIdle }} px-3 py-2"><span class="{{ $active ? 'text-accent-200' : 'text-slate-400 group-hover:text-accent-200' }}"><x-nav-icon name="grades" /></span>@if ($mobile)<span>Input nilai</span>@else<span x-show="!sidebarCollapsed">Input nilai</span>@endif</a>
+        </div>
+    </div>
+
+    {{-- Report and ledger work share one review-oriented group. --}}
+    <div class="mt-3">
+        <button type="button" @click="toggleNavGroup('reports')" :aria-expanded="navGroups.reports.toString()" @if (! $mobile) :class="sidebarCollapsed ? 'justify-center !px-2' : 'px-3'" @endif class="flex min-h-10 w-full items-center gap-3 rounded-xl px-3 py-2 text-left text-slate-300 transition-colors hover:bg-white/10 hover:text-white focus:outline-hidden focus-visible:ring-2 focus-visible:ring-accent-300" title="Rapor & leger">
+            <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-white/5 text-accent-300"><x-nav-icon name="report" /></span>
+            @if ($mobile)<span class="flex-1 font-semibold">Rapor & leger</span>@else<span x-show="!sidebarCollapsed" class="flex-1 font-semibold">Rapor & leger</span>@endif
+            <svg @if (! $mobile) x-show="!sidebarCollapsed" @endif :class="{ 'rotate-180': navGroups.reports }" class="h-4 w-4 shrink-0 text-slate-500 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="m6 9 6 6 6-6" /></svg>
+        </button>
+        <div x-show="navGroups.reports" x-transition.opacity class="mt-1 space-y-1 border-l border-white/10 pl-3" @if (! $mobile) :class="{ 'ml-0 border-0 pl-0': sidebarCollapsed }" @endif>
+            @php($active = $isActive(['admin.report-cards.*']))
+            <a href="{{ route('admin.report-cards.index') }}" @if ($mobile) @click="closeMobileSidebar()" @endif @if (! $mobile) :class="sidebarCollapsed ? 'justify-center !px-2' : 'px-3'" @endif title="Kelengkapan rapor" class="{{ $linkBase }} {{ $active ? $linkActive : $linkIdle }} px-3 py-2"><span class="{{ $active ? 'text-accent-200' : 'text-slate-400 group-hover:text-accent-200' }}"><x-nav-icon name="report" /></span>@if ($mobile)<span>Kelengkapan rapor</span>@else<span x-show="!sidebarCollapsed">Kelengkapan rapor</span>@endif</a>
+            @php($active = $isActive(['admin.ledger.*']))
+            <a href="{{ route('admin.ledger.index') }}" @if ($mobile) @click="closeMobileSidebar()" @endif @if (! $mobile) :class="sidebarCollapsed ? 'justify-center !px-2' : 'px-3'" @endif title="Generator leger" class="{{ $linkBase }} {{ $active ? $linkActive : $linkIdle }} px-3 py-2"><span class="{{ $active ? 'text-accent-200' : 'text-slate-400 group-hover:text-accent-200' }}"><x-nav-icon name="ledger" /></span>@if ($mobile)<span>Generator leger</span>@else<span x-show="!sidebarCollapsed">Generator leger</span>@endif</a>
+            @if (auth()->check() && auth()->user()->hasAnyRole(['ADMIN', 'KEPSEK']))
+                @php($active = $isActive(['admin.audit-logs.*']))
+                <a href="{{ route('admin.audit-logs.index') }}" @if ($mobile) @click="closeMobileSidebar()" @endif @if (! $mobile) :class="sidebarCollapsed ? 'justify-center !px-2' : 'px-3'" @endif title="Histori audit" class="{{ $linkBase }} {{ $active ? $linkActive : $linkIdle }} px-3 py-2"><span class="{{ $active ? 'text-accent-200' : 'text-slate-400 group-hover:text-accent-200' }}"><x-nav-icon name="audit" /></span>@if ($mobile)<span>Histori audit</span>@else<span x-show="!sidebarCollapsed">Histori audit</span>@endif</a>
+            @endif
+        </div>
+    </div>
+
+    {{-- PKBM settings are grouped and only exposed to the Admin role. --}}
+    @auth
+        @if (auth()->user()->hasRole('ADMIN'))
+            <div class="mt-3">
+                <button type="button" @click="toggleNavGroup('settings')" :aria-expanded="navGroups.settings.toString()" @if (! $mobile) :class="sidebarCollapsed ? 'justify-center !px-2' : 'px-3'" @endif class="flex min-h-10 w-full items-center gap-3 rounded-xl px-3 py-2 text-left text-slate-300 transition-colors hover:bg-white/10 hover:text-white focus:outline-hidden focus-visible:ring-2 focus-visible:ring-accent-300" title="Pengaturan PKBM">
+                    <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-white/5 text-accent-300"><x-nav-icon name="format" /></span>
+                    @if ($mobile)<span class="flex-1 font-semibold">Pengaturan PKBM</span>@else<span x-show="!sidebarCollapsed" class="flex-1 font-semibold">Pengaturan PKBM</span>@endif
+                    <svg @if (! $mobile) x-show="!sidebarCollapsed" @endif :class="{ 'rotate-180': navGroups.settings }" class="h-4 w-4 shrink-0 text-slate-500 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="m6 9 6 6 6-6" /></svg>
+                </button>
+                <div x-show="navGroups.settings" x-transition.opacity class="mt-1 space-y-1 border-l border-white/10 pl-3" @if (! $mobile) :class="{ 'ml-0 border-0 pl-0': sidebarCollapsed }" @endif>
+                    @php($active = $isActive(['admin.institutions.*']))
+                    <a href="{{ route('admin.institutions.index') }}" @if ($mobile) @click="closeMobileSidebar()" @endif @if (! $mobile) :class="sidebarCollapsed ? 'justify-center !px-2' : 'px-3'" @endif title="Identitas PKBM" class="{{ $linkBase }} {{ $active ? $linkActive : $linkIdle }} px-3 py-2"><span class="{{ $active ? 'text-accent-200' : 'text-slate-400 group-hover:text-accent-200' }}"><x-nav-icon name="institution" /></span>@if ($mobile)<span>Identitas PKBM</span>@else<span x-show="!sidebarCollapsed">Identitas PKBM</span>@endif</a>
+                    @if (auth()->user()->institution_id)
+                        @php($active = $isActive(['admin.signatory-settings.*']))
+                        <a href="{{ route('admin.signatory-settings.edit') }}" @if ($mobile) @click="closeMobileSidebar()" @endif @if (! $mobile) :class="sidebarCollapsed ? 'justify-center !px-2' : 'px-3'" @endif title="Penandatangan" class="{{ $linkBase }} {{ $active ? $linkActive : $linkIdle }} px-3 py-2"><span class="{{ $active ? 'text-accent-200' : 'text-slate-400 group-hover:text-accent-200' }}"><x-nav-icon name="signatory" /></span>@if ($mobile)<span>Penandatangan</span>@else<span x-show="!sidebarCollapsed">Penandatangan</span>@endif</a>
+                        @php($active = $isActive(['admin.settings.format.*']))
+                        <a href="{{ route('admin.settings.format.edit') }}" @if ($mobile) @click="closeMobileSidebar()" @endif @if (! $mobile) :class="sidebarCollapsed ? 'justify-center !px-2' : 'px-3'" @endif title="Format rapor" class="{{ $linkBase }} {{ $active ? $linkActive : $linkIdle }} px-3 py-2"><span class="{{ $active ? 'text-accent-200' : 'text-slate-400 group-hover:text-accent-200' }}"><x-nav-icon name="format" /></span>@if ($mobile)<span>Format rapor</span>@else<span x-show="!sidebarCollapsed">Format rapor</span>@endif</a>
+                        @php($active = $isActive(['admin.backups.*']))
+                        <a href="{{ route('admin.backups.index') }}" @if ($mobile) @click="closeMobileSidebar()" @endif @if (! $mobile) :class="sidebarCollapsed ? 'justify-center !px-2' : 'px-3'" @endif title="Backup database" class="{{ $linkBase }} {{ $active ? $linkActive : $linkIdle }} px-3 py-2"><span class="{{ $active ? 'text-accent-200' : 'text-slate-400 group-hover:text-accent-200' }}"><x-nav-icon name="backup" /></span>@if ($mobile)<span>Backup database</span>@else<span x-show="!sidebarCollapsed">Backup database</span>@endif</a>
+                    @endif
+                </div>
+            </div>
+        @endif
+    @endauth
+
+    {{-- Account links remain available in the sidebar, while the header keeps its quick menu. --}}
+    @auth
+        <div class="mt-3 border-t border-white/10 pt-3">
+            <button type="button" @click="toggleNavGroup('account')" :aria-expanded="navGroups.account.toString()" @if (! $mobile) :class="sidebarCollapsed ? 'justify-center !px-2' : 'px-3'" @endif class="flex min-h-10 w-full items-center gap-3 rounded-xl px-3 py-2 text-left text-slate-300 transition-colors hover:bg-white/10 hover:text-white focus:outline-hidden focus-visible:ring-2 focus-visible:ring-accent-300" title="Akun">
+                <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-white/5 text-accent-300"><x-nav-icon name="profile" /></span>
+                @if ($mobile)<span class="flex-1 font-semibold">Akun</span>@else<span x-show="!sidebarCollapsed" class="flex-1 font-semibold">Akun</span>@endif
+                <svg @if (! $mobile) x-show="!sidebarCollapsed" @endif :class="{ 'rotate-180': navGroups.account }" class="h-4 w-4 shrink-0 text-slate-500 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="m6 9 6 6 6-6" /></svg>
+            </button>
+            <div x-show="navGroups.account" x-transition.opacity class="mt-1 space-y-1 border-l border-white/10 pl-3" @if (! $mobile) :class="{ 'ml-0 border-0 pl-0': sidebarCollapsed }" @endif>
+                <a href="{{ route('profile.edit') }}" @if ($mobile) @click="closeMobileSidebar()" @endif @if (! $mobile) :class="sidebarCollapsed ? 'justify-center !px-2' : 'px-3'" @endif title="Profil saya" class="{{ $linkBase }} {{ $linkIdle }} px-3 py-2"><span class="text-slate-400 group-hover:text-accent-200"><x-nav-icon name="profile" /></span>@if ($mobile)<span>Profil saya</span>@else<span x-show="!sidebarCollapsed">Profil saya</span>@endif</a>
+                <a href="{{ route('password.edit') }}" @if ($mobile) @click="closeMobileSidebar()" @endif @if (! $mobile) :class="sidebarCollapsed ? 'justify-center !px-2' : 'px-3'" @endif title="Ubah password" class="{{ $linkBase }} {{ $linkIdle }} px-3 py-2"><span class="text-slate-400 group-hover:text-accent-200"><x-nav-icon name="password" /></span>@if ($mobile)<span>Ubah password</span>@else<span x-show="!sidebarCollapsed">Ubah password</span>@endif</a>
+            </div>
+        </div>
+    @endauth
+</nav>

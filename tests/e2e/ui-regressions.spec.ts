@@ -14,14 +14,14 @@ test.describe('UI regressions', () => {
 
         const navigation = test.info().project.name === 'mobile-chrome'
             ? page.locator('[role="dialog"] nav')
-            : page.locator('aside nav');
+            : page.locator('#desktop-sidebar-navigation');
 
         if (test.info().project.name === 'mobile-chrome') {
             await page.getByRole('button', { name: 'Buka menu navigasi' }).click();
         }
 
         await expect(navigation.getByText('Komponen UI', { exact: true })).toHaveCount(0);
-        await expect(navigation).toContainText('Fondasi data inti');
+        await expect(navigation).toContainText('Data inti');
     });
 
     test('traps mobile drawer focus and restores the trigger', async ({ page }) => {

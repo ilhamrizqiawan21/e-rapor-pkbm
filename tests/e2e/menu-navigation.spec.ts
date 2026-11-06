@@ -31,10 +31,14 @@ async function visibleMenuLinks(page: Page): Promise<Array<{ label: string; href
 async function assertNavigationPresentation(page: Page, role: Role): Promise<void> {
     const navigation = test.info().project.name === 'mobile-chrome'
         ? page.locator('[role="dialog"] nav')
-        : page.locator('aside nav');
+        : page.locator('#desktop-sidebar-navigation');
 
-    for (const group of ['Fondasi', 'Master Data', 'Penilaian', 'Rapor dan Leger', 'Pengaturan']) {
+    for (const group of ['Data inti', 'Penilaian', 'Rapor & leger', 'Akun']) {
         await expect(navigation).toContainText(group);
+    }
+
+    if (role === 'admin') {
+        await expect(navigation).toContainText('Pengaturan PKBM');
     }
 
     for (const label of ['Dashboard', 'Input nilai', 'Kelengkapan rapor', 'Generator leger']) {
@@ -56,6 +60,24 @@ async function assertNavigationPresentation(page: Page, role: Role): Promise<voi
         await expect(navigation.getByText('Histori audit', { exact: true })).toBeAttached();
         await expect(navigation.getByText('Backup database', { exact: true })).toHaveCount(0);
     }
+}
+
+async function assertNavigationToggles(page: Page): Promise<void> {
+    const navigation = test.info().project.name === 'mobile-chrome'
+        ? page.locator('[role="dialog"] nav')
+        : page.locator('#desktop-sidebar-navigation');
+
+    const groupButton = navigation.getByRole('button', { name: 'Data inti' });
+    const submenu = navigation.locator('a[title="Peserta didik"]');
+
+    await expect(groupButton).toHaveAttribute('aria-expanded', 'true');
+    await groupButton.click();
+    await expect(groupButton).toHaveAttribute('aria-expanded', 'false');
+    await expect(submenu).toBeHidden();
+
+    await groupButton.click();
+    await expect(groupButton).toHaveAttribute('aria-expanded', 'true');
+    await expect(submenu).toBeVisible();
 }
 
 async function assertAccountMenu(page: Page): Promise<void> {
@@ -83,6 +105,7 @@ for (const role of Object.keys(accounts) as Role[]) {
         }
 
         await assertNavigationPresentation(page, role);
+        await assertNavigationToggles(page);
         await assertAccountMenu(page);
 
         const links = await visibleMenuLinks(page);

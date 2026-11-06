@@ -12,14 +12,37 @@ const focusableSelector = [
 window.mobileNavigation = () => ({
     mobileSidebarOpen: false,
     menuTrigger: null,
+    sidebarCollapsed: false,
+    navGroups: {
+        foundation: true,
+        assessment: true,
+        reports: true,
+        settings: true,
+        account: true,
+    },
 
     init() {
+        // Remember the desktop rail preference without coupling it to server state.
+        this.sidebarCollapsed = window.localStorage.getItem('erapor.sidebarCollapsed') === 'true';
+
         this.$watch('mobileSidebarOpen', (isOpen) => {
             if (isOpen) {
                 document.body.classList.add('overflow-hidden');
                 this.$nextTick(() => this.$refs.closeButton?.focus());
             }
         });
+
+        this.$watch('sidebarCollapsed', (isCollapsed) => {
+            window.localStorage.setItem('erapor.sidebarCollapsed', isCollapsed ? 'true' : 'false');
+        });
+    },
+
+    toggleSidebar() {
+        this.sidebarCollapsed = !this.sidebarCollapsed;
+    },
+
+    toggleNavGroup(group) {
+        this.navGroups[group] = !this.navGroups[group];
     },
 
     openMobileSidebar(event) {
