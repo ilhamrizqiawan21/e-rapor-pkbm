@@ -75,12 +75,27 @@
                                 @php($grade = $reportCard?->grades->first())
                                 @php($rowId = $enrollment->id)
                                 @php($rowError = $gradeErrors[$rowId] ?? null)
+                                @php($descriptionSource = $grade?->descriptionSnippet?->material ? ['id' => $grade->descriptionSnippet->id, 'material' => $grade->descriptionSnippet->material, 'templates' => $grade->descriptionSnippet->templates->where('active', true)->mapWithKeys(fn ($template) => [$template->predicate_code => $template->template])->all()] : null)
+                                @php($material = $grade?->descriptionSnippet?->material)
                                 <tr class="align-top hover:bg-slate-50" data-grade-row="{{ $rowId }}">
                                     <x-table.td>{{ $students->firstItem() + $index }}</x-table.td>
                                     <x-table.td><p class="font-semibold text-slate-900">{{ $enrollment->student->full_name }}</p><p class="mt-1 text-xs text-slate-500">{{ $enrollment->student->student_number }}{{ $enrollment->student->national_student_number ? ' · NISN '.$enrollment->student->national_student_number : '' }}</p></x-table.td>
-                                    <x-table.td><input class="w-28 rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-brand-600 focus:ring-2 focus:ring-brand-500/20" type="number" min="0" max="100" step="1" name="rows[{{ $rowId }}][score]" value="{{ old('rows.'.$rowId.'.score', $grade?->score) }}" aria-label="Nilai {{ $enrollment->student->full_name }}"><input type="hidden" name="rows[{{ $rowId }}][enrollment_id]" value="{{ $rowId }}"></x-table.td>
-                                    <x-table.td><span class="inline-flex rounded-full bg-slate-100 px-3 py-1 font-semibold text-slate-700">{{ $grade?->predicate ?? '—' }}</span></x-table.td>
-                                    <x-table.td><textarea id="description-{{ $rowId }}" name="rows[{{ $rowId }}][description]" rows="3" class="min-w-[330px] rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-brand-600 focus:ring-2 focus:ring-brand-500/20" placeholder="Ketik deskripsi capaian...">{{ old('rows.'.$rowId.'.description', $grade?->description) }}</textarea><input id="description-{{ $rowId }}-snippet" type="hidden" name="rows[{{ $rowId }}][description_snippet_id]" value="{{ $grade?->description_snippet_id }}"><button type="button" class="mt-2 text-xs font-semibold text-brand-800 underline hover:text-brand-950" data-description-picker data-target="description-{{ $rowId }}" data-picker-url="{{ route('admin.description-snippets.picker', ['subject_id' => $assignment->subject_id]) }}">Pilih dari bank deskripsi</button></x-table.td>
+                                    <x-table.td><input class="w-28 rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-brand-600 focus:ring-2 focus:ring-brand-500/20" type="number" min="0" max="100" step="1" name="rows[{{ $rowId }}][score]" value="{{ old('rows.'.$rowId.'.score', $grade?->score) }}" aria-label="Nilai {{ $enrollment->student->full_name }}" data-score-input="{{ $rowId }}"><input type="hidden" name="rows[{{ $rowId }}][enrollment_id]" value="{{ $rowId }}"></x-table.td>
+                                    <x-table.td><span id="predicate-{{ $rowId }}" class="inline-flex rounded-full bg-slate-100 px-3 py-1 font-semibold text-slate-700" data-predicate-badge="{{ $rowId }}">{{ $grade?->predicate ?? '—' }}</span></x-table.td>
+                                    <x-table.td>
+                                        <div class="min-w-[330px] space-y-2">
+                                            <div>
+                                                <label for="material-{{ $rowId }}" class="mb-1 block text-xs font-semibold text-slate-700">Materi / capaian</label>
+                                                <input id="material-{{ $rowId }}" type="text" name="rows[{{ $rowId }}][material]" value="{{ old('rows.'.$rowId.'.material', $material) }}" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-brand-600 focus:ring-2 focus:ring-brand-500/20" placeholder="Contoh: memahami pengertian sifat terpuji" data-material-field="{{ $rowId }}">
+                                            </div>
+                                            <div>
+                                                <label for="description-{{ $rowId }}" class="mb-1 block text-xs font-semibold text-slate-700">Deskripsi otomatis</label>
+                                                <textarea id="description-{{ $rowId }}" name="rows[{{ $rowId }}][description]" rows="3" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-brand-600 focus:ring-2 focus:ring-brand-500/20" placeholder="Isi materi untuk membuat deskripsi..." data-description-field="{{ $rowId }}" data-description-auto="{{ $descriptionSource || ($material && ! $grade?->description) ? 'true' : 'false' }}" data-description-source='@js($descriptionSource)'>{{ old('rows.'.$rowId.'.description', $grade?->description) }}</textarea>
+                                            </div>
+                                            <input id="description-{{ $rowId }}-snippet" type="hidden" name="rows[{{ $rowId }}][description_snippet_id]" value="{{ $grade?->description_snippet_id }}">
+                                            <button type="button" class="text-xs font-semibold text-brand-800 underline hover:text-brand-950" data-description-picker data-target="description-{{ $rowId }}" data-material-target="material-{{ $rowId }}" data-score-target="{{ $rowId }}" data-picker-url="{{ route('admin.description-snippets.picker', array_filter(['subject_id' => $assignment->subject_id, 'score' => $grade?->score], fn ($value) => $value !== null)) }}">Pilih materi dari bank deskripsi</button>
+                                        </div>
+                                    </x-table.td>
                                     <x-table.td>@if ($grade)<input type="hidden" name="rows[{{ $rowId }}][expected_updated_at]" value="{{ $grade->updated_at?->toIso8601String() }}">@endif @if ($reportCard?->status === 'LOCKED')<x-badge variant="LOCKED" dot>Terkunci</x-badge>@elseif ($reportCard?->status === 'SUBMITTED')<x-badge variant="info" dot>Diajukan</x-badge>@elseif ($reportCard?->status === 'IN_REVIEW')<x-badge variant="warning" dot>Ditinjau</x-badge>@elseif ($reportCard?->status === 'NEEDS_REVISION')<x-badge variant="danger" dot>Perlu revisi</x-badge>@elseif ($reportCard?->status === 'APPROVED')<x-badge variant="success" dot>Disetujui</x-badge>@elseif ($grade?->score !== null)<x-badge variant="ACTIVE" dot>Terisi</x-badge>@else<span class="text-slate-500">Belum diisi</span>@endif @if ($rowError)<p class="mt-2 max-w-48 text-xs text-rose-600" role="alert">{{ $rowError }}</p>@endif</x-table.td>
                                     <x-table.td align="right"><div class="flex flex-wrap justify-end gap-2">@if (auth()->user()->hasAnyRole(['ADMIN', 'GURU']))<x-button type="submit" size="sm" variant="secondary" icon="save" formaction="{{ route('admin.grade-entry.store') }}" name="enrollment_id" value="{{ $rowId }}" data-save-row="{{ $rowId }}">Simpan</x-button>@if ($reportCard && auth()->user()->hasRole('GURU') && in_array($reportCard->status, ['DRAFT', 'NEEDS_REVISION'], true))<x-button type="submit" size="sm" variant="success" icon="check" formaction="{{ route('admin.report-cards.submit', $reportCard) }}">Ajukan</x-button>@endif @else<span class="text-xs text-slate-500">Hanya baca</span>@endif</div></x-table.td>
                                 </tr>
@@ -96,6 +111,63 @@
     </div>
 
     <script>
+        const predicateRanges = @js($predicateRanges);
+
+        function resolvePredicate(score) {
+            if (score === '' || score === null || Number.isNaN(Number(score))) return null;
+            const numericScore = Number(score);
+            return predicateRanges.find((range) => numericScore >= Number(range.minimum_score) && numericScore <= Number(range.maximum_score)) || null;
+        }
+
+        function renderDescription(source, predicate, material) {
+            if (!predicate || !material?.trim()) return '';
+            const template = source?.templates?.[predicate.code] || `Siswa ${predicate.label.toLowerCase()} dalam {material}.`;
+            return template.replaceAll('{material}', material.trim());
+        }
+
+        function updateGradeRow(rowId) {
+            const score = document.querySelector(`[data-score-input="${rowId}"]`);
+            const badge = document.querySelector(`[data-predicate-badge="${rowId}"]`);
+            const description = document.querySelector(`[data-description-field="${rowId}"]`);
+            const material = document.querySelector(`[data-material-field="${rowId}"]`);
+            const predicate = resolvePredicate(score?.value ?? '');
+            if (badge) badge.textContent = predicate ? `${predicate.code} · ${predicate.label}` : '—';
+            if (description?.dataset.descriptionAuto === 'true') {
+                const source = JSON.parse(description.dataset.descriptionSource || 'null');
+                const generated = renderDescription(source, predicate, material?.value || source?.material || '');
+                description.dataset.generatedByScore = 'true';
+                description.value = generated;
+                description.dispatchEvent(new Event('input', { bubbles: true }));
+                delete description.dataset.generatedByScore;
+            }
+        }
+
+        document.querySelectorAll('[data-score-input]').forEach((input) => {
+            input.addEventListener('input', () => updateGradeRow(input.dataset.scoreInput));
+            updateGradeRow(input.dataset.scoreInput);
+        });
+
+        document.querySelectorAll('[data-description-field]').forEach((field) => {
+            field.addEventListener('input', () => {
+                if (field.dataset.generatedByScore === 'true') return;
+                field.dataset.descriptionAuto = 'false';
+                const snippet = document.getElementById(field.id + '-snippet');
+                if (snippet) snippet.value = '';
+            });
+        });
+
+        document.querySelectorAll('[data-material-field]').forEach((field) => {
+            field.addEventListener('input', () => {
+                const description = document.querySelector(`[data-description-field="${field.dataset.materialField}"]`);
+                if (!description) return;
+                const source = JSON.parse(description.dataset.descriptionSource || 'null') || { templates: {} };
+                source.material = field.value;
+                description.dataset.descriptionSource = JSON.stringify(source);
+                description.dataset.descriptionAuto = field.value.trim() !== '' ? 'true' : 'false';
+                updateGradeRow(field.dataset.materialField);
+            });
+        });
+
         document.querySelectorAll('[data-description-picker]').forEach((button) => {
             button.addEventListener('click', () => {
                 const url = button.dataset.pickerUrl + '&format=json';
@@ -105,8 +177,18 @@
                     if (event.origin !== window.location.origin || event.data?.type !== 'description-snippet-selected') return;
                     const payload = event.data.payload;
                     const description = document.getElementById(target);
+                    const material = document.getElementById(button.dataset.materialTarget);
                     const snippet = document.getElementById(target + '-snippet');
-                    if (description && snippet && payload) { description.value = payload.content || ''; snippet.value = payload.id || ''; description.dispatchEvent(new Event('input', { bubbles: true })); }
+                    if (description && snippet && payload) {
+                        description.dataset.descriptionSource = JSON.stringify({ id: payload.id, material: payload.material, templates: payload.templates || {} });
+                        description.dataset.descriptionAuto = 'true';
+                        description.dataset.generatedByScore = 'true';
+                        description.value = payload.content || payload.generated_content || payload.legacy_content || '';
+                        if (material) material.value = payload.material || '';
+                        snippet.value = payload.id || '';
+                        description.dispatchEvent(new Event('input', { bubbles: true }));
+                        delete description.dataset.generatedByScore;
+                    }
                 }, { once: true });
             });
         });

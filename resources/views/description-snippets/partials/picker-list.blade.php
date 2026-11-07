@@ -14,7 +14,14 @@
                         <span class="rounded-full bg-slate-100 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-slate-600">{{ $snippet->isShared() ? 'Dibagikan' : 'Pribadi' }}</span>
                     </div>
                     <p class="mt-1 text-xs font-medium text-accent-700">{{ $snippet->subject?->name ?? 'Semua mata pelajaran' }}</p>
-                    <p class="mt-3 whitespace-pre-line text-sm leading-6 text-slate-700">{{ $snippet->content }}</p>
+                    <p class="mt-3 text-xs font-semibold uppercase tracking-wide text-slate-500">Materi</p>
+                    <p class="mt-1 whitespace-pre-line text-sm leading-6 text-slate-700">{{ $snippet->material ?: $snippet->content }}</p>
+                    @if (($target['generated_content'] ?? '') !== '')
+                        <div class="mt-4 rounded-xl border border-accent-100 bg-accent-50/60 p-3">
+                            <p class="text-[11px] font-bold uppercase tracking-wide text-accent-800">Hasil untuk nilai saat ini</p>
+                            <p class="mt-1 whitespace-pre-line text-sm leading-6 text-slate-800">{{ $target['generated_content'] }}</p>
+                        </div>
+                    @endif
                 </div>
                 <button
                     type="button"
@@ -25,7 +32,7 @@
                     role="option"
                     aria-label="Gunakan {{ $snippet->title }}"
                 >
-                    Gunakan deskripsi
+                    Gunakan materi
                 </button>
             </div>
         </article>

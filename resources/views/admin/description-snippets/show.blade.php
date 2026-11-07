@@ -12,9 +12,17 @@
 
         <div class="grid gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
             <section class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
-                <p class="text-xs font-semibold uppercase tracking-[0.16em] text-accent-700">Isi reusable</p>
-                <div class="mt-4 whitespace-pre-line rounded-xl border border-slate-100 bg-slate-50 p-5 text-sm leading-7 text-slate-800">{{ $snippet->content }}</div>
-                <p class="mt-4 text-xs text-slate-500">Saat digunakan pada input nilai, teks ini disalin ke deskripsi peserta didik dan dapat diedit tanpa mengubah snippet asli.</p>
+                <p class="text-xs font-semibold uppercase tracking-[0.16em] text-accent-700">Materi reusable</p>
+                <div class="mt-4 whitespace-pre-line rounded-xl border border-slate-100 bg-slate-50 p-5 text-sm leading-7 text-slate-800">{{ $snippet->material ?: $snippet->content }}</div>
+                <p class="mt-4 text-xs text-slate-500">Saat digunakan pada input nilai, materi ini akan dirangkai dengan template predikat lalu tetap dapat disunting untuk peserta didik tertentu.</p>
+                @if ($snippet->templates->isNotEmpty())
+                    <div class="mt-6 space-y-3">
+                        <h3 class="text-sm font-semibold text-slate-900">Template predikat</h3>
+                        @foreach ($snippet->templates as $template)
+                            <div class="rounded-xl border border-slate-200 bg-white p-4"><div class="flex items-center justify-between gap-3"><span class="font-semibold text-slate-900">{{ $template->predicate_code }} · {{ $template->predicate_label }}</span><span class="text-xs text-slate-500">{{ $template->active ? 'Aktif' : 'Nonaktif' }}</span></div><p class="mt-2 whitespace-pre-line text-sm leading-6 text-slate-700">{{ $template->template }}</p></div>
+                        @endforeach
+                    </div>
+                @endif
             </section>
 
             <section class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">

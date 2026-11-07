@@ -8,7 +8,7 @@ use Illuminate\Database\Query\Builder;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-/** Validates reusable description text and its institution/private visibility. */
+/** Validates reusable material rules and their institution/private visibility. */
 class StoreDescriptionSnippetRequest extends FormRequest
 {
     public function authorize(): bool
@@ -21,7 +21,10 @@ class StoreDescriptionSnippetRequest extends FormRequest
     {
         return [
             'title' => ['required', 'string', 'max:255'],
-            'content' => ['required', 'string', 'max:10000'],
+            'content' => ['nullable', 'string', 'max:10000'],
+            'material' => ['nullable', 'string', 'max:10000'],
+            'templates' => ['nullable', 'array'],
+            'templates.*' => ['nullable', 'string', 'max:10000'],
             'subject_id' => [
                 'nullable',
                 'integer',
@@ -43,11 +46,37 @@ class StoreDescriptionSnippetRequest extends FormRequest
         $this->merge([
             'title' => $this->trimmed('title'),
             'content' => is_string($this->input('content')) ? trim($this->input('content')) : $this->input('content'),
+            'material' => is_string($this->input('material')) ? trim($this->input('material')) : $this->input('material'),
+            'templates' => collect(is_array($this->input('templates')) ? $this->input('templates') : [])
+                ->map(fn ($template): string => trim((string) $template))
+                ->all(),
             'subject_id' => $this->nullableInteger('subject_id'),
             'owner_user_id' => $this->nullableInteger('owner_user_id'),
             'visibility' => is_string($this->input('visibility')) ? strtoupper(trim($this->input('visibility'))) : $this->input('visibility'),
             'active' => $this->has('active') ? $this->boolean('active') : true,
         ]);
+    }
+
+    public function withValidator($validator): void
+    {
+        $validator->after(function ($validator): void {
+            $material = trim((string) $this->input('material', ''));
+            $content = trim((string) $this->input('content', ''));
+            $templates = collect(is_array($this->input('templates')) ? $this->input('templates') : [])
+                ->filter(fn ($template): bool => trim((string) $template) !== '');
+
+            if ($templates->isNotEmpty() && $material === '') {
+                $validator->errors()->add('material', 'Materi wajib diisi untuk bank deskripsi.');
+            } elseif ($material === '' && $content === '' && $templates->isEmpty()) {
+                $validator->errors()->add('material', 'Materi wajib diisi untuk bank deskripsi.');
+            }
+
+            foreach ($templates as $code => $template) {
+                if (! str_contains((string) $template, '{material}')) {
+                    $validator->errors()->add("templates.{$code}", 'Template wajib menggunakan token {material}.');
+                }
+            }
+        });
     }
 
     /** @return array<int, mixed> */

@@ -113,6 +113,33 @@ class DescriptionSnippetPickerTest extends TestCase
         $this->assertSame('Capaian pribadi.', collect($response->json('data'))->firstWhere('id', $private->getKey())['content']);
     }
 
+    public function test_picker_returns_generated_text_for_the_current_score(): void
+    {
+        [$user, $institution] = $this->userWithInstitution(RoleCode::Guru);
+        $subject = $this->subject($institution, 'PAI', 'Pendidikan Agama Islam');
+        $snippet = $this->snippet($institution, $user, $subject, [
+            'title' => 'Sifat terpuji',
+            'material' => 'memahami pengertian sifat terpuji',
+            'content' => null,
+            'visibility' => 'SHARED',
+        ]);
+        $snippet->templates()->create([
+            'predicate_code' => 'A',
+            'predicate_label' => 'Sangat Baik',
+            'template' => 'Siswa sangat baik dalam {material}.',
+            'active' => true,
+        ]);
+
+        $response = $this->actingAs($user)
+            ->withHeader('Accept', 'application/json')
+            ->get('/admin/description-snippets/picker?subject_id='.$subject->getKey().'&score=90');
+
+        $response->assertOk()
+            ->assertJsonPath('data.0.predicate', 'A')
+            ->assertJsonPath('data.0.content', 'Siswa sangat baik dalam memahami pengertian sifat terpuji.')
+            ->assertJsonPath('data.0.material', 'memahami pengertian sifat terpuji');
+    }
+
     public function test_picker_rejects_cross_institution_subject_and_inactive_user(): void
     {
         [$user, $institution] = $this->userWithInstitution(RoleCode::Guru);

@@ -5,7 +5,7 @@
         <div>
             <p class="text-sm font-semibold uppercase tracking-[0.18em] text-accent-700">Input nilai</p>
             <h2 class="mt-2 text-3xl font-semibold tracking-tight text-slate-950">Pilih deskripsi capaian</h2>
-            <p class="mt-2 max-w-3xl text-sm text-slate-600">Gunakan deskripsi tersimpan sebagai draf, lalu sesuaikan kembali pada kolom deskripsi nilai jika diperlukan.</p>
+            <p class="mt-2 max-w-3xl text-sm text-slate-600">Pilih materi. Sistem sudah menyiapkan kalimat sesuai nilai dan predikat yang sedang diinput; Anda tetap dapat menyunting hasil akhirnya.</p>
         </div>
 
         <section class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
@@ -21,6 +21,9 @@
                 <span class="rounded-full bg-slate-100 px-3 py-1">{{ $snippets->total() }} deskripsi tersedia</span>
                 @if ($subject)
                     <span class="rounded-full bg-accent-50 px-3 py-1 text-accent-800">Mapel: {{ $subject->name }}</span>
+                @endif
+                @if (request('score') !== null && $snippets->isNotEmpty())
+                    <span class="rounded-full bg-violet-50 px-3 py-1 text-violet-800">Nilai {{ request('score') }} · predikat {{ $selectionTargets[$snippets->first()->getKey()]['predicate'] ?? '—' }}</span>
                 @endif
                 <span class="rounded-full bg-emerald-50 px-3 py-1 text-emerald-800">Menampilkan milik Anda dan yang dibagikan</span>
             </div>

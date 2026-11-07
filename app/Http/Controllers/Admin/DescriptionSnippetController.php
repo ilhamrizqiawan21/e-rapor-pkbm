@@ -8,7 +8,10 @@ use App\Http\Requests\Admin\StoreDescriptionSnippetRequest;
 use App\Http\Requests\Admin\UpdateDescriptionSnippetRequest;
 use App\Models\DescriptionSnippet;
 use App\Models\Institution;
+use App\Models\PredicateRange;
 use App\Models\User;
+use App\Services\DescriptionSnippetTemplateService;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -16,11 +19,12 @@ use Illuminate\View\View;
 
 class DescriptionSnippetController extends Controller
 {
-    public function index(Request $request): View
+    public function index(Request $request, DescriptionSnippetTemplateService $templates): View
     {
         $institution = $this->institution($request);
         $user = $request->user();
         Gate::authorize('viewAny', DescriptionSnippet::class);
+        $predicateRanges = $templates->activeRanges($institution);
 
         $snippets = DescriptionSnippet::query()
             ->visibleTo($user)
@@ -30,6 +34,7 @@ class DescriptionSnippetController extends Controller
                 $query->where(function ($searchQuery) use ($search): void {
                     $searchQuery
                         ->where('title', 'like', "%{$search}%")
+                        ->orWhere('material', 'like', "%{$search}%")
                         ->orWhere('content', 'like', "%{$search}%");
                 });
             })
@@ -55,10 +60,12 @@ class DescriptionSnippetController extends Controller
                 'visibility' => $user->hasRole('ADMIN') ? DescriptionSnippetVisibility::Shared : DescriptionSnippetVisibility::Private,
                 'active' => true,
             ]),
+            'predicateRanges' => $predicateRanges,
+            'templateDefaults' => $this->templateDefaults($predicateRanges, $templates),
         ]);
     }
 
-    public function create(Request $request): View
+    public function create(Request $request, DescriptionSnippetTemplateService $templates): View
     {
         $institution = $this->institution($request);
         Gate::authorize('create', DescriptionSnippet::class);
@@ -71,16 +78,17 @@ class DescriptionSnippetController extends Controller
                     : DescriptionSnippetVisibility::Private,
                 'active' => true,
             ]),
+            $templates,
         ));
     }
 
-    public function store(StoreDescriptionSnippetRequest $request): RedirectResponse
+    public function store(StoreDescriptionSnippetRequest $request, DescriptionSnippetTemplateService $templates): RedirectResponse
     {
         $institution = $this->institution($request);
         Gate::authorize('create', DescriptionSnippet::class);
 
         $data = $this->roleScopedData($request->validated(), $request->user());
-        $snippet = $institution->descriptionSnippets()->create($data);
+        $snippet = $templates->save($institution, $data);
 
         return redirect()
             ->route('admin.description-snippets.show', $snippet)
@@ -90,23 +98,24 @@ class DescriptionSnippetController extends Controller
     public function show(Request $request, DescriptionSnippet $descriptionSnippet): View
     {
         $this->authorizeSnippet($request, $descriptionSnippet, 'view');
-        $descriptionSnippet->load(['subject', 'owner']);
+        $descriptionSnippet->load(['subject', 'owner', 'templates']);
 
         return view('admin.description-snippets.show', ['snippet' => $descriptionSnippet]);
     }
 
-    public function edit(Request $request, DescriptionSnippet $descriptionSnippet): View
+    public function edit(Request $request, DescriptionSnippet $descriptionSnippet, DescriptionSnippetTemplateService $templates): View
     {
         $institution = $this->institution($request);
         $this->authorizeSnippet($request, $descriptionSnippet, 'update');
 
-        return view('admin.description-snippets.edit', $this->formData($institution, $descriptionSnippet));
+        return view('admin.description-snippets.edit', $this->formData($institution, $descriptionSnippet, $templates));
     }
 
-    public function update(UpdateDescriptionSnippetRequest $request, DescriptionSnippet $descriptionSnippet): RedirectResponse
+    public function update(UpdateDescriptionSnippetRequest $request, DescriptionSnippet $descriptionSnippet, DescriptionSnippetTemplateService $templates): RedirectResponse
     {
         $this->authorizeSnippet($request, $descriptionSnippet, 'update');
-        $descriptionSnippet->update($this->roleScopedData($request->validated(), $request->user(), $descriptionSnippet));
+        $institution = $this->institution($request);
+        $templates->save($institution, $this->roleScopedData($request->validated(), $request->user(), $descriptionSnippet), $descriptionSnippet);
 
         return redirect()
             ->route('admin.description-snippets.show', $descriptionSnippet)
@@ -124,8 +133,10 @@ class DescriptionSnippetController extends Controller
     }
 
     /** @return array<string, mixed> */
-    private function formData(Institution $institution, DescriptionSnippet $snippet): array
+    private function formData(Institution $institution, DescriptionSnippet $snippet, DescriptionSnippetTemplateService $templates): array
     {
+        $predicateRanges = $templates->activeRanges($institution);
+
         return [
             'snippet' => $snippet,
             'subjects' => $this->subjects($institution),
@@ -135,7 +146,15 @@ class DescriptionSnippetController extends Controller
                 ->where('status', 'ACTIVE')
                 ->orderBy('name')
                 ->get(['id', 'name']),
+            'predicateRanges' => $predicateRanges,
+            'templateDefaults' => $this->templateDefaults($predicateRanges, $templates),
         ];
+    }
+
+    /** @param Collection<int, PredicateRange> $ranges */
+    private function templateDefaults($ranges, DescriptionSnippetTemplateService $templates): array
+    {
+        return $ranges->mapWithKeys(fn ($range): array => [$range->code => $templates->defaultTemplate($range)])->all();
     }
 
     private function subjects(Institution $institution)

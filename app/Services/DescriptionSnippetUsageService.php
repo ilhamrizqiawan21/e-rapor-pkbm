@@ -22,6 +22,8 @@ use LogicException;
  */
 final class DescriptionSnippetUsageService
 {
+    public function __construct(private readonly DescriptionSnippetTemplateService $templates) {}
+
     /**
      * Return active snippets the actor may use for a subject.
      *
@@ -77,7 +79,7 @@ final class DescriptionSnippetUsageService
 
             $lockedGrade->update([
                 'description_snippet_id' => $snippet->getKey(),
-                'description' => $snippet->content,
+                'description' => $this->templates->render($snippet, $lockedGrade->score, $lockedGrade->predicate),
             ]);
 
             return $lockedGrade->fresh(['descriptionSnippet', 'subjectAssignment.subject']);

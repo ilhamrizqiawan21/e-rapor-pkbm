@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-#[Fillable(['institution_id', 'owner_user_id', 'subject_id', 'title', 'content', 'visibility', 'active'])]
+#[Fillable(['institution_id', 'owner_user_id', 'subject_id', 'title', 'material', 'content', 'visibility', 'active'])]
 class DescriptionSnippet extends Model
 {
     protected function casts(): array
@@ -38,6 +38,11 @@ class DescriptionSnippet extends Model
     public function reportGrades(): HasMany
     {
         return $this->hasMany(ReportGrade::class);
+    }
+
+    public function templates(): HasMany
+    {
+        return $this->hasMany(DescriptionSnippetTemplate::class);
     }
 
     public function scopeForInstitution(Builder $query, Institution|int $institution): Builder

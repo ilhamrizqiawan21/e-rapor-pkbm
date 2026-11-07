@@ -6,6 +6,7 @@ use App\Enums\DescriptionSnippetVisibility;
 use App\Http\Controllers\Controller;
 use App\Models\DescriptionSnippet;
 use App\Models\Subject;
+use App\Services\DescriptionSnippetTemplateService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -13,6 +14,8 @@ use Illuminate\View\View;
 
 class DescriptionSnippetPickerController extends Controller
 {
+    public function __construct(private readonly DescriptionSnippetTemplateService $templates) {}
+
     public function index(Request $request): View|JsonResponse
     {
         Gate::authorize('viewAny', DescriptionSnippet::class);
@@ -21,6 +24,7 @@ class DescriptionSnippetPickerController extends Controller
             'subject_id' => ['nullable', 'integer'],
             'search' => ['nullable', 'string', 'max:120'],
             'per_page' => ['nullable', 'integer', 'min:1', 'max:50'],
+            'score' => ['nullable', 'integer', 'between:0,100'],
         ]);
 
         $user = $request->user();
@@ -36,16 +40,23 @@ class DescriptionSnippetPickerController extends Controller
 
         $search = trim((string) ($validated['search'] ?? ''));
         $perPage = (int) ($validated['per_page'] ?? 12);
+        $score = isset($validated['score']) ? (int) $validated['score'] : null;
+        $predicateCode = $score === null
+            ? null
+            : $this->templates->activeRanges($user->institution)->first(fn ($range): bool => $range->contains($score))?->code;
 
         $snippets = DescriptionSnippet::query()
-            ->with('subject:id,name,short_name')
+            ->with(['subject:id,name,short_name', 'templates'])
             ->visibleTo($user)
             ->where('active', true)
-            ->when($subject, fn ($query) => $query->where('subject_id', $subject->getKey()))
+            ->when($subject, fn ($query) => $query->where(function ($subjectQuery) use ($subject): void {
+                $subjectQuery->whereNull('subject_id')->orWhere('subject_id', $subject->getKey());
+            }))
             ->when($search !== '', function ($query) use ($search): void {
                 $query->where(function ($searchQuery) use ($search): void {
                     $searchQuery
                         ->where('title', 'like', "%{$search}%")
+                        ->orWhere('material', 'like', "%{$search}%")
                         ->orWhere('content', 'like', "%{$search}%");
                 });
             })
@@ -57,7 +68,7 @@ class DescriptionSnippetPickerController extends Controller
         if ($this->wantsJson($request)) {
             return response()->json([
                 'data' => $snippets->getCollection()->map(
-                    fn (DescriptionSnippet $snippet): array => $this->selectionTarget($snippet),
+                    fn (DescriptionSnippet $snippet): array => $this->selectionTarget($snippet, $score, $predicateCode),
                 )->values(),
                 'meta' => [
                     'current_page' => $snippets->currentPage(),
@@ -78,7 +89,7 @@ class DescriptionSnippetPickerController extends Controller
             'search' => $search,
             'pickerUrl' => $request->url(),
             'selectionTargets' => $snippets->getCollection()->mapWithKeys(
-                fn (DescriptionSnippet $snippet): array => [$snippet->getKey() => $this->selectionTarget($snippet)],
+                fn (DescriptionSnippet $snippet): array => [$snippet->getKey() => $this->selectionTarget($snippet, $score, $predicateCode)],
             ),
         ]);
     }
@@ -88,12 +99,19 @@ class DescriptionSnippetPickerController extends Controller
      *
      * @return array<string, mixed>
      */
-    public function selectionTarget(DescriptionSnippet $snippet): array
+    public function selectionTarget(DescriptionSnippet $snippet, ?int $score = null, ?string $predicateCode = null): array
     {
+        $generated = $this->templates->render($snippet, $score, $predicateCode);
+
         return [
             'id' => $snippet->getKey(),
             'title' => $snippet->title,
-            'content' => $snippet->content,
+            'content' => $generated !== '' ? $generated : $snippet->content,
+            'legacy_content' => $snippet->content,
+            'material' => $snippet->material,
+            'templates' => $this->templates->templatesFor($snippet),
+            'generated_content' => $generated,
+            'predicate' => $predicateCode,
             'subject_id' => $snippet->subject_id,
             'subject_name' => $snippet->subject?->name,
             'subject_short_name' => $snippet->subject?->short_name,

@@ -1,6 +1,23 @@
 <div class="space-y-5">
     <x-input name="title" label="Judul snippet" :value="old('title', $snippet->title)" :error="$errors->first('title')" placeholder="Contoh: Mampu memahami konsep bilangan" required />
-    <x-textarea name="content" label="Isi deskripsi" rows="7" :value="old('content', $snippet->content)" :error="$errors->first('content')" placeholder="Tuliskan deskripsi capaian yang dapat digunakan kembali." hint="Isi dapat diedit lagi pada input nilai peserta didik setelah dimasukkan." required />
+    <x-textarea name="material" label="Materi / capaian yang dinilai" rows="4" :value="old('material', $snippet->material)" :error="$errors->first('material')" placeholder="Contoh: memahami pengertian sifat terpuji" hint="Materi ini akan dimasukkan otomatis ke template sesuai predikat nilai." />
+
+    <section class="rounded-2xl border border-brand-100 bg-brand-50/60 p-4 sm:p-5" aria-labelledby="predicate-template-heading">
+        <div class="flex items-start gap-3">
+            <span class="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-brand-900 text-white" aria-hidden="true">Aa</span>
+            <div>
+                <h2 id="predicate-template-heading" class="font-semibold text-brand-950">Template berdasarkan predikat</h2>
+                <p class="mt-1 text-sm leading-5 text-brand-800">Gunakan token <code class="rounded bg-white px-1.5 py-0.5 font-semibold">{material}</code>. Saat nilai 90, template A akan menghasilkan kalimat seperti “Siswa sangat baik dalam memahami pengertian sifat terpuji.”</p>
+            </div>
+        </div>
+        <div class="mt-5 space-y-4">
+            @foreach ($predicateRanges as $range)
+                @php($existingTemplate = $snippet->templates?->firstWhere('predicate_code', strtoupper($range->code))?->template)
+                @php($templateValue = old('templates.'.strtoupper($range->code), $existingTemplate ?: ($templateDefaults[strtoupper($range->code)] ?? 'Siswa '.strtolower($range->label).' dalam {material}.')))
+                <x-textarea name="templates[{{ strtoupper($range->code) }}]" label="{{ $range->code }} · {{ $range->label }} ({{ $range->minimum_score }}–{{ $range->maximum_score }})" rows="2" :value="$templateValue" :error="$errors->first('templates.'.strtoupper($range->code))" placeholder="Siswa {{ strtolower($range->label) }} dalam {material}." required />
+            @endforeach
+        </div>
+    </section>
 
     <div class="grid gap-5 sm:grid-cols-2">
         <x-select name="subject_id" label="Mata pelajaran (opsional)" :selected="old('subject_id', $snippet->subject_id)" :options="$subjects->pluck('name', 'id')->toArray()" placeholder="Semua mata pelajaran" :error="$errors->first('subject_id')" hint="Kosongkan jika kalimat dapat dipakai lintas mapel." />

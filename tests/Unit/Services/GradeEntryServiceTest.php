@@ -52,6 +52,35 @@ class GradeEntryServiceTest extends TestCase
         $this->assertDatabaseHas('report_cards', ['enrollment_id' => $enrollment->id, 'semester_id' => $semester->id]);
     }
 
+    public function test_it_generates_a_material_description_from_the_saved_score_predicate(): void
+    {
+        [$guru, $assignment, $semester, $enrollment] = $this->academicSetup();
+        $snippet = DescriptionSnippet::query()->create([
+            'institution_id' => $guru->institution_id,
+            'owner_user_id' => $guru->id,
+            'subject_id' => $assignment->subject_id,
+            'title' => 'Sifat terpuji',
+            'material' => 'memahami pengertian sifat terpuji',
+            'content' => null,
+            'visibility' => 'PRIVATE',
+            'active' => true,
+        ]);
+        $snippet->templates()->create([
+            'predicate_code' => 'A',
+            'predicate_label' => 'Sangat Baik',
+            'template' => 'Siswa sangat baik dalam {material}.',
+            'active' => true,
+        ]);
+
+        $grade = app(GradeEntryService::class)->saveRow($guru, $this->row($assignment, $semester, $enrollment, [
+            'score' => 90,
+            'description_snippet_id' => $snippet->id,
+        ]));
+
+        $this->assertSame('A', $grade->predicate);
+        $this->assertSame('Siswa sangat baik dalam memahami pengertian sifat terpuji.', $grade->description);
+    }
+
     public function test_it_rejects_invalid_scores_without_creating_a_grade(): void
     {
         [$guru, $assignment, $semester, $enrollment] = $this->academicSetup();

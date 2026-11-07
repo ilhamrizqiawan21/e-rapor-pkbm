@@ -60,6 +60,27 @@ class DescriptionSnippetUsageServiceTest extends TestCase
         $this->assertTrue($updated->descriptionSnippet->is($snippet));
     }
 
+    public function test_it_generates_description_from_material_and_current_predicate(): void
+    {
+        [$admin, , $subject, , $grade] = $this->academicSetup();
+        $snippet = $this->snippet($admin, $subject, [
+            'material' => 'memahami pengertian sifat terpuji',
+            'content' => null,
+        ]);
+        $snippet->templates()->create([
+            'predicate_code' => 'A',
+            'predicate_label' => 'Sangat Baik',
+            'template' => 'Siswa sangat baik dalam {material}.',
+            'active' => true,
+        ]);
+        $grade->update(['score' => 90, 'predicate' => 'A']);
+
+        $updated = app(DescriptionSnippetUsageService::class)->applySnippet($admin, $grade, $snippet);
+
+        $this->assertSame('Siswa sangat baik dalam memahami pengertian sifat terpuji.', $updated->description);
+        $this->assertSame('memahami pengertian sifat terpuji', $updated->descriptionSnippet->material);
+    }
+
     public function test_editing_final_text_does_not_mutate_the_original_snippet(): void
     {
         [$admin, , $subject, , $grade] = $this->academicSetup();

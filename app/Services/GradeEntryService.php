@@ -38,6 +38,7 @@ final class GradeEntryService
         private readonly DescriptionSnippetUsageService $snippets,
         private readonly GradeConcurrencyService $concurrency,
         private readonly AuditLogger $audit,
+        private readonly PredicateRangeService $predicateRanges,
     ) {}
 
     /**
@@ -49,6 +50,7 @@ final class GradeEntryService
     {
         $this->assertCanView($actor);
         $institution = $actor->institution;
+        $predicateRanges = $this->predicateRanges->ensureDefaults($institution);
         $years = $this->academicYears($actor)->get();
         $academicYear = $this->selectAcademicYear($years, $filters['academic_year_id'] ?? null);
         $semesters = $academicYear?->semesters()->orderBy('sequence')->orderBy('id')->get() ?? new Collection;
@@ -84,6 +86,12 @@ final class GradeEntryService
             'assignment' => $assignment,
             'students' => $students,
             'filters' => $filters,
+            'predicateRanges' => $predicateRanges->where('active', true)->values()->map(fn ($range): array => [
+                'code' => $range->code,
+                'label' => $range->label,
+                'minimum_score' => $range->minimum_score,
+                'maximum_score' => $range->maximum_score,
+            ])->all(),
         ];
     }
 
@@ -275,7 +283,9 @@ final class GradeEntryService
                 'student',
                 'reportCards' => fn ($query) => $query
                     ->where('semester_id', $semester->getKey())
-                    ->with(['grades' => fn ($grades) => $grades->where('subject_assignment_id', $assignment->getKey())]),
+                    ->with(['grades' => fn ($grades) => $grades
+                        ->where('subject_assignment_id', $assignment->getKey())
+                        ->with(['descriptionSnippet.templates'])]),
             ])
             ->when(trim($search) !== '', function (Builder $query) use ($search): void {
                 $term = '%'.trim($search).'%';
