@@ -60,8 +60,9 @@ final class SimpleXlsx
      * @param  array<string, array<int, array<int, string>>>  $sheets
      * @param  array<string, array<int, int>>  $editableColumns
      * @param  array<string, array<int, string>>  $editableCells
+     * @param  array<string, array<string, mixed>>  $sheetOptions
      */
-    public static function write(string $path, array $sheets, array $editableColumns = [], array $editableCells = []): void
+    public static function write(string $path, array $sheets, array $editableColumns = [], array $editableCells = [], array $sheetOptions = []): void
     {
         $zip = new ZipArchive;
         if ($zip->open($path, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
@@ -95,7 +96,7 @@ final class SimpleXlsx
         $index = 0;
         foreach ($sheets as $name => $rows) {
             $index++;
-            $zip->addFromString('xl/worksheets/sheet'.$index.'.xml', self::sheet($rows, $editableColumns[$name] ?? [], $editableCells[$name] ?? []));
+            $zip->addFromString('xl/worksheets/sheet'.$index.'.xml', self::sheet($rows, $editableColumns[$name] ?? [], $editableCells[$name] ?? [], $sheetOptions[$name] ?? []));
         }
 
         $zip->close();
@@ -186,31 +187,67 @@ final class SimpleXlsx
         return $parsed === false ? null : $parsed;
     }
 
-    /** @param  array<int, int>  $editableColumns @param  array<int, string>  $editableCells */
-    private static function sheet(array $rows, array $editableColumns, array $editableCells): string
+    /**
+     * @param  array<int, int>  $editableColumns
+     * @param  array<int, string>  $editableCells
+     * @param  array<string, mixed>  $options
+     */
+    private static function sheet(array $rows, array $editableColumns, array $editableCells, array $options = []): string
     {
-        $xml = '<?xml version="1.0" encoding="UTF-8"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetViews><sheetView workbookViewId="0"><pane ySplit="1" topLeftCell="A2" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews><sheetData>';
+        $widths = $options['widths'] ?? [];
+        $rowHeights = $options['row_heights'] ?? [];
+        $freezeRows = (int) ($options['freeze_rows'] ?? 1);
+        $wrapAll = (bool) ($options['wrap_all'] ?? false);
+        $readonlyColumns = $options['readonly_columns'] ?? [];
+        $autoFilter = (bool) ($options['auto_filter'] ?? true);
+        $maxColumn = max(0, count($rows[0] ?? []) - 1);
+        $maxRow = max(1, count($rows));
+
+        $xml = '<?xml version="1.0" encoding="UTF-8"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">';
+        if (! empty($options['tab_color'])) {
+            $xml .= '<sheetPr><tabColor rgb="'.self::escape((string) $options['tab_color']).'"/></sheetPr>';
+        }
+        $xml .= '<sheetViews><sheetView showGridLines="0" workbookViewId="0">';
+        if ($freezeRows > 0) {
+            $xml .= '<pane ySplit="'.$freezeRows.'" topLeftCell="A'.($freezeRows + 1).'" activePane="bottomLeft" state="frozen"/>';
+        }
+        $xml .= '</sheetView></sheetViews>';
+        if ($widths !== []) {
+            $xml .= '<cols>';
+            foreach ($widths as $columnIndex => $width) {
+                $xml .= '<col min="'.((int) $columnIndex + 1).'" max="'.((int) $columnIndex + 1).'" width="'.((float) $width).'" customWidth="1"/>';
+            }
+            $xml .= '</cols>';
+        }
+        $xml .= '<sheetData>';
         foreach ($rows as $rowIndex => $row) {
             $number = $rowIndex + 1;
-            $xml .= '<row r="'.$number.'">';
+            $rowHeight = $rowHeights[$number] ?? null;
+            $xml .= '<row r="'.$number.'"'.($rowHeight !== null ? ' ht="'.((float) $rowHeight).'" customHeight="1"' : '').'>';
             foreach (array_values($row) as $columnIndex => $value) {
                 if ($value === null) {
                     continue;
                 }
                 $cellReference = self::columnName($columnIndex).$number;
-                $style = $rowIndex === 0 ? 1 : (in_array($columnIndex, $editableColumns, true) || in_array($cellReference, $editableCells, true) ? 2 : 0);
+                $isEditable = in_array($columnIndex, $editableColumns, true) || in_array($cellReference, $editableCells, true);
+                $isReadonly = in_array($columnIndex, $readonlyColumns, true);
+                $style = $rowIndex === 0 ? 1 : ($isEditable ? 2 : ($isReadonly ? 3 : ($wrapAll ? 4 : 0)));
                 $xml .= '<c r="'.self::columnName($columnIndex).$number.'" s="'.$style.'" t="inlineStr"><is><t xml:space="preserve">'.self::escape((string) $value).'</t></is></c>';
             }
             $xml .= '</row>';
         }
-        $xml .= '</sheetData><sheetProtection sheet="1" objects="1" scenarios="1"/><autoFilter ref="A1:'.self::columnName(max(0, count($rows[0] ?? []) - 1)).max(1, count($rows)).'"/><pageMargins left="0.25" right="0.25" top="0.5" bottom="0.5" header="0.3" footer="0.3"/></worksheet>';
+        $xml .= '</sheetData><sheetProtection sheet="1" objects="1" scenarios="1"/>';
+        if ($autoFilter) {
+            $xml .= '<autoFilter ref="A1:'.self::columnName($maxColumn).$maxRow.'"/>';
+        }
+        $xml .= '<pageMargins left="0.25" right="0.25" top="0.5" bottom="0.5" header="0.3" footer="0.3"/></worksheet>';
 
         return $xml;
     }
 
     private static function styles(): string
     {
-        return '<?xml version="1.0" encoding="UTF-8"?><styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><fonts count="2"><font><sz val="10"/><name val="Arial"/></font><font><b/><sz val="10"/><name val="Arial"/></font></fonts><fills count="4"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill><fill><patternFill patternType="solid"><fgColor rgb="FFDDEBF7"/><bgColor indexed="64"/></patternFill></fill><fill><patternFill patternType="solid"><fgColor rgb="FFE8F5E9"/><bgColor indexed="64"/></patternFill></fill></fills><borders count="2"><border><left/><right/><top/><bottom/><diagonal/></border><border><left style="thin"/><right style="thin"/><top style="thin"/><bottom style="thin"/><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="3"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/><xf numFmtId="0" fontId="1" fillId="2" borderId="1" applyAlignment="1"><alignment horizontal="center" vertical="center" wrapText="1"/></xf><xf numFmtId="0" fontId="0" fillId="3" borderId="1" applyAlignment="1"><protection locked="0"/><alignment vertical="top" wrapText="1"/></xf></cellXfs><cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles></styleSheet>';
+        return '<?xml version="1.0" encoding="UTF-8"?><styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><fonts count="2"><font><sz val="10"/><name val="Arial"/></font><font><b/><sz val="10"/><name val="Arial"/></font></fonts><fills count="5"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill><fill><patternFill patternType="solid"><fgColor rgb="FFDDEBF7"/><bgColor indexed="64"/></patternFill></fill><fill><patternFill patternType="solid"><fgColor rgb="FFE8F5E9"/><bgColor indexed="64"/></patternFill></fill><fill><patternFill patternType="solid"><fgColor rgb="FFF1F5F9"/><bgColor indexed="64"/></patternFill></fill></fills><borders count="2"><border><left/><right/><top/><bottom/><diagonal/></border><border><left style="thin"/><right style="thin"/><top style="thin"/><bottom style="thin"/><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="5"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/><xf numFmtId="0" fontId="1" fillId="2" borderId="1" applyAlignment="1"><alignment horizontal="center" vertical="center" wrapText="1"/></xf><xf numFmtId="0" fontId="0" fillId="3" borderId="1" applyAlignment="1"><protection locked="0"/><alignment vertical="top" wrapText="1"/></xf><xf numFmtId="0" fontId="0" fillId="4" borderId="1" applyAlignment="1"><alignment vertical="top" wrapText="1"/></xf><xf numFmtId="0" fontId="0" fillId="0" borderId="1" applyAlignment="1"><alignment vertical="top" wrapText="1"/></xf></cellXfs><cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles></styleSheet>';
     }
 
     private static function escape(string $value): string

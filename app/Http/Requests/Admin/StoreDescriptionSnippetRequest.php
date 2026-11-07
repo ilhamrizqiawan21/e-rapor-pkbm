@@ -66,9 +66,9 @@ class StoreDescriptionSnippetRequest extends FormRequest
                 ->filter(fn ($template): bool => trim((string) $template) !== '');
 
             if ($templates->isNotEmpty() && $material === '') {
-                $validator->errors()->add('material', 'Materi wajib diisi untuk bank deskripsi.');
+                $validator->errors()->add('material', 'Materi wajib diisi untuk template deskripsi.');
             } elseif ($material === '' && $content === '' && $templates->isEmpty()) {
-                $validator->errors()->add('material', 'Materi wajib diisi untuk bank deskripsi.');
+                $validator->errors()->add('material', 'Materi wajib diisi untuk template deskripsi.');
             }
 
             foreach ($templates as $code => $template) {

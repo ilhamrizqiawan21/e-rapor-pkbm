@@ -74,6 +74,30 @@ final class GradeImportService
                     'NILAI' => [5],
                 ], [
                     'KONTEKS' => ['B7'],
+                ], [
+                    'PETUNJUK' => [
+                        'widths' => [0 => 12, 1 => 112],
+                        'row_heights' => [1 => 28, 2 => 38, 3 => 44, 4 => 44, 5 => 44, 6 => 44, 7 => 44, 8 => 44, 9 => 28],
+                        'wrap_all' => true,
+                        'freeze_rows' => 0,
+                        'auto_filter' => false,
+                        'tab_color' => 'FF0F766E',
+                    ],
+                    'KONTEKS' => [
+                        'widths' => [0 => 30, 1 => 30, 2 => 64],
+                        'wrap_all' => true,
+                        'readonly_columns' => [0, 2],
+                        'freeze_rows' => 1,
+                        'auto_filter' => false,
+                        'tab_color' => 'FFF59E0B',
+                    ],
+                    'NILAI' => [
+                        'widths' => [0 => 8, 1 => 16, 2 => 16, 3 => 16, 4 => 30, 5 => 16, 6 => 22, 7 => 42, 8 => 20],
+                        'readonly_columns' => [0, 1, 2, 3, 4, 6, 7, 8],
+                        'freeze_rows' => 1,
+                        'auto_filter' => true,
+                        'tab_color' => 'FF2563EB',
+                    ],
                 ]);
                 readfile($path);
             } finally {

@@ -34,7 +34,7 @@ async function assertNavigationPresentation(page: Page, role: Role): Promise<voi
         : page.locator('#desktop-sidebar-navigation');
 
     const groups = role === 'kepsek'
-        ? ['Data inti', 'Tinjauan & persetujuan rapor', 'Akun']
+        ? ['Data inti', 'Rapor & leger', 'Akun']
         : ['Data inti', 'Penilaian', role === 'guru' ? 'Rapor & leger' : 'Rapor & leger', 'Akun'];
 
     for (const group of groups) {
@@ -57,13 +57,15 @@ async function assertNavigationPresentation(page: Page, role: Role): Promise<voi
 
     if (role === 'guru') {
         await expect(navigation.getByText('Input nilai', { exact: true })).toBeAttached();
-        await expect(navigation.getByText('Rapor kelas saya', { exact: true })).toBeAttached();
+        await expect(navigation.getByText('Kelengkapan rapor', { exact: true })).toBeAttached();
     }
 
     if (role === 'admin') {
-        for (const label of ['Data Guru', 'Peserta didik', 'Mata pelajaran', 'Tahun pelajaran', 'Kelas / rombel', 'Backup database']) {
+        for (const label of ['Data Guru', 'Peserta didik', 'Mata pelajaran', 'Tahun pelajaran', 'Kelas / rombel']) {
             await expect(navigation.getByText(label, { exact: true })).toBeAttached();
         }
+        await expect(navigation.getByRole('link', { name: 'Pengaturan PKBM', exact: true })).toBeVisible();
+        await expect(navigation.getByText('Cadangan data', { exact: true })).toHaveCount(0);
     }
 
     if (role === 'guru') {

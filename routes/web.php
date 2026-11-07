@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\AcademicDecisionController;
 use App\Http\Controllers\Account\ProfileController;
 use App\Http\Controllers\Admin\AcademicClassController;
+use App\Http\Controllers\Admin\AcademicRolloverController;
 use App\Http\Controllers\Admin\AcademicYearController;
 use App\Http\Controllers\Admin\AuditHistoryController;
 use App\Http\Controllers\Admin\BackupController;
@@ -60,6 +62,7 @@ Route::middleware('auth')->group(function (): void {
     Route::get('/account/password', [PasswordController::class, 'edit'])->name('password.edit');
     Route::put('/account/password', [PasswordController::class, 'update'])->name('password.update');
     Route::get('/account/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/account/profile', [ProfileController::class, 'update'])->name('profile.update');
 
     Route::prefix('admin')->name('admin.')->group(function (): void {
         Route::get('students/import', [StudentImportController::class, 'create'])->name('students.import.create');
@@ -98,6 +101,7 @@ Route::middleware('auth')->group(function (): void {
         Route::get('grade-entry/import/errors', [GradeImportController::class, 'errors'])->name('grade-entry.import.errors');
         Route::get('grade-entry', [GradeEntryController::class, 'index'])->name('grade-entry.index');
         Route::post('grade-entry', [GradeEntryController::class, 'store'])->name('grade-entry.store');
+        Route::post('grade-entry/context', [GradeEntryController::class, 'storeContext'])->name('grade-entry.store-context');
         Route::post('grade-entry/all', [GradeEntryController::class, 'storeAll'])->name('grade-entry.store-all');
         Route::get('report-cards', [ReportCardCompletenessController::class, 'index'])->name('report-cards.index');
         Route::get('ledger', [LedgerController::class, 'index'])->name('ledger.index');
@@ -128,12 +132,23 @@ Route::middleware('auth')->group(function (): void {
         Route::post('report-cards/{report_card}/unlock', [ReportCardWorkflowController::class, 'unlock'])->name('report-cards.unlock');
     });
 
+    Route::get('academic-decisions', [AcademicDecisionController::class, 'index'])->name('academic-decisions.index');
+    Route::get('admin/academic-years/{academicYear}/transition', [AcademicRolloverController::class, 'index'])->name('admin.academic-years.transition');
+    Route::put('academic-decisions/classes/{academicClass}', [AcademicDecisionController::class, 'update'])->name('academic-decisions.update');
+    Route::post('academic-decisions/classes/{academicClass}/finalize', [AcademicDecisionController::class, 'finalize'])->name('academic-decisions.finalize');
+
     Route::middleware('role:ADMIN')->prefix('admin/users/{user}/password')->name('admin.users.password.')->group(function (): void {
         Route::get('/', [UserPasswordController::class, 'edit'])->name('edit');
         Route::put('/', [UserPasswordController::class, 'update'])->name('update');
     });
 
     Route::middleware('role:ADMIN')->prefix('admin')->name('admin.')->group(function (): void {
+        Route::post('academic-years/{academicYear}/transition/prepare', [AcademicRolloverController::class, 'prepare'])->name('academic-years.transition.prepare');
+        Route::put('academic-years/{academicYear}/transition/placements', [AcademicRolloverController::class, 'placements'])->name('academic-years.transition.placements');
+        Route::post('academic-years/{academicYear}/transition/preview', [AcademicRolloverController::class, 'preview'])->name('academic-years.transition.preview');
+        Route::post('academic-years/{academicYear}/transition', [AcademicRolloverController::class, 'store'])->name('academic-years.transition.store');
+        Route::post('academic-years/{academicYear}/transition/copy', [AcademicRolloverController::class, 'copy'])->name('academic-years.transition.copy');
+        Route::post('academic-decisions/classes/{academicClass}/reopen', [AcademicDecisionController::class, 'reopen'])->name('academic-decisions.reopen');
         Route::get('backups', [BackupController::class, 'index'])->name('backups.index');
         Route::post('backups', [BackupController::class, 'store'])->name('backups.store');
         Route::post('backups/restore', [BackupController::class, 'restore'])->name('backups.restore');

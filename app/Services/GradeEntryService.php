@@ -9,6 +9,7 @@ use App\Models\AcademicClass;
 use App\Models\AcademicYear;
 use App\Models\DescriptionSnippet;
 use App\Models\Enrollment;
+use App\Models\GradeEntryContext;
 use App\Models\ReportCard;
 use App\Models\ReportGrade;
 use App\Models\Semester;
@@ -62,6 +63,14 @@ final class GradeEntryService
         $subjects = $assignments->pluck('subject')->filter()->unique('id')->sortBy('name')->values();
         $subjectId = isset($filters['subject_id']) ? (int) $filters['subject_id'] : null;
         $assignment = $this->selectAssignment($assignments, $subjectId, $filters['subject_assignment_id'] ?? null);
+        $materialContext = $academicClass && $semester && $assignment
+            ? GradeEntryContext::query()
+                ->where('institution_id', $institution->getKey())
+                ->where('semester_id', $semester->getKey())
+                ->where('subject_assignment_id', $assignment->getKey())
+                ->with(['descriptionSnippet.templates'])
+                ->first()
+            : null;
 
         $students = null;
         if ($academicClass && $semester && $assignment) {
@@ -85,6 +94,7 @@ final class GradeEntryService
             'semester' => $semester,
             'academicClass' => $academicClass,
             'assignment' => $assignment,
+            'materialContext' => $materialContext,
             'students' => $students,
             'filters' => $filters,
             'predicateRanges' => $predicateRanges->where('active', true)->values()->map(fn ($range): array => [
@@ -111,8 +121,9 @@ final class GradeEntryService
         $description = array_key_exists('description', $data) ? $data['description'] : null;
         $snippetId = $data['description_snippet_id'] ?? null;
         $material = trim((string) ($data['material'] ?? ''));
+        $hasMaterialInput = array_key_exists('material', $data);
 
-        return DB::transaction(function () use ($actor, $context, $data, $score, $description, $snippetId, $material): ReportGrade {
+        return DB::transaction(function () use ($actor, $context, $data, $score, $description, $snippetId, $material, $hasMaterialInput): ReportGrade {
             /** @var Enrollment $enrollment */
             $enrollment = $context['enrollment'];
             /** @var Semester $semester */
@@ -149,6 +160,10 @@ final class GradeEntryService
                 $grade = $this->snippets->updateFinalDescription($actor, $grade, $description);
             }
 
+            if ($hasMaterialInput) {
+                $this->saveMaterialContext($actor, $semester, $assignment, $material, $snippetId);
+            }
+
             $freshGrade = $grade->fresh(['reportCard', 'subjectAssignment.subject', 'descriptionSnippet']);
             $this->audit->record(
                 $actor,
@@ -160,6 +175,47 @@ final class GradeEntryService
             );
 
             return $freshGrade;
+        });
+    }
+
+    /** Save the shared learning-material context without touching locked rows. */
+    public function saveContext(User $actor, array $data): void
+    {
+        $this->assertCanEdit($actor);
+        $grid = $this->grid($actor, $data);
+        $year = $grid['academicYear'];
+        $semester = $grid['semester'];
+        $academicClass = $grid['academicClass'];
+        $assignment = $grid['assignment'];
+
+        if (! $year || ! $semester || ! $academicClass || ! $assignment) {
+            throw new ModelNotFoundException('Konteks input nilai tidak ditemukan.');
+        }
+
+        if ((int) ($data['academic_year_id'] ?? 0) !== $year->getKey()
+            || (int) ($data['semester_id'] ?? 0) !== $semester->getKey()
+            || (int) ($data['class_id'] ?? 0) !== $academicClass->getKey()
+            || (int) ($data['subject_assignment_id'] ?? 0) !== $assignment->getKey()) {
+            throw new ModelNotFoundException('Konteks input nilai tidak ditemukan.');
+        }
+
+        $this->ensurePeriodOpen($year, $semester);
+        $snippetId = $data['description_snippet_id'] ?? null;
+        if (filled($snippetId)) {
+            DescriptionSnippet::query()
+                ->where('institution_id', $actor->institution_id)
+                ->whereKey($snippetId)
+                ->firstOrFail();
+        }
+
+        DB::transaction(function () use ($actor, $semester, $assignment, $data, $snippetId): void {
+            $this->saveMaterialContext(
+                $actor,
+                $semester,
+                $assignment,
+                trim((string) ($data['material'] ?? '')),
+                $snippetId,
+            );
         });
     }
 
@@ -212,6 +268,28 @@ final class GradeEntryService
         return $range === null
             ? $material
             : sprintf('Siswa %s dalam %s.', Str::lower($range->label), $material);
+    }
+
+    private function saveMaterialContext(User $actor, Semester $semester, SubjectAssignment $assignment, string $material, mixed $snippetId): void
+    {
+        $query = GradeEntryContext::query()
+            ->where('institution_id', $actor->institution_id)
+            ->where('semester_id', $semester->getKey())
+            ->where('subject_assignment_id', $assignment->getKey());
+
+        if ($material === '' && blank($snippetId)) {
+            $query->delete();
+
+            return;
+        }
+
+        $query->updateOrCreate([], [
+            'institution_id' => $actor->institution_id,
+            'semester_id' => $semester->getKey(),
+            'subject_assignment_id' => $assignment->getKey(),
+            'description_snippet_id' => filled($snippetId) ? (int) $snippetId : null,
+            'material' => $material !== '' ? $material : null,
+        ]);
     }
 
     /** @return Builder<AcademicYear> */

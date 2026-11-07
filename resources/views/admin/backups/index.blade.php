@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="mx-auto max-w-7xl space-y-6">
-        <x-page-header eyebrow="Pengaturan PKBM / operasional" title="Cadangan dan pemulihan data" description="Kelola salinan data secara aman. Pemulihan mengganti data aktif dan selalu membuat cadangan pengaman terlebih dahulu." />
+        <x-page-header eyebrow="Pengaturan PKBM / operasional" title="Cadangan dan pemulihan data" description="Kelola salinan data secara aman. Pemulihan mengganti data aktif dan selalu membuat cadangan pengaman terlebih dahulu." back-href="{{ route('admin.institutions.index') }}" back-text="Kembali ke pengaturan PKBM" />
 
         @if (session('status'))
             <div class="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800" role="status">{{ session('status') }}</div>

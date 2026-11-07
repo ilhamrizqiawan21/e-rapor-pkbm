@@ -54,6 +54,9 @@ return [
 
     'url' => env('APP_URL', 'http://localhost:8000'),
 
+    // Used to brand guest pages when more than one institution exists.
+    'institution_id' => env('APP_INSTITUTION_ID'),
+
     /*
     |--------------------------------------------------------------------------
     | Application Timezone

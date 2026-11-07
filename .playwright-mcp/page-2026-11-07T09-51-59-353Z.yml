@@ -1,0 +1,177 @@
+- main [ref=f7e3]:
+  - generic [ref=f7e5]:
+    - generic [ref=f7e6]:
+      - button "Buka menu navigasi" [ref=f7e7]
+      - generic [ref=f7e15]:
+        - paragraph [ref=f7e16]: Periode aktif
+        - paragraph [ref=f7e18]: 2026/2027 · Semester Ganjil
+    - generic [ref=f7e19]:
+      - generic [ref=f7e20]: Siap digunakan
+      - button "Buka menu akun" [ref=f7e24]:
+        - generic [aria-hidden] [ref=f7e25]: AD
+        - generic [ref=f7e26]:
+          - generic [ref=f7e27]: Admin Demo
+          - generic [ref=f7e28]: Admin
+  - generic [ref=f7e32]:
+    - generic [ref=f7e33]:
+      - generic [ref=f7e34]:
+        - paragraph [ref=f7e35]: Dashboard Admin
+        - heading "Operasional PKBM dalam satu layar" [level=2] [ref=f7e36]
+        - paragraph [ref=f7e37]: Mulai dari fondasi periode, pantau kesiapan data, lalu pastikan nilai dan rapor bergerak sampai siap diterbitkan.
+      - generic [ref=f7e42]:
+        - paragraph [ref=f7e43]: Periode aktif
+        - paragraph [ref=f7e44]: 2026/2027 · Semester Ganjil
+    - status [ref=f7e45]:
+      - generic [ref=f7e51]:
+        - paragraph [ref=f7e52]: Fondasi periode sudah lengkap
+        - paragraph [ref=f7e53]: Data siap dipantau. Gunakan ringkasan di bawah untuk menemukan kelas atau rapor yang perlu ditindaklanjuti.
+      - link "Buka input nilai" [ref=f7e54] [cursor=pointer]:
+        - /url: http://127.0.0.1:8002/admin/grade-entry
+    - region [ref=f7e55]:
+      - generic [ref=f7e56]:
+        - generic [ref=f7e57]:
+          - paragraph [ref=f7e58]: Urutan kerja Admin
+          - heading "Siapkan periode sampai siap menilai" [level=3] [ref=f7e59]
+          - paragraph [ref=f7e60]: Empat fondasi ini membuat angka dashboard dan status rapor dapat dibaca dengan benar.
+        - generic [ref=f7e61]: 4/4 selesai
+      - list [ref=f7e62]:
+        - listitem [ref=f7e63]:
+          - generic [ref=f7e64]: Selesai
+          - heading "Aktifkan periode" [level=4] [ref=f7e69]
+          - paragraph [ref=f7e70]: 2026/2027 · Semester Ganjil
+          - generic [ref=f7e71]: Fondasi tersedia
+        - listitem [ref=f7e72]:
+          - generic [ref=f7e73]: Selesai
+          - heading "Siapkan kelas / rombel" [level=4] [ref=f7e78]
+          - paragraph [ref=f7e79]: 4 kelas aktif
+          - generic [ref=f7e80]: Fondasi tersedia
+        - listitem [ref=f7e81]:
+          - generic [ref=f7e82]: Selesai
+          - heading "Masukkan peserta didik" [level=4] [ref=f7e87]
+          - paragraph [ref=f7e88]: 20 peserta didik aktif
+          - generic [ref=f7e89]: Fondasi tersedia
+        - listitem [ref=f7e90]:
+          - generic [ref=f7e91]: Selesai
+          - heading "Petakan mapel dan guru" [level=4] [ref=f7e96]
+          - paragraph [ref=f7e97]: 40 penugasan aktif
+          - generic [ref=f7e98]: Fondasi tersedia
+    - region [ref=f7e99]:
+      - generic [ref=f7e100]:
+        - heading "Ringkasan periode aktif" [level=3] [ref=f7e101]
+        - generic [ref=f7e102]: Diperbarui dari data operasional
+      - generic [ref=f7e103]:
+        - generic [ref=f7e104]:
+          - paragraph [ref=f7e105]: Kelas aktif
+          - paragraph [ref=f7e106]: "4"
+          - paragraph [ref=f7e107]: Pada periode aktif
+        - generic [ref=f7e108]:
+          - paragraph [ref=f7e109]: Peserta didik
+          - paragraph [ref=f7e110]: "20"
+          - paragraph [ref=f7e111]: Penempatan aktif
+        - generic [ref=f7e112]:
+          - paragraph [ref=f7e113]: Guru aktif
+          - paragraph [ref=f7e114]: "1"
+          - paragraph [ref=f7e115]: Dalam institusi
+        - generic [ref=f7e116]:
+          - paragraph [ref=f7e117]: Rapor siap dicetak
+          - paragraph [ref=f7e118]: "17"
+          - paragraph [ref=f7e119]: Data lengkap dan siap diterbitkan
+    - generic [ref=f7e120]:
+      - region [ref=f7e121]:
+        - generic [ref=f7e122]:
+          - generic [ref=f7e123]:
+            - heading "Progres nilai per kelas" [level=3] [ref=f7e124]
+            - paragraph [ref=f7e125]: Nilai terisi dibanding slot nilai yang diharapkan.
+          - generic [ref=f7e126]: 4 kelas
+        - table [ref=f7e128]:
+          - rowgroup [ref=f7e129]:
+            - row [ref=f7e130]:
+              - columnheader "Kelas" [ref=f7e131]
+              - columnheader "Peserta" [ref=f7e132]
+              - columnheader "Nilai terisi" [ref=f7e133]
+              - columnheader "Progress" [ref=f7e134]
+          - rowgroup [ref=f7e135]:
+            - row [ref=f7e136]:
+              - cell [ref=f7e137]:
+                - paragraph [ref=f7e138]: Paket A Tingkat 1
+                - paragraph [ref=f7e139]: PA-1
+              - cell "5" [ref=f7e140]
+              - cell "50 / 50" [ref=f7e141]
+              - cell "100% terisi" [ref=f7e142]:
+                - generic [ref=f7e144]:
+                  - generic [ref=f7e145]: 100%
+                  - generic [ref=f7e146]: terisi
+            - row [ref=f7e149]:
+              - cell [ref=f7e150]:
+                - paragraph [ref=f7e151]: Paket B Tingkat 7A
+                - paragraph [ref=f7e152]: PB-7
+              - cell "5" [ref=f7e153]
+              - cell "50 / 50" [ref=f7e154]
+              - cell "100% terisi" [ref=f7e155]:
+                - generic [ref=f7e157]:
+                  - generic [ref=f7e158]: 100%
+                  - generic [ref=f7e159]: terisi
+            - row [ref=f7e162]:
+              - cell [ref=f7e163]:
+                - paragraph [ref=f7e164]: Paket B Tingkat 8A
+                - paragraph [ref=f7e165]: PB-8
+              - cell "5" [ref=f7e166]
+              - cell "50 / 50" [ref=f7e167]
+              - cell "100% terisi" [ref=f7e168]:
+                - generic [ref=f7e170]:
+                  - generic [ref=f7e171]: 100%
+                  - generic [ref=f7e172]: terisi
+            - row [ref=f7e175]:
+              - cell [ref=f7e176]:
+                - paragraph [ref=f7e177]: Paket C Tingkat 10A
+                - paragraph [ref=f7e178]: PC-10
+              - cell "5" [ref=f7e179]
+              - cell "50 / 50" [ref=f7e180]
+              - cell "100% terisi" [ref=f7e181]:
+                - generic [ref=f7e183]:
+                  - generic [ref=f7e184]: 100%
+                  - generic [ref=f7e185]: terisi
+      - region [ref=f7e188]:
+        - paragraph [ref=f7e189]: Status rapor
+        - paragraph [ref=f7e190]: Ringkasan kesiapan rapor pada periode aktif.
+        - generic [ref=f7e191]:
+          - generic [ref=f7e192]:
+            - generic [ref=f7e193]: Belum siap dicetak
+            - strong [ref=f7e194]: "0"
+          - generic [ref=f7e195]:
+            - generic [ref=f7e196]: Siap dicetak
+            - strong [ref=f7e197]: "17"
+          - generic [ref=f7e198]:
+            - generic [ref=f7e199]: Terkunci
+            - strong [ref=f7e200]: "3"
+          - generic [ref=f7e201]:
+            - generic [ref=f7e202]: Perlu diperbarui
+            - strong [ref=f7e203]: "0"
+    - generic [ref=f7e204]:
+      - region [ref=f7e205]:
+        - heading "Akses cepat" [level=3] [ref=f7e206]
+        - paragraph [ref=f7e207]: Buka pekerjaan yang paling sering dipakai Admin.
+        - generic [ref=f7e208]:
+          - link "Input nilai" [ref=f7e209] [cursor=pointer]:
+            - /url: http://127.0.0.1:8002/admin/grade-entry
+          - link "Kelola rapor" [ref=f7e210] [cursor=pointer]:
+            - /url: http://127.0.0.1:8002/admin/report-cards
+          - link "Data peserta didik" [ref=f7e211] [cursor=pointer]:
+            - /url: http://127.0.0.1:8002/admin/students
+          - link "Tahun pelajaran" [ref=f7e212] [cursor=pointer]:
+            - /url: http://127.0.0.1:8002/admin/academic-years
+      - region [ref=f7e213]:
+        - generic [ref=f7e214]:
+          - heading "Perpindahan terbaru" [level=3] [ref=f7e215]
+          - paragraph [ref=f7e216]: Riwayat perpindahan yang sudah disetujui Admin.
+        - table [ref=f7e218]:
+          - rowgroup [ref=f7e219]:
+            - row [ref=f7e220]:
+              - columnheader "Peserta didik" [ref=f7e221]
+              - columnheader "Asal → tujuan" [ref=f7e222]
+              - columnheader "Tanggal" [ref=f7e223]
+          - rowgroup [ref=f7e224]:
+            - row [ref=f7e225]:
+              - cell "Naufal Ardiansyah" [ref=f7e226]
+              - cell "Paket B Tingkat 7A → Paket B Tingkat 8A" [ref=f7e227]
+              - cell "16/09/2026" [ref=f7e228]

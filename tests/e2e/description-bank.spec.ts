@@ -14,7 +14,7 @@ test.describe('08 reusable description bank browser flows', () => {
 
         await page.goto('/admin/description-snippets');
         await expect(page.getByRole('heading', { name: 'Bank deskripsi', exact: true })).toBeVisible();
-        await expect(page.getByRole('link', { name: 'Tambah snippet' })).toBeVisible();
+        await expect(page.getByRole('link', { name: 'Tambah template' })).toBeVisible();
     });
 
     test('admin can open the description picker used by grade input', async ({ page }) => {

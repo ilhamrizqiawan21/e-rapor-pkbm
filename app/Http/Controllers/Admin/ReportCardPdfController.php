@@ -132,9 +132,11 @@ final class ReportCardPdfController extends Controller
                 'filename' => $filename,
             ]);
 
+            $disposition = $request->boolean('preview') ? 'inline' : 'attachment';
+
             return response($contents, 200, [
                 'Content-Type' => 'application/pdf',
-                'Content-Disposition' => 'attachment; filename="'.$filename.'"',
+                'Content-Disposition' => $disposition.'; filename="'.$filename.'"',
                 'Content-Length' => (string) strlen($contents),
             ]);
         } catch (PdfEngineUnavailable $exception) {

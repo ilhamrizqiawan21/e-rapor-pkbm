@@ -41,7 +41,7 @@ class ReportCardPolicy
     {
         // Locked cards are final output; no role may edit them through normal
         // entry endpoints, including Admin.
-        if (! $this->belongsToInstitution($user, $reportCard) || $reportCard->status === 'LOCKED') {
+        if (! $this->belongsToInstitution($user, $reportCard) || $reportCard->status === 'LOCKED' || $this->periodClosed($reportCard)) {
             return false;
         }
 
@@ -68,7 +68,7 @@ class ReportCardPolicy
 
     public function manageCompleteness(User $user, ReportCard $reportCard): bool
     {
-        if (! $this->belongsToInstitution($user, $reportCard) || $reportCard->status === 'LOCKED') {
+        if (! $this->belongsToInstitution($user, $reportCard) || $reportCard->status === 'LOCKED' || $this->periodClosed($reportCard)) {
             return false;
         }
 
@@ -107,6 +107,7 @@ class ReportCardPolicy
     public function delete(User $user, ReportCard $reportCard): bool
     {
         return $reportCard->status !== 'LOCKED'
+            && ! $this->periodClosed($reportCard)
             && $this->hasClassAccess($user, $reportCard)
             && $user->hasRole('ADMIN');
     }
@@ -208,7 +209,7 @@ class ReportCardPolicy
 
     private function isDataEntryStatus(User $user, ReportCard $reportCard): bool
     {
-        if (! $this->belongsToInstitution($user, $reportCard) || $reportCard->status === 'LOCKED') {
+        if (! $this->belongsToInstitution($user, $reportCard) || $reportCard->status === 'LOCKED' || $this->periodClosed($reportCard)) {
             return false;
         }
 
@@ -220,5 +221,11 @@ class ReportCardPolicy
     {
         return $user->isActive()
             && $reportCard->enrollment?->academicClass?->program?->institution_id === $user->institution_id;
+    }
+
+    private function periodClosed(ReportCard $reportCard): bool
+    {
+        return $reportCard->semester?->status?->value === 'CLOSED'
+            || $reportCard->semester?->academicYear?->status?->value === 'CLOSED';
     }
 }

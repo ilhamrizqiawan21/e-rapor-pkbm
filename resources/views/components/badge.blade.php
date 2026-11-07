@@ -20,6 +20,8 @@
         'INACTIVE' => 'neutral',
         'WITHDRAWN' => 'danger',
         'TRANSFERRED' => 'warning',
+        'COMPLETED' => 'neutral',
+        'GRADUATED' => 'success',
     ];
 
     $resolvedVariant = $statusMap[$normalized] ?? strtolower($variant);
@@ -68,6 +70,8 @@
         'INACTIVE' => 'Nonaktif',
         'WITHDRAWN' => 'Dikeluarkan',
         'TRANSFERRED' => 'Dipindahkan',
+        'COMPLETED' => 'Selesai tahun pelajaran',
+        'GRADUATED' => 'Lulus paket',
     ];
 @endphp
 

@@ -27,8 +27,9 @@
         .identity .label { color: #374151; width: 16%; }
         .identity .value { font-weight: 600; width: 34%; }
         .section-title { background: #e5e7eb; border: 1px solid #374151; font-size: 10pt; font-weight: 700; margin-top: 10px; padding: 5px 7px; }
-        table.data { border-collapse: collapse; table-layout: fixed; width: 100%; }
+        table.data { border: 1px solid #374151; border-collapse: collapse; table-layout: fixed; width: 100%; }
         table.data th, table.data td { border: 1px solid #374151; padding: 4px 5px; overflow-wrap: anywhere; vertical-align: top; }
+        table.data th:last-child, table.data td:last-child { border-right: 1px solid #374151; }
         table.data th { background: #f3f4f6; font-weight: 700; text-align: center; }
         .col-no { width: 6%; text-align: center; }
         .col-subject { width: 26%; }
@@ -121,7 +122,7 @@
         @forelse ($grades as $index => $grade)
             <tr>
                 <td class="col-no">{{ $index + 1 }}</td>
-                <td><strong>{{ $grade->subject_name_snapshot }}</strong><br><small>{{ $grade->subject_short_name_snapshot }}</small></td>
+                <td><strong>{{ $grade->subject_name_snapshot }}</strong></td>
                 @if ($settings->show_kkm)<td class="col-kkm">{{ $grade->minimum_score_snapshot }}</td>@endif
                 <td class="col-score">{{ $grade->score ?? '-' }}</td>
                 @if ($settings->show_predicate)<td class="col-predicate">{{ $grade->predicate ?? '-' }}</td>@endif
@@ -170,6 +171,10 @@
         <div class="text-block">{{ $homeroomNote?->note ?: '-' }}</div>
     </div>
 
+    @if(filled($decisionLabel ?? null))
+        <div class="avoid-break" style="margin-top: 10px; border: 1px solid #374151; padding: 7px;"><strong>Keputusan Wali Kelas:</strong> {{ $decisionLabel }}</div>
+    @endif
+
     <div class="signatures">
         @foreach ($signatureSlots as $signature)
             <div class="signature">
@@ -179,8 +184,12 @@
                 @else
                     <div class="signature-space"></div>
                 @endif
-                @if ($signature['name'])<div class="signature-name">{{ $signature['name'] }}</div>@else<div>&nbsp;</div>@endif
-                @if ($signature['employee_number'])<div class="signature-number">{{ $signature['employee_number'] }}</div>@endif
+                @if (($signature['type'] ?? null) !== 'PARENT_GUARDIAN' && filled($signature['name'] ?? null))
+                    <div class="signature-name">{{ $signature['name'] }}</div>
+                @else
+                    <div>(........................................)</div>
+                @endif
+                @if (($signature['type'] ?? null) !== 'PARENT_GUARDIAN' && $signature['employee_number'])<div class="signature-number">{{ $signature['employee_number'] }}</div>@endif
             </div>
         @endforeach
     </div>

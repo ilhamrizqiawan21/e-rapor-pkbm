@@ -1,0 +1,250 @@
+- generic [ref=f4e2]:
+  - generic [ref=f4e4]:
+    - generic [ref=f4e5]: Internal Server Error
+    - button "Copy as Markdown" [ref=f4e11] [cursor=pointer]
+  - generic [ref=f4e18]:
+    - generic [ref=f4e19]:
+      - heading "Error" [level=1] [ref=f4e20]
+      - generic [ref=f4e21]: app/Models/AcademicDecisionBatch.php:22
+      - paragraph [ref=f4e23]: Class "AppModels\Model" not found
+    - generic [ref=f4e24]:
+      - generic [ref=f4e25]:
+        - generic [ref=f4e26]:
+          - generic [ref=f4e27]: LARAVEL
+          - generic [ref=f4e28]: 13.40.0
+        - generic [ref=f4e29]:
+          - generic [ref=f4e30]: PHP
+          - generic [ref=f4e31]: 8.3.6
+      - generic [ref=f4e32]: UNHANDLED
+      - generic [ref=f4e36]: CODE 0
+    - generic [ref=f4e38]:
+      - generic [ref=f4e39]: "500"
+      - generic [ref=f4e43]: GET
+      - generic [ref=f4e47]: http://localhost:8000/admin/report-cards
+      - button [ref=f4e48] [cursor=pointer]
+  - generic [ref=f4e53]:
+    - generic [ref=f4e54]:
+      - heading "Exception trace" [level=3] [ref=f4e60]
+      - generic [ref=f4e61]:
+        - generic [ref=f4e62]:
+          - generic [ref=f4e63] [cursor=pointer]:
+            - generic [ref=f4e66]:
+              - code [ref=f4e70]:
+                - generic [ref=f4e71]: include()
+              - generic [ref=f4e72]: app/Models/AcademicDecisionBatch.php:22
+            - button [ref=f4e75]
+          - code [ref=f4e84]:
+            - generic [ref=f4e85]: 17 'reopened_by',
+            - generic [ref=f4e86]: 18 'reopened_at',
+            - generic [ref=f4e87]: 19 'reopen_reason',
+            - generic [ref=f4e88]: 20 'revision',
+            - generic [ref=f4e89]: 21])]
+            - generic [ref=f4e90]: 22class AcademicDecisionBatch extends Model
+            - generic [ref=f4e91]: "23{"
+            - generic [ref=f4e92]: "24 protected function casts(): array"
+            - generic [ref=f4e93]: "25 {"
+            - generic [ref=f4e94]: 26 return [
+            - generic [ref=f4e95]: 27 'finalized_at' => 'datetime',
+            - generic [ref=f4e96]: 28 'reopened_at' => 'datetime',
+            - generic [ref=f4e97]: 29 'revision' => 'integer',
+            - generic [ref=f4e98]: 30 ];
+            - generic [ref=f4e99]: "31 }"
+            - generic [ref=f4e100]: "32"
+            - generic [ref=f4e101]: "33 public function institution(): BelongsTo"
+            - generic [ref=f4e102]: "34"
+        - generic [ref=f4e104] [cursor=pointer]:
+          - generic [ref=f4e109]: 2 vendor frames
+          - button [ref=f4e110]
+        - generic [ref=f4e116] [cursor=pointer]:
+          - generic [ref=f4e119]:
+            - code [ref=f4e123]:
+              - generic [ref=f4e124]: Composer\Autoload\ClassLoader->loadClass()
+            - generic [ref=f4e125]: app/Services/AcademicDecisionService.php:35
+          - button [ref=f4e128]
+        - generic [ref=f4e134] [cursor=pointer]:
+          - generic [ref=f4e137]:
+            - code [ref=f4e141]:
+              - generic [ref=f4e142]: App\Services\AcademicDecisionService->batch()
+            - generic [ref=f4e143]: app/Services/AcademicDecisionService.php:54
+          - button [ref=f4e146]
+        - generic [ref=f4e152] [cursor=pointer]:
+          - generic [ref=f4e155]:
+            - code [ref=f4e159]:
+              - generic [ref=f4e160]: App\Services\AcademicDecisionService->forReport()
+            - generic [ref=f4e161]: app/Services/ReportCardCompletenessService.php:93
+          - button [ref=f4e164]
+        - generic [ref=f4e170] [cursor=pointer]:
+          - generic [ref=f4e173]:
+            - code [ref=f4e177]:
+              - generic [ref=f4e178]: App\Services\ReportCardCompletenessService->summary()
+            - generic [ref=f4e179]: app/Http/Controllers/Admin/ReportCardCompletenessController.php:51
+          - button [ref=f4e182]
+        - generic [ref=f4e188] [cursor=pointer]:
+          - generic [ref=f4e193]: 3 vendor frames
+          - button [ref=f4e194]
+        - generic [ref=f4e200] [cursor=pointer]:
+          - generic [ref=f4e203]:
+            - code [ref=f4e207]:
+              - generic [ref=f4e208]: Illuminate\Database\Eloquent\Collection->mapWithKeys()
+            - generic [ref=f4e209]: app/Http/Controllers/Admin/ReportCardCompletenessController.php:50
+          - button [ref=f4e212]
+        - generic [ref=f4e218] [cursor=pointer]:
+          - generic [ref=f4e223]: 35 vendor frames
+          - button [ref=f4e224]
+        - generic [ref=f4e230] [cursor=pointer]:
+          - generic [ref=f4e233]:
+            - code [ref=f4e237]:
+              - generic [ref=f4e238]: "Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()"
+            - generic [ref=f4e239]: app/Http/Middleware/SecurityHeaders.php:13
+          - button [ref=f4e242]
+        - generic [ref=f4e248] [cursor=pointer]:
+          - generic [ref=f4e253]: 23 vendor frames
+          - button [ref=f4e254]
+        - generic [ref=f4e260] [cursor=pointer]:
+          - generic [ref=f4e263]:
+            - code [ref=f4e267]:
+              - generic [ref=f4e268]: Illuminate\Foundation\Application->handleRequest()
+            - generic [ref=f4e269]: public/index.php:20
+          - button [ref=f4e272]
+        - generic [ref=f4e278] [cursor=pointer]:
+          - generic [ref=f4e283]: 1 vendor frame
+          - button [ref=f4e284]
+    - generic [ref=f4e289]:
+      - generic [ref=f4e290]:
+        - heading "Queries" [level=3] [ref=f4e295]
+        - generic [ref=f4e296]: 1-10 of 18
+      - generic [ref=f4e298]:
+        - generic [ref=f4e299]:
+          - generic [ref=f4e300]:
+            - generic [ref=f4e301]: sqlite
+            - code [ref=f4e308]:
+              - generic [ref=f4e309]: select * from "sessions" where "id" = 'pThdcQWEsy3ktlCha5ZRKDprRbmOSxwT2sMt5tiy' limit 1
+          - generic [ref=f4e310]: 1.2ms
+        - generic [ref=f4e311]:
+          - generic [ref=f4e312]:
+            - generic [ref=f4e313]: sqlite
+            - code [ref=f4e320]:
+              - generic [ref=f4e321]: select * from "users" where "id" = 1 limit 1
+          - generic [ref=f4e322]: 0.07ms
+        - generic [ref=f4e323]:
+          - generic [ref=f4e324]:
+            - generic [ref=f4e325]: sqlite
+            - code [ref=f4e332]:
+              - generic [ref=f4e333]: select exists(select * from "roles" inner join "user_roles" on "roles"."id" = "user_roles"."role_id" where "user_roles"."user_id" = 1 and "code" = 'GURU') as "exists"
+          - generic [ref=f4e334]: 0.09ms
+        - generic [ref=f4e335]:
+          - generic [ref=f4e336]:
+            - generic [ref=f4e337]: sqlite
+            - code [ref=f4e344]:
+              - generic [ref=f4e345]: select count(*) as "aggregate" from "report_cards" where exists (select * from "enrollments" where "report_cards"."enrollment_id" = "enrollments"."id" and exists (select * from "academic_classes" where "enrollments"."class_id" = "academic_classes"."id" and exists (select * from "programs" where "academic_classes"."program_id" = "programs"."id" and "institution_id" = 1)))
+          - generic [ref=f4e346]: 0.12ms
+        - generic [ref=f4e347]:
+          - generic [ref=f4e348]:
+            - generic [ref=f4e349]: sqlite
+            - code [ref=f4e356]:
+              - generic [ref=f4e357]: select * from "report_cards" where exists (select * from "enrollments" where "report_cards"."enrollment_id" = "enrollments"."id" and exists (select * from "academic_classes" where "enrollments"."class_id" = "academic_classes"."id" and exists (select * from "programs" where "academic_classes"."program_id" = "programs"."id" and "institution_id" = 1))) order by "id" desc limit 20 offset 0
+          - generic [ref=f4e358]: 0.28ms
+        - generic [ref=f4e359]:
+          - generic [ref=f4e360]:
+            - generic [ref=f4e361]: sqlite
+            - code [ref=f4e368]:
+              - generic [ref=f4e369]: select * from "enrollments" where "enrollments"."id" in (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 16, 17, 18, 19, 20, 21)
+          - generic [ref=f4e370]: 0.13ms
+        - generic [ref=f4e371]:
+          - generic [ref=f4e372]:
+            - generic [ref=f4e373]: sqlite
+            - code [ref=f4e380]:
+              - generic [ref=f4e381]: select * from "students" where "students"."id" in (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20)
+          - generic [ref=f4e382]: 0.23ms
+        - generic [ref=f4e383]:
+          - generic [ref=f4e384]:
+            - generic [ref=f4e385]: sqlite
+            - code [ref=f4e392]:
+              - generic [ref=f4e393]: select * from "academic_classes" where "academic_classes"."id" in (1, 2, 3, 4)
+          - generic [ref=f4e394]: 0.09ms
+        - generic [ref=f4e395]:
+          - generic [ref=f4e396]:
+            - generic [ref=f4e397]: sqlite
+            - code [ref=f4e404]:
+              - generic [ref=f4e405]: select * from "programs" where "programs"."id" in (1, 2, 3)
+          - generic [ref=f4e406]: 0.07ms
+        - generic [ref=f4e407]:
+          - generic [ref=f4e408]:
+            - generic [ref=f4e409]: sqlite
+            - code [ref=f4e416]:
+              - generic [ref=f4e417]: select * from "semesters" where "semesters"."id" in (3, 4)
+          - generic [ref=f4e418]: 0.06ms
+      - generic [ref=f4e419]:
+        - button [disabled] [ref=f4e420]
+        - button [disabled] [ref=f4e424]
+        - button "1" [ref=f4e428] [cursor=pointer]
+        - button "2" [ref=f4e430] [cursor=pointer]
+        - button [ref=f4e431] [cursor=pointer]
+        - button [ref=f4e434] [cursor=pointer]
+  - generic [ref=f4e439]:
+    - generic [ref=f4e440]:
+      - heading "Headers" [level=2] [ref=f4e441]
+      - generic [ref=f4e442]:
+        - generic [ref=f4e443]:
+          - generic [ref=f4e444]: host
+          - generic [ref=f4e446]: localhost:8000
+        - generic [ref=f4e447]:
+          - generic [ref=f4e448]: connection
+          - generic [ref=f4e450]: keep-alive
+        - generic [ref=f4e451]:
+          - generic [ref=f4e452]: sec-ch-ua
+          - generic [ref=f4e454]: "\"Not-A.Brand\";v=\"99\", \"Google Chrome\";v=\"157\", \"Chromium\";v=\"157\""
+        - generic [ref=f4e455]:
+          - generic [ref=f4e456]: sec-ch-ua-mobile
+          - generic [ref=f4e458]: "?0"
+        - generic [ref=f4e459]:
+          - generic [ref=f4e460]: sec-ch-ua-platform
+          - generic [ref=f4e462]: "\"Linux\""
+        - generic [ref=f4e463]:
+          - generic [ref=f4e464]: upgrade-insecure-requests
+          - generic [ref=f4e466]: "1"
+        - generic [ref=f4e467]:
+          - generic [ref=f4e468]: user-agent
+          - generic [ref=f4e470]: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/157.0.0.0 Safari/537.36
+        - generic [ref=f4e471]:
+          - generic [ref=f4e472]: accept
+          - generic [ref=f4e474]: text/html,application/xhtml+xml,application/xml;q=0.9,image/jxl,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+        - generic [ref=f4e475]:
+          - generic [ref=f4e476]: sec-fetch-site
+          - generic [ref=f4e478]: none
+        - generic [ref=f4e479]:
+          - generic [ref=f4e480]: sec-fetch-mode
+          - generic [ref=f4e482]: navigate
+        - generic [ref=f4e483]:
+          - generic [ref=f4e484]: sec-fetch-user
+          - generic [ref=f4e486]: "?1"
+        - generic [ref=f4e487]:
+          - generic [ref=f4e488]: sec-fetch-dest
+          - generic [ref=f4e490]: document
+        - generic [ref=f4e491]:
+          - generic [ref=f4e492]: accept-encoding
+          - generic [ref=f4e494]: gzip, deflate, br, zstd
+        - generic [ref=f4e495]:
+          - generic [ref=f4e496]: accept-language
+          - generic [ref=f4e498]: en-US,en;q=0.9
+        - generic [ref=f4e499]:
+          - generic [ref=f4e500]: cookie
+          - generic [ref=f4e502]: XSRF-TOKEN=eyJpdiI6IjFLQUtXRi9udEY5YVZXalZESUdZMFE9PSIsInZhbHVlIjoiMGZTTG5jblcwM3Rod0FOK3JFRE9xaUxGaFlON3FneGVlN24yVUdMWHcyMjdmSE5CQ1ZyUHU2aFdCRE5FT2lTdkEyV01LRlRtQ1cvSjFoMC9NaVZjeVhIS2pZRzM0SitMU24xSk9DTGdnRFJuSlRhR2xidTd5eHdIRDVPdHRBazkiLCJtYWMiOiJkY2QxZjYyYjQ3ZGZkMGMyYzI2MWRhN2JkNjM2YTY3OWFiZDRjNTcxOTczYmNmN2E5M2VkNTE4MWViYTQ4ZTZiIiwidGFnIjoiIn0%3D; e-rapor-pkbm-session=eyJpdiI6Ijh1WGpGUkZqbXNPZjlFQ0lZK0pFRFE9PSIsInZhbHVlIjoiT1ozVUJPQW9RZFpLNktSVXhDNC9XMVpJWFhwK2VjeldsTU0rUFpQUk0zbFlSSExQTVB5UWRGNy9LTnl4MlhGS2lwQUJLVjZvcHp1SlliU05HOUdwMUNiTVRnbi9CRDhvclJvVlg5YWtiQmdpc3dMLzRENEhOSHZTL0x0bzlFcGQiLCJtYWMiOiIwNmNhOGJiMzdlNmZmZTcwZjU2OGNhNmZkMDNhYjVlYzNlNDlmMDBjZjdmZWU5ZjZiNzI0ZGM5YWFkOWY0ZWYwIiwidGFnIjoiIn0%3D
+    - generic [ref=f4e503]:
+      - heading "Body" [level=2] [ref=f4e504]
+      - generic [ref=f4e505]: // No request body
+    - generic [ref=f4e506]:
+      - heading "Routing" [level=2] [ref=f4e507]
+      - generic [ref=f4e508]:
+        - generic [ref=f4e509]:
+          - generic [ref=f4e510]: controller
+          - generic [ref=f4e512]: App\Http\Controllers\Admin\ReportCardCompletenessController@index
+        - generic [ref=f4e513]:
+          - generic [ref=f4e514]: route name
+          - generic [ref=f4e516]: admin.report-cards.index
+        - generic [ref=f4e517]:
+          - generic [ref=f4e518]: middleware
+          - generic [ref=f4e520]: web, auth
+    - generic [ref=f4e521]:
+      - heading "Routing parameters" [level=2] [ref=f4e522]
+      - generic [ref=f4e523]: // No routing parameters

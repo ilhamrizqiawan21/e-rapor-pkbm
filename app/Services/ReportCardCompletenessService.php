@@ -13,12 +13,15 @@ use Illuminate\Validation\ValidationException;
  */
 final class ReportCardCompletenessService
 {
+    public function __construct(private AcademicDecisionService $decisions) {}
+
     /**
      * @return array{complete: bool, completed: int, total: int, missing: array<int, array{key: string, label: string, message: string}>, components: array<int, array{key: string, label: string, required: bool, complete: bool, message: string}>}
      */
     public function summary(ReportCard $reportCard): array
     {
         $reportCard->loadMissing([
+            'semester.academicYear',
             'enrollment.student',
             'enrollment.academicClass.subjectAssignments',
             'grades',
@@ -82,6 +85,13 @@ final class ReportCardCompletenessService
                     ? 'Semua nilai sudah lengkap.'
                     : sprintf('%d mata pelajaran belum lengkap.', $missingGrades),
             );
+        }
+
+        if ($reportCard->semester?->code?->value === 'GENAP'
+            && $reportCard->semester?->status?->value !== 'CLOSED'
+            && $reportCard->semester?->academicYear?->status?->value !== 'CLOSED') {
+            $components[] = $this->component('academic_decision', 'Keputusan wali kelas', $this->decisions->forReport($reportCard) !== null,
+                'Keputusan kenaikan atau kelulusan belum diisi oleh wali kelas.');
         }
 
         $missing = collect($components)

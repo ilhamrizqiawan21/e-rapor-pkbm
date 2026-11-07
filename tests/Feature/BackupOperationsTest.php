@@ -84,6 +84,8 @@ class BackupOperationsTest extends TestCase
 
     public function test_only_admin_can_open_backup_operations(): void
     {
+        Storage::fake('backup-test');
+        config(['backup.disk' => 'backup-test']);
         $institution = Institution::query()->create(['name' => 'PKBM Backup']);
         $admin = User::factory()->withRole(RoleCode::Admin)->create(['institution_id' => $institution->id]);
         $guru = User::factory()->withRole(RoleCode::Guru)->create(['institution_id' => $institution->id]);

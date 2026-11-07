@@ -41,6 +41,8 @@ class ReportCardPdfControllerTest extends TestCase
             Route::get('/__test/report-cards/{report_card}/pdf/preview', [ReportCardPdfController::class, 'preview']);
             Route::get('/__test/report-cards/{report_card}/pdf/download', [ReportCardPdfController::class, 'download']);
             Route::get('/__test/report-cards/{report_card}/pdf/print', [ReportCardPdfController::class, 'print']);
+            Route::get('/__test/report-cards/{report_card}/pdf/identity', [ReportCardPdfController::class, 'identity']);
+            Route::get('/__test/report-cards/{report_card}/pdf/grades', [ReportCardPdfController::class, 'grades']);
             Route::get('/__test/classes/{academicClass}/semesters/{semester}/pdf', [ReportCardPdfController::class, 'batch']);
         });
     }
@@ -73,6 +75,33 @@ class ReportCardPdfControllerTest extends TestCase
         $response->assertOk()->assertHeader('Content-Type', 'application/pdf');
         $response->assertHeader('Content-Disposition', 'attachment; filename="rapor-2025-2026-ganjil-nipd-001-'.$fixture['reportCard']->id.'.pdf"');
         $this->assertSame('%PDF-1.7 fake', $response->getContent());
+    }
+
+    public function test_identity_and_grades_extracts_can_be_downloaded_before_full_report_is_complete(): void
+    {
+        $fixture = $this->fixture('DRAFT');
+        app()->instance(PdfEngine::class, new FakePdfEngine);
+
+        $guru = User::factory()->withRole(RoleCode::Guru)->create(['institution_id' => $fixture['institution']->id]);
+        $fixture['class']->update(['homeroom_teacher_id' => $guru->id]);
+
+        $this->actingAs($guru)
+            ->get('/__test/report-cards/'.$fixture['reportCard']->id.'/pdf/identity')
+            ->assertOk()
+            ->assertHeader('Content-Type', 'application/pdf')
+            ->assertHeader('Content-Disposition', 'attachment; filename="rapor-2025-2026-ganjil-nipd-001-'.$fixture['reportCard']->id.'-identitas.pdf"');
+
+        $this->actingAs($guru)
+            ->get('/__test/report-cards/'.$fixture['reportCard']->id.'/pdf/grades')
+            ->assertOk()
+            ->assertHeader('Content-Type', 'application/pdf')
+            ->assertHeader('Content-Disposition', 'attachment; filename="rapor-2025-2026-ganjil-nipd-001-'.$fixture['reportCard']->id.'-nilai.pdf"');
+
+        foreach (['identity' => 'identitas', 'grades' => 'nilai'] as $type => $suffix) {
+            $this->actingAs($guru)->get('/__test/report-cards/'.$fixture['reportCard']->id.'/pdf/'.$type.'?preview=1')
+                ->assertOk()
+                ->assertHeader('Content-Disposition', 'inline; filename="rapor-2025-2026-ganjil-nipd-001-'.$fixture['reportCard']->id.'-'.$suffix.'.pdf"');
+        }
     }
 
     public function test_preview_uses_pkbm_format_and_all_document_tokens(): void

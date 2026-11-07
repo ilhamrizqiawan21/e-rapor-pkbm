@@ -1,0 +1,31 @@
+- main [ref=e2]:
+  - generic [ref=e3]:
+    - generic [ref=e4]:
+      - img "Logo PKBM Contoh" [ref=e6]
+      - paragraph [ref=e7]: PKBM Contoh
+      - heading "E-Rapor" [level=1] [ref=e8]
+      - paragraph [ref=e9]: Pengelolaan rapor Peserta Didik PKBM
+    - generic [ref=e10]:
+      - generic [ref=e11]:
+        - heading "Masuk ke aplikasi" [level=2] [ref=e12]
+        - paragraph [ref=e13]: Gunakan username atau email yang terdaftar.
+      - generic [ref=e14]:
+        - generic [ref=e15]:
+          - generic [ref=e16]: Username atau email *
+          - textbox "Username atau email *" [active] [ref=e18]:
+            - /placeholder: admin atau admin@erapor.test
+        - generic [ref=e19]:
+          - generic [ref=e20]: Kata sandi *
+          - generic [ref=e21]:
+            - textbox "Kata sandi *" [ref=e22]:
+              - /placeholder: Masukkan kata sandi
+            - button "Tampilkan password" [ref=e23]:
+              - generic [ref=e24]: Tampilkan
+        - generic [ref=e25]:
+          - generic [ref=e26]:
+            - checkbox "Ingat saya" [ref=e27]
+            - text: Ingat saya
+          - link "Lupa password?" [ref=e28] [cursor=pointer]:
+            - /url: http://localhost:8000/forgot-password
+        - button "Masuk" [ref=e29]
+    - paragraph [ref=e31]: E-Rapor PKBM

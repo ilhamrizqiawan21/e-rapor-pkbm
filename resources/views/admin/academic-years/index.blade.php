@@ -28,6 +28,13 @@
                                 <p class="mt-2 text-sm text-slate-500">{{ $academicYear->start_date?->translatedFormat('d F Y') }} — {{ $academicYear->end_date?->translatedFormat('d F Y') }}</p>
                             </div>
                             <div class="flex flex-wrap gap-2">
+                                @if(isset($periodActions[$academicYear->id]) && $periodActions[$academicYear->id]['semester'])
+                                    @if($periodActions[$academicYear->id]['year_change'])
+                                        <x-button size="sm" href="{{ route('admin.academic-years.transition', $academicYear) }}">{{ auth()->user()->hasRole('ADMIN') ? 'Siapkan tahun baru' : 'Kesiapan tahun baru' }}</x-button>
+                                    @else
+                                        <x-button size="sm" type="button" @click="$dispatch('open-modal', 'semester-start-{{ $academicYear->id }}')">{{ auth()->user()->hasRole('ADMIN') ? 'Mulai semester genap' : 'Kesiapan semester genap' }}</x-button>
+                                    @endif
+                                @endif
                                 <x-button size="sm" variant="detail" icon="eye" href="{{ route('admin.academic-years.show', $academicYear) }}">Detail semester</x-button>
                                 @can('update', $academicYear)
                                     <x-button size="sm" href="#" @click.prevent="$dispatch('open-modal', 'academic-year-edit-{{ $academicYear->id }}')" variant="edit" icon="edit">Edit</x-button>
@@ -50,6 +57,9 @@
         @endcan
 
         @foreach ($academicYears as $academicYear)
+            @if(isset($periodActions[$academicYear->id]) && ! $periodActions[$academicYear->id]['year_change'] && $periodActions[$academicYear->id]['semester'])
+                @include('admin.academic-years.partials.semester-start', ['academicYear' => $academicYear, 'state' => $periodActions[$academicYear->id]])
+            @endif
             @can('update', $academicYear)
                 <x-modal name="academic-year-edit-{{ $academicYear->id }}" title="Edit tahun pelajaran" max-width="4xl">
                     @include('admin.academic-years.form', ['academicYear' => $academicYear, 'statusOptions' => $statusOptions, 'modalName' => 'academic-year-edit-'.$academicYear->id])

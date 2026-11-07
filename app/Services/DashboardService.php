@@ -21,7 +21,10 @@ use Illuminate\Support\Collection;
  */
 final class DashboardService
 {
-    public function __construct(private readonly AcademicPeriodContext $periodContext) {}
+    public function __construct(
+        private readonly AcademicPeriodContext $periodContext,
+        private readonly ReportCardCompletenessService $completeness,
+    ) {}
 
     /** @return array<string, mixed> */
     public function for(User $user, ?string $requestedRole = null): array
@@ -132,8 +135,8 @@ final class DashboardService
             'hasPeriod' => $hasPeriod,
             'stats' => [
                 ['label' => 'Penugasan mapel', 'value' => $assignments->count(), 'detail' => 'Kelas dan mapel aktif'],
-                ['label' => 'Belum diajukan', 'value' => $reportStatus['drafts'], 'detail' => 'Rapor masih berupa draf'],
-                ['label' => 'Perlu revisi', 'value' => $reportStatus['revisions'], 'detail' => 'Dikembalikan Kepsek'],
+                ['label' => 'Belum lengkap', 'value' => $reportStatus['drafts'], 'detail' => 'Masih ada komponen rapor yang harus diisi'],
+                ['label' => 'Perlu diperbarui', 'value' => $reportStatus['revisions'], 'detail' => 'Periksa kembali data rapor'],
                 ['label' => 'Wali kelas', 'value' => $homeroomClasses->count(), 'detail' => 'Kelas aktif'],
             ],
             'assignments' => $assignments,
@@ -172,14 +175,32 @@ final class DashboardService
         if ($period['academicYear'] === null || $period['semester'] === null) {
             return $counts;
         }
-        $grouped = $this->reportCards($user, $period)->select('report_cards.status')->selectRaw('count(*) as aggregate')->groupBy('report_cards.status')->pluck('aggregate', 'status');
-        foreach (['draft', 'submitted', 'in_review', 'revisions', 'approved', 'locked'] as $key) {
-            $status = match ($key) {
-                'draft' => 'DRAFT', 'submitted' => 'SUBMITTED', 'in_review' => 'IN_REVIEW', 'revisions' => 'NEEDS_REVISION', 'approved' => 'APPROVED', 'locked' => 'LOCKED',
+        $cards = $this->reportCards($user, $period)
+            ->with(['enrollment.academicClass.subjectAssignments', 'enrollment.student', 'semester.academicYear', 'grades'])
+            ->get();
+
+        foreach ($cards as $card) {
+            if ($card->status === 'LOCKED') {
+                $counts['locked']++;
+
+                continue;
+            }
+
+            if ($this->completeness->summary($card)['complete']) {
+                $counts['approved']++;
+
+                continue;
+            }
+
+            $key = match ($card->status) {
+                'SUBMITTED' => 'submitted',
+                'IN_REVIEW' => 'in_review',
+                'NEEDS_REVISION' => 'revisions',
+                default => 'draft',
             };
-            $counts[$key] = (int) ($grouped[$status] ?? 0);
+            $counts[$key]++;
         }
-        $counts['waiting_review'] = $counts['submitted'] + $counts['in_review'];
+        $counts['waiting_review'] = $counts['draft'] + $counts['submitted'] + $counts['in_review'] + $counts['revisions'];
 
         return $counts;
     }
@@ -187,7 +208,14 @@ final class DashboardService
     /** @param array{academicYear: ?AcademicYear, semester: ?Semester, label: string} $period */
     private function reportCards(User $user, array $period): Builder
     {
-        return ReportCard::query()->join('enrollments', 'enrollments.id', '=', 'report_cards.enrollment_id')->join('academic_classes', 'academic_classes.id', '=', 'enrollments.class_id')->join('programs', 'programs.id', '=', 'academic_classes.program_id')->where('programs.institution_id', $user->institution_id)->where('academic_classes.academic_year_id', $period['academicYear']->getKey())->where('report_cards.semester_id', $period['semester']->getKey());
+        return ReportCard::query()
+            ->select('report_cards.*')
+            ->join('enrollments', 'enrollments.id', '=', 'report_cards.enrollment_id')
+            ->join('academic_classes', 'academic_classes.id', '=', 'enrollments.class_id')
+            ->join('programs', 'programs.id', '=', 'academic_classes.program_id')
+            ->where('programs.institution_id', $user->institution_id)
+            ->where('academic_classes.academic_year_id', $period['academicYear']->getKey())
+            ->where('report_cards.semester_id', $period['semester']->getKey());
     }
 
     /** @param array{academicYear: ?AcademicYear, semester: ?Semester, label: string} $period */

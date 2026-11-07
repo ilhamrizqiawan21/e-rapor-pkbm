@@ -10,6 +10,7 @@ use App\Models\ReportGrade;
 use App\Models\Semester;
 use App\Models\User;
 use App\Services\AuditLogger;
+use App\Services\ReportCardCompletenessService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Gate;
@@ -22,12 +23,11 @@ use Illuminate\Validation\ValidationException;
  */
 final class LedgerExportService
 {
-    public const PRINTABLE_STATUSES = ['DRAFT', 'SUBMITTED', 'IN_REVIEW', 'NEEDS_REVISION', 'APPROVED', 'LOCKED'];
-
     public function __construct(
         private readonly PdfEngine $engine,
         private readonly NativeXlsxWriter $xlsx,
         private readonly AuditLogger $audit,
+        private readonly ReportCardCompletenessService $completeness,
     ) {}
 
     /** @return array<string, mixed> */
@@ -180,7 +180,6 @@ final class LedgerExportService
         $reportCards = ReportCard::query()
             ->where('semester_id', $semester->getKey())
             ->whereIn('enrollment_id', $reportingIds)
-            ->whereIn('status', self::PRINTABLE_STATUSES)
             ->with([
                 'enrollment.student',
                 'grades.subjectAssignment.teacher.staffProfile',
@@ -188,6 +187,7 @@ final class LedgerExportService
                 'homeroomNote',
             ])
             ->get()
+            ->filter(fn (ReportCard $reportCard): bool => $this->completeness->summary($reportCard)['complete'])
             ->keyBy('enrollment_id');
 
         $rows = [];

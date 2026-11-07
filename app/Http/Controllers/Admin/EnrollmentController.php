@@ -24,7 +24,7 @@ class EnrollmentController extends Controller
         $status = $request->string('status')->toString();
         $query = $academicClass->enrollments()->with('student')->latest('start_date');
 
-        if (in_array($status, ['ACTIVE', 'WITHDRAWN', 'TRANSFERRED'], true)) {
+        if (in_array($status, ['ACTIVE', 'WITHDRAWN', 'TRANSFERRED', 'COMPLETED', 'GRADUATED'], true)) {
             $query->where('enrollment_status', $status);
         }
 

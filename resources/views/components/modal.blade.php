@@ -5,6 +5,7 @@
 ])
 
 @php
+    $hasValidationErrors = isset($errors) && $errors->any();
     $maxWidthClass = [
         'sm' => 'sm:max-w-sm',
         'md' => 'sm:max-w-md',
@@ -16,11 +17,12 @@
 @endphp
 
 <div
-    x-data="{ show: false }"
+    x-data="{ show: @js($hasValidationErrors && old('_modal') === $name) }"
     x-show="show"
     x-on:open-modal.window="$event.detail === '{{ $name }}' ? show = true : null"
     x-on:close-modal.window="$event.detail === '{{ $name }}' ? show = false : null"
     x-on:keydown.escape.window="show = false"
+    x-on:submit.capture="if (!$event.target.querySelector('input[name=_modal]')) { const input = document.createElement('input'); input.type = 'hidden'; input.name = '_modal'; input.value = '{{ $name }}'; $event.target.appendChild(input); }"
     x-cloak
     class="relative z-50"
     role="dialog"
@@ -61,6 +63,7 @@
                         <button
                             type="button"
                             @click="show = false"
+                            aria-label="Tutup dialog"
                             class="rounded-lg p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-600 focus:outline-hidden"
                         >
                             <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">

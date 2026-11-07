@@ -20,6 +20,8 @@
         'danger' => 'bg-rose-600 text-white hover:bg-rose-700 focus-visible:ring-rose-500 shadow-xs active:bg-rose-800',
         'warning' => 'bg-amber-600 text-white hover:bg-amber-700 focus-visible:ring-amber-500 shadow-xs active:bg-amber-800',
         'ghost' => 'text-slate-700 hover:bg-slate-100 hover:text-slate-900 focus-visible:ring-slate-400 active:bg-slate-200',
+        'identity' => 'border border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-100 focus-visible:ring-blue-500 shadow-xs active:bg-blue-200',
+        'grades' => 'border border-violet-200 bg-violet-50 text-violet-700 hover:bg-violet-100 focus-visible:ring-violet-500 shadow-xs active:bg-violet-200',
         'pdf' => 'border border-rose-200 bg-rose-50 text-rose-700 hover:bg-rose-100 focus-visible:ring-rose-500 shadow-xs active:bg-rose-200',
         'excel' => 'border border-emerald-200 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 focus-visible:ring-emerald-500 shadow-xs active:bg-emerald-200',
         'edit' => 'border border-emerald-200 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 focus-visible:ring-emerald-500 shadow-xs active:bg-emerald-200',

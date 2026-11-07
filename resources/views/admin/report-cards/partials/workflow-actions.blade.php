@@ -15,12 +15,12 @@
 <section class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6" x-data="{ unlockOpen: false }">
     <div class="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
         <div>
-            <p class="text-xs font-semibold uppercase tracking-[0.16em] text-accent-700">Penerbitan rapor</p>
+            <p class="text-xs font-semibold uppercase tracking-[0.16em] text-accent-700">Tahap akhir</p>
             <div class="mt-2 flex flex-wrap items-center gap-3">
-                <h3 class="text-xl font-semibold text-slate-950">Kelengkapan dan cetak</h3>
+                <h3 class="text-xl font-semibold text-slate-950">Terbitkan rapor</h3>
                 <x-badge :variant="$statusVariant" dot>{{ $statusLabel }}</x-badge>
             </div>
-            <p class="mt-2 text-sm text-slate-600">Lengkapi seluruh komponen rapor, lalu wali kelas dapat langsung mengekspor atau mencetaknya.</p>
+            <p class="mt-2 text-sm text-slate-600">Setelah checklist wajib lengkap, pratinjau dan cetak dokumen final dari bagian ini.</p>
         </div>
         @if (app('router')->has('admin.audit-logs.index'))
             <x-button href="{{ route('admin.audit-logs.index', ['entity_type' => 'report_card', 'entity_id' => $reportCard->id]) }}" size="sm" variant="secondary" icon="audit">Lihat histori audit</x-button>
@@ -39,7 +39,7 @@
 
     <div class="mt-5 flex flex-wrap gap-2">
         @if ($readyToPrint && $canExport)
-            <x-button href="{{ route('admin.report-cards.pdf.preview', $reportCard) }}" size="sm" variant="pdf" icon="eye" target="_blank" rel="noopener">Pratinjau PDF</x-button>
+            <x-button href="{{ route('admin.report-cards.pdf.preview', $reportCard) }}" size="sm" variant="detail" icon="eye" target="_blank" rel="noopener">Pratinjau PDF</x-button>
             <x-button href="{{ route('admin.report-cards.pdf.download', $reportCard) }}" size="sm" variant="pdf" icon="pdf">Unduh PDF</x-button>
             <x-button href="{{ route('admin.report-cards.pdf.print', $reportCard) }}" size="sm" variant="pdf" icon="print" target="_blank" rel="noopener">Cetak PDF</x-button>
         @elseif (! $canExport)
@@ -57,11 +57,6 @@
             <button type="button" @click="unlockOpen = true" class="inline-flex min-h-10 items-center justify-center gap-2 rounded-lg border border-amber-300 bg-amber-50 px-3 py-2 text-sm font-semibold text-amber-900 shadow-sm transition-colors hover:bg-amber-100 focus:outline-hidden focus-visible:ring-2 focus-visible:ring-amber-500"><x-icon name="unlock" />Buka arsip</button>
         @endif
     </div>
-
-    <dl class="mt-5 grid gap-3 border-t border-slate-100 pt-4 text-xs text-slate-600 sm:grid-cols-2">
-        <div><dt class="font-semibold uppercase tracking-wide text-slate-400">Status</dt><dd class="mt-1">{{ $statusLabel }}</dd></div>
-        <div><dt class="font-semibold uppercase tracking-wide text-slate-400">Kelengkapan</dt><dd class="mt-1">{{ $progress['completed'] ?? 0 }}/{{ $progress['total'] ?? 0 }} komponen wajib</dd></div>
-    </dl>
 
     @if ($canUnlock)
         <div x-show="unlockOpen" x-cloak class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/50 p-4" role="dialog" aria-modal="true" aria-labelledby="unlock-title-{{ $reportCard->id }}">

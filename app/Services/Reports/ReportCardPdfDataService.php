@@ -6,13 +6,16 @@ use App\Contracts\PdfEngine;
 use App\Exceptions\ReportCardPdfException;
 use App\Models\AcademicClass;
 use App\Models\Institution;
+use App\Models\InstitutionFormatSetting;
 use App\Models\ReportCard;
 use App\Models\Semester;
 use App\Models\Student;
+use App\Services\AcademicDecisionService;
 use App\Services\InstitutionFormatSettingsService;
 use App\Services\ReportCardCompletenessService;
 use App\Services\ReportCardIdentityService;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 /**
@@ -28,6 +31,7 @@ final class ReportCardPdfDataService
         private readonly ReportCardCompletenessService $completeness,
         private readonly ReportCardIdentityService $identityService,
         private readonly InstitutionFormatSettingsService $formatSettings,
+        private readonly AcademicDecisionService $decisions,
     ) {}
 
     /** @return array<string, mixed> */
@@ -56,6 +60,10 @@ final class ReportCardPdfDataService
         $institution = $this->institution($reportCard);
         $settings = $this->formatSettings->forInstitution($institution);
         $identity = $this->identityService->context($reportCard);
+        $archivedOutput = $identity['archived_output'] ?? null;
+        if (is_array($archivedOutput)) {
+            $settings = (new InstitutionFormatSetting)->forceFill($archivedOutput['settings']);
+        }
         $student = $reportCard->enrollment?->student;
         $studentName = $reportCard->status === 'LOCKED'
             ? (string) ($identity['student']['name'] ?? '')
@@ -68,8 +76,9 @@ final class ReportCardPdfDataService
 
         return [
             'reportCard' => $reportCard,
+            'decisionLabel' => is_array($archivedOutput) ? ($archivedOutput['decisionLabel'] ?? null) : $this->decisions->forReport($reportCard)?->label_snapshot,
             'identity' => $identity,
-            'studentName' => $studentName,
+            'studentName' => $archivedOutput['studentName'] ?? $studentName,
             'settings' => $settings,
             'grades' => $reportCard->grades,
             'attitudes' => $reportCard->attitudeAssessments->keyBy(fn ($assessment): string => strtoupper($assessment->attitude_type)),
@@ -77,9 +86,9 @@ final class ReportCardPdfDataService
             'extracurriculars' => $reportCard->extracurriculars,
             'homeroomNote' => $reportCard->homeroomNote,
             'signatures' => $signatures,
-            'signatureSlots' => $signatures->isNotEmpty()
+            'signatureSlots' => $archivedOutput['signatureSlots'] ?? ($signatures->isNotEmpty()
                 ? $signatures
-                : $this->emptySignatureSlots($settings),
+                : $this->emptySignatureSlots($settings, $reportCard, $institution)),
             'documentNumber' => $this->formatSettings->formatDocumentNumber(
                 (string) ($reportCard->document_number ?? ''),
                 $settings,
@@ -92,9 +101,9 @@ final class ReportCardPdfDataService
                     'semester' => $semesterName,
                 ],
             ),
-            'issuedDate' => $this->formatSettings->formatDate($reportCard->issued_date ?? $reportCard->locked_at, $settings),
-            'logoDataUri' => $this->logoDataUri($institution, $settings->show_logo),
-            'footerText' => $settings->footer_text ?: trim('RAPOR PKBM '.($identity['institution']['name'] ?? 'PKBM').' / '.$semesterName.' T.A '.$academicYearName),
+            'issuedDate' => $archivedOutput['issuedDate'] ?? $this->formatSettings->formatDate($reportCard->issued_date ?? $reportCard->locked_at, $settings),
+            'logoDataUri' => is_array($archivedOutput) ? $archivedOutput['logoDataUri'] : $this->logoDataUri($institution, $settings->show_logo),
+            'footerText' => $archivedOutput['footerText'] ?? ($settings->footer_text ?: trim('RAPOR PKBM '.($identity['institution']['name'] ?? 'PKBM').' / '.$semesterName.' T.A '.$academicYearName)),
         ];
     }
 
@@ -262,12 +271,26 @@ final class ReportCardPdfDataService
     }
 
     /** @return Collection<int, array<string, mixed>> */
-    private function emptySignatureSlots(object $settings): Collection
+    private function emptySignatureSlots(object $settings, ReportCard $reportCard, Institution $institution): Collection
     {
+        $teacher = $reportCard->enrollment?->academicClass?->homeroomTeacher;
+        $headSetting = $institution->signatorySetting;
+        $headUser = $headSetting?->headmasterUser;
+        $headIsManual = $headSetting?->headmaster_source?->value === 'MANUAL';
+        $headName = $headIsManual ? $headSetting?->headmaster_name : $headUser?->name;
+        $headNumber = $headIsManual ? $headSetting?->headmaster_employee_number : $headUser?->staffProfile?->employee_number;
         $slots = collect([
             ['type' => 'PARENT_GUARDIAN', 'label' => 'Orang Tua/Wali', 'name' => null, 'employee_number' => null, 'imageDataUri' => null, 'signed_at' => null],
-            ['type' => $settings->signature_left_role, 'label' => $settings->signature_left_label, 'name' => null, 'employee_number' => null, 'imageDataUri' => null, 'signed_at' => null],
-            ['type' => $settings->signature_right_role, 'label' => $settings->signature_right_label, 'name' => null, 'employee_number' => null, 'imageDataUri' => null, 'signed_at' => null],
+            ...collect([[$settings->signature_left_role, $settings->signature_left_label], [$settings->signature_right_role, $settings->signature_right_label]])->map(fn ($slot) => [
+                'type' => $slot[0], 'label' => $slot[1],
+                'name' => match ($slot[0]) {
+                    'GURU' => $teacher?->name, 'KEPSEK' => $headName, default => null
+                },
+                'employee_number' => match ($slot[0]) {
+                    'GURU' => $teacher?->staffProfile?->employee_number, 'KEPSEK' => $headNumber, default => null
+                },
+                'imageDataUri' => null, 'signed_at' => null,
+            ])->all(),
         ]);
 
         return $slots->unique('type')->values();
@@ -289,7 +312,7 @@ final class ReportCardPdfDataService
             return null;
         }
 
-        $path = public_path('storage/'.ltrim((string) $institution->logo_path, '/'));
+        $path = Storage::disk('public')->path((string) $institution->logo_path);
         if (! is_file($path)) {
             return null;
         }

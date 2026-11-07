@@ -66,6 +66,24 @@ class AuthUiTest extends TestCase
             ->assertSee('Peran: Admin');
     }
 
+    public function test_user_can_update_own_profile_but_cannot_use_an_existing_username(): void
+    {
+        $user = User::factory()->withRole(RoleCode::Guru)->create();
+        $other = User::factory()->create(['username' => 'sudah-dipakai']);
+
+        $this->actingAs($user)->put(route('profile.update'), [
+            'name' => 'Nama Baru', 'username' => ' NAMA.BARU ',
+        ])->assertRedirect(route('profile.edit'))->assertSessionHasNoErrors();
+
+        $this->assertDatabaseHas('users', ['id' => $user->id, 'name' => 'Nama Baru', 'username' => 'nama.baru']);
+
+        $this->actingAs($user)->put(route('profile.update'), [
+            'name' => 'Tidak Tersimpan', 'username' => $other->username,
+        ])->assertSessionHasErrors('username');
+
+        $this->assertDatabaseHas('users', ['id' => $user->id, 'name' => 'Nama Baru', 'username' => 'nama.baru']);
+    }
+
     public function test_role_dashboard_routes_are_restricted_to_the_matching_role(): void
     {
         $guru = User::factory()->withRole(RoleCode::Guru)->create();

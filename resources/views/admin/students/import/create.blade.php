@@ -58,7 +58,7 @@
                 <section class="rounded-2xl border border-slate-200 bg-slate-900 p-5 text-white" aria-labelledby="columns-heading">
                     <h2 id="columns-heading" class="font-semibold">Kolom yang tersedia</h2>
                     <p class="mt-2 text-sm leading-5 text-slate-300">NIPD, NISN, nama lengkap, jenis kelamin, tempat/tanggal lahir, alamat, nama wali, dan status.</p>
-                    <p class="mt-4 text-xs leading-5 text-slate-400">Status kosong otomatis menjadi Aktif. Pilihan status: Aktif, Nonaktif, Lulus, atau Pindah. Data lama tidak ditimpa saat impor.</p>
+                    <p class="mt-4 text-xs leading-5 text-slate-400">Status kosong otomatis menjadi Aktif. Pilihan status: Aktif, Nonaktif, Lulus, atau Pindah; format sistem berbahasa Inggris juga diterima. Data lama tidak ditimpa saat impor.</p>
                 </section>
             </aside>
         </div>

@@ -25,7 +25,8 @@ final class ReportCardIdentityService
             $storedSnapshot = json_decode($storedSnapshot, true);
         }
 
-        $identity = $reportCard->status === 'LOCKED' && is_array($storedSnapshot)
+        $archived = $reportCard->semester?->status?->value === 'CLOSED' || $reportCard->semester?->academicYear?->status?->value === 'CLOSED';
+        $identity = ($reportCard->status === 'LOCKED' || $archived) && is_array($storedSnapshot)
             ? $storedSnapshot
             : $this->liveIdentity($reportCard);
 
@@ -113,6 +114,11 @@ final class ReportCardIdentityService
                 'name' => $student?->full_name,
                 'student_number' => $student?->student_number,
                 'nisn' => $student?->national_student_number,
+                'gender' => $student?->gender,
+                'birth_place' => $student?->birth_place,
+                'birth_date' => $student?->birth_date?->format('d/m/Y'),
+                'address' => $student?->address,
+                'guardian_name' => $student?->guardian_name,
             ],
             'class' => [
                 'name' => $academicClass?->name,

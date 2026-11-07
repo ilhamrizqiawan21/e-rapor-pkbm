@@ -14,7 +14,7 @@ test.describe('13-14 leger and dashboard browser flows', () => {
         await page.goto('/admin/ledger');
 
         await expect(page.getByRole('heading', { name: 'Leger nilai', exact: true })).toBeVisible();
-        await expect(page.getByRole('heading', { name: 'Belum ada periode leger', exact: true })).toBeVisible();
+        await expect(page.getByText('2026/2027', { exact: true }).first()).toBeVisible();
     });
 
     test('role dashboards render their monitoring surfaces', async ({ page }) => {
@@ -22,16 +22,16 @@ test.describe('13-14 leger and dashboard browser flows', () => {
         await expect(page.getByRole('heading', { name: 'Operasional PKBM dalam satu layar', exact: true })).toBeVisible();
         await expect(page.getByText('Progres nilai per kelas', { exact: true })).toBeVisible();
 
-        await page.locator('header').getByRole('button', { name: /Akun|Admin Demo|Guru Demo|Kepala PKBM/ }).click();
+        await page.locator('header').getByRole('button', { name: 'Buka menu akun' }).click();
         await page.getByRole('menuitem', { name: 'Keluar' }).click();
         await login(page, 'guru', '/dashboard/guru');
         await expect(page.getByRole('heading', { name: 'Ruang kerja penilaian', exact: true })).toBeVisible();
         await expect(page.getByText('Progres input nilai per mapel', { exact: true })).toBeVisible();
 
-        await page.locator('header').getByRole('button', { name: /Akun|Admin Demo|Guru Demo|Kepala PKBM/ }).click();
+        await page.locator('header').getByRole('button', { name: 'Buka menu akun' }).click();
         await page.getByRole('menuitem', { name: 'Keluar' }).click();
         await login(page, 'kepsek', '/dashboard/kepsek');
-        await expect(page.getByRole('heading', { name: 'Pusat tinjauan dan persetujuan rapor', exact: true })).toBeVisible();
-        await expect(page.getByText('Antrean tinjauan', { exact: true })).toBeVisible();
+        await expect(page.getByRole('heading', { name: 'Pantau rapor peserta didik', exact: true })).toBeVisible();
+        await expect(page.getByText('Rapor yang perlu dipantau', { exact: true })).toBeVisible();
     });
 });

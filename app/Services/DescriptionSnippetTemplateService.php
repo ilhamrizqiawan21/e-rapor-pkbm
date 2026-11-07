@@ -50,7 +50,7 @@ final class DescriptionSnippetTemplateService
         }
 
         if (blank($data['material'] ?? null) && $templates->isNotEmpty()) {
-            throw ValidationException::withMessages(['material' => 'Materi wajib diisi untuk bank deskripsi baru.']);
+            throw ValidationException::withMessages(['material' => 'Materi wajib diisi untuk template deskripsi baru.']);
         }
 
         return DB::transaction(function () use ($institution, $data, $snippet, $ranges, $templates): DescriptionSnippet {

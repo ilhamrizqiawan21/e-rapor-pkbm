@@ -1,5 +1,5 @@
 <div class="space-y-5">
-    <x-input name="title" label="Judul snippet" :value="old('title', $snippet->title)" :error="$errors->first('title')" placeholder="Contoh: Mampu memahami konsep bilangan" required />
+    <x-input name="title" label="Nama template" :value="old('title', $snippet->title)" :error="$errors->first('title')" placeholder="Contoh: Memahami konsep bilangan" required />
     <x-textarea name="material" label="Materi / capaian yang dinilai" rows="4" :value="old('material', $snippet->material)" :error="$errors->first('material')" placeholder="Contoh: memahami pengertian sifat terpuji" hint="Materi ini akan dimasukkan ke kalimat sesuai predikat nilai." />
 
     <section class="rounded-2xl border border-brand-100 bg-brand-50/60 p-4 sm:p-5" aria-labelledby="predicate-template-heading">
@@ -26,13 +26,13 @@
 
     @if (auth()->user()->hasRole('ADMIN'))
         <div class="grid gap-5 sm:grid-cols-2">
-            <x-select name="visibility" label="Visibilitas" :selected="old('visibility', $snippet->visibility?->value ?? 'SHARED')" :options="['SHARED' => 'Dibagikan']" :error="$errors->first('visibility')" hint="Snippet dibagikan dapat digunakan guru dalam institusi." required />
-            <x-select name="owner_user_id" label="Guru pemilik (opsional)" :selected="old('owner_user_id', $snippet->owner_user_id)" :options="$teachers->pluck('name', 'id')->toArray()" placeholder="Tidak ditentukan" :error="$errors->first('owner_user_id')" hint="Untuk penanda asal snippet; pengelolaan tetap oleh Admin." />
+            <x-select name="visibility" label="Visibilitas" :selected="old('visibility', $snippet->visibility?->value ?? 'SHARED')" :options="['SHARED' => 'Dibagikan']" :error="$errors->first('visibility')" hint="Template yang dibagikan dapat digunakan guru dalam institusi." required />
+            <x-select name="owner_user_id" label="Guru pemilik (opsional)" :selected="old('owner_user_id', $snippet->owner_user_id)" :options="$teachers->pluck('name', 'id')->toArray()" placeholder="Tidak ditentukan" :error="$errors->first('owner_user_id')" hint="Untuk penanda asal template; pengelolaan tetap oleh Admin." />
         </div>
     @else
         <input type="hidden" name="visibility" value="PRIVATE">
         <div class="rounded-xl border border-brand-100 bg-brand-50 px-4 py-3 text-sm text-brand-900">
-            Snippet ini akan disimpan sebagai <strong>pribadi</strong> dan hanya dapat dikelola serta digunakan oleh Anda.
+            Template ini akan disimpan sebagai <strong>pribadi</strong> dan hanya dapat dikelola serta digunakan oleh Anda.
         </div>
     @endif
 </div>

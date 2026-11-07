@@ -4,10 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $title ?? 'E-Rapor PKBM' }}</title>
+    <link rel="icon" href="{{ $brandingLogoUrl ?: asset('favicon.svg') }}">
+    <link rel="apple-touch-icon" href="{{ $brandingLogoUrl ?: asset('favicon.svg') }}">
     @include('layouts.partials.font-head')
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 @php
+    $flashToasts = collect([
+        ['key' => 'success', 'type' => 'success', 'title' => 'Berhasil'],
+        ['key' => 'status', 'type' => 'success', 'title' => 'Berhasil'],
+        ['key' => 'error', 'type' => 'danger', 'title' => 'Gagal'],
+        ['key' => 'warning', 'type' => 'warning', 'title' => 'Perhatian'],
+        ['key' => 'info', 'type' => 'info', 'title' => 'Informasi'],
+    ])->map(function (array $flash): ?array {
+        $message = session()->pull($flash['key']);
+
+        return filled($message) ? ['type' => $flash['type'], 'title' => $flash['title'], 'message' => $message] : null;
+    })->filter()->values()->all();
     $activePeriodLabel = data_get($period ?? null, 'label', 'Periode belum aktif');
     $periodReady = (bool) ($hasPeriod ?? false);
     $currentUser = auth()->user();
@@ -26,7 +39,7 @@
             <aside x-show="mobileSidebarOpen" x-transition:enter="transition ease-in-out duration-300 transform" x-transition:enter-start="-translate-x-full" x-transition:enter-end="translate-x-0" x-transition:leave="transition ease-in-out duration-300 transform" x-transition:leave-start="translate-x-0" x-transition:leave-end="-translate-x-full" class="relative mr-16 flex w-full max-w-xs flex-1 flex-col bg-brand-900 text-white shadow-2xl">
                 <div class="flex items-start justify-between border-b border-white/10 px-5 py-5">
                     <a href="{{ route('dashboard') }}" @click="closeMobileSidebar()" class="flex items-center gap-3 focus:outline-hidden focus-visible:ring-2 focus-visible:ring-accent-300">
-                        <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-accent-400 font-black tracking-tight text-brand-950">ER</span>
+                        <x-brand-mark :institution="$brandingInstitution" :logo-url="$brandingLogoUrl" size="md" />
                         <span><span class="block text-xs font-semibold uppercase tracking-[0.2em] text-accent-300">PKBM</span><span class="mt-1 block text-lg font-semibold">E-Rapor</span></span>
                     </a>
                     <button type="button" @click="closeMobileSidebar()" x-ref="closeButton" class="flex h-10 w-10 items-center justify-center rounded-xl text-white hover:bg-white/10 focus:outline-hidden focus-visible:ring-2 focus-visible:ring-accent-300" aria-label="Tutup menu">
@@ -45,7 +58,7 @@
         <aside class="sticky top-0 hidden h-screen max-h-screen shrink-0 flex-col bg-brand-900 text-white transition-[width] duration-200 lg:flex" :class="sidebarCollapsed ? 'w-[88px]' : 'w-72'" :aria-label="sidebarCollapsed ? 'Sidebar ringkas' : 'Sidebar utama'">
             <div class="flex items-center justify-between border-b border-white/10 px-4 py-5" :class="sidebarCollapsed ? 'flex-col gap-4 px-3' : ''">
                 <a href="{{ route('dashboard') }}" class="flex min-w-0 items-center gap-3 rounded-xl focus:outline-hidden focus-visible:ring-2 focus-visible:ring-accent-300" title="E-Rapor PKBM">
-                    <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-accent-400 font-black tracking-tight text-brand-950">ER</span>
+                    <x-brand-mark :institution="$brandingInstitution" :logo-url="$brandingLogoUrl" size="md" />
                     <span x-show="!sidebarCollapsed" x-transition.opacity class="min-w-0"><span class="block text-xs font-semibold uppercase tracking-[0.2em] text-accent-300">PKBM</span><span class="mt-1 block truncate text-lg font-semibold">E-Rapor</span></span>
                 </a>
                 <button type="button" @click="toggleSidebar()" class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-slate-300 hover:bg-white/10 hover:text-white focus:outline-hidden focus-visible:ring-2 focus-visible:ring-accent-300" :aria-label="sidebarCollapsed ? 'Buka sidebar' : 'Ciutkan sidebar'" :aria-expanded="(!sidebarCollapsed).toString()" title="Menu sidebar">
@@ -158,6 +171,49 @@
     <x-confirm-dialog />
 
     <!-- Global Toast Container -->
-    <x-toast />
+    <x-toast :messages="$flashToasts" />
+
+    <script>
+        (() => {
+            const flashMessages = @js(collect($flashToasts)->pluck('message')->filter()->values()->all());
+            const normalize = (value) => String(value ?? '').replace(/\s+/g, ' ').trim();
+            const isLegacyFlash = (element) => {
+                const text = normalize(element.textContent);
+
+                return text && flashMessages.some((message) => text.includes(normalize(message)));
+            };
+
+            document.querySelectorAll('main [role="status"], main [role="alert"], main .bg-emerald-50, main .border-emerald-200').forEach((element) => {
+                if (isLegacyFlash(element)) element.remove();
+            });
+
+            const scrollKey = `e-rapor-scroll:${window.location.pathname}${window.location.search}`;
+            const pendingScrollKey = 'e-rapor-pending-scroll';
+            const rememberScrollBeforeSubmit = (event) => {
+                const form = event.target;
+
+                if (!(form instanceof HTMLFormElement) || (form.method || 'get').toLowerCase() === 'get') return;
+
+                sessionStorage.setItem(pendingScrollKey, JSON.stringify({
+                    key: scrollKey,
+                    x: window.scrollX,
+                    y: window.scrollY,
+                }));
+            };
+
+            document.addEventListener('submit', rememberScrollBeforeSubmit, true);
+
+            try {
+                const pendingScroll = JSON.parse(sessionStorage.getItem(pendingScrollKey) || 'null');
+
+                if (pendingScroll?.key === scrollKey) {
+                    sessionStorage.removeItem(pendingScrollKey);
+                    window.requestAnimationFrame(() => window.scrollTo(pendingScroll.x || 0, pendingScroll.y || 0));
+                }
+            } catch {
+                sessionStorage.removeItem(pendingScrollKey);
+            }
+        })();
+    </script>
 </body>
 </html>

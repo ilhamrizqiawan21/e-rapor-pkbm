@@ -59,6 +59,37 @@ class GradeImportTest extends TestCase
         $this->assertDatabaseHas('grade_import_batches', ['status' => 'IMPORTED', 'imported_rows' => 1]);
     }
 
+    public function test_official_template_has_readable_sheet_layout_and_distinguishes_editable_cells(): void
+    {
+        [$guru, $assignment, $semester] = $this->academicSetup();
+        $context = $this->context($assignment, $semester);
+
+        $content = $this->actingAs($guru)
+            ->get(route('admin.grade-entry.import.template', $context))
+            ->streamedContent();
+        $path = tempnam(sys_get_temp_dir(), 'grade-template-format-');
+        $this->assertNotFalse($path);
+        file_put_contents($path, $content);
+
+        $zip = new \ZipArchive;
+        $this->assertTrue($zip->open($path) === true);
+        $instructions = (string) $zip->getFromName('xl/worksheets/sheet1.xml');
+        $contextSheet = (string) $zip->getFromName('xl/worksheets/sheet2.xml');
+        $grades = (string) $zip->getFromName('xl/worksheets/sheet3.xml');
+        $styles = (string) $zip->getFromName('xl/styles.xml');
+        $zip->close();
+        unlink($path);
+
+        $this->assertStringContainsString('showGridLines="0"', $instructions);
+        $this->assertStringContainsString('width="112"', $instructions);
+        $this->assertStringContainsString('wrapText="1"', $styles);
+        $this->assertStringContainsString('width="64"', $contextSheet);
+        $this->assertStringContainsString('tabColor rgb="FF2563EB"', $grades);
+        $this->assertStringContainsString('width="42"', $grades);
+        $this->assertStringContainsString('s="2"', $grades);
+        $this->assertStringContainsString('s="3"', $grades);
+    }
+
     public function test_changed_identity_and_out_of_range_score_block_the_atomic_import(): void
     {
         [$guru, $assignment, $semester, $first, $second] = $this->academicSetup(twoStudents: true);

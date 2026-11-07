@@ -436,10 +436,24 @@ class StudentImportService
 
         if ($values['status'] === '') {
             $values['status'] = 'ACTIVE';
-        } elseif (! in_array(strtoupper($values['status']), ['ACTIVE', 'INACTIVE', 'GRADUATED', 'TRANSFERRED'], true)) {
-            $errors[] = 'Status harus Aktif, Nonaktif, Lulus, atau Pindah.';
         } else {
-            $values['status'] = strtoupper($values['status']);
+            $status = mb_strtoupper(trim($values['status']));
+            $status = [
+                'AKTIF' => 'ACTIVE',
+                'ACTIVE' => 'ACTIVE',
+                'NONAKTIF' => 'INACTIVE',
+                'INACTIVE' => 'INACTIVE',
+                'LULUS' => 'GRADUATED',
+                'GRADUATED' => 'GRADUATED',
+                'PINDAH' => 'TRANSFERRED',
+                'TRANSFERRED' => 'TRANSFERRED',
+            ][$status] ?? null;
+
+            if ($status === null) {
+                $errors[] = 'Status harus Aktif, Nonaktif, Lulus, atau Pindah.';
+            } else {
+                $values['status'] = $status;
+            }
         }
 
         return $errors;
@@ -724,7 +738,7 @@ class StudentImportService
             $column = $this->columnName($index);
             $cells[] = '<c r="'.$column.'1" s="1" t="inlineStr"><is><t>'.htmlspecialchars($header, ENT_XML1 | ENT_COMPAT, 'UTF-8').'</t></is></c>';
         }
-        $dataSheet = '<?xml version="1.0" encoding="UTF-8"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetViews><sheetView workbookViewId="0"><pane ySplit="1" topLeftCell="A2" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews><cols><col min="1" max="2" width="20" style="2" customWidth="1"/><col min="3" max="9" width="22" customWidth="1"/></cols><sheetData><row r="1">'.implode('', $cells).'</row></sheetData><autoFilter ref="A1:I1"/><dataValidations count="2"><dataValidation type="list" allowBlank="1" sqref="D2:D50001"><formula1>"L,P"</formula1></dataValidation><dataValidation type="list" allowBlank="1" sqref="I2:I50001"><formula1>"ACTIVE,INACTIVE,GRADUATED,TRANSFERRED"</formula1></dataValidation></dataValidations><pageMargins left="0.25" right="0.25" top="0.5" bottom="0.5" header="0.3" footer="0.3"/></worksheet>';
+        $dataSheet = '<?xml version="1.0" encoding="UTF-8"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetViews><sheetView workbookViewId="0"><pane ySplit="1" topLeftCell="A2" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews><cols><col min="1" max="2" width="20" style="2" customWidth="1"/><col min="3" max="9" width="22" customWidth="1"/></cols><sheetData><row r="1">'.implode('', $cells).'</row></sheetData><autoFilter ref="A1:I1"/><dataValidations count="2"><dataValidation type="list" allowBlank="1" sqref="D2:D50001"><formula1>"L,P"</formula1></dataValidation><dataValidation type="list" allowBlank="1" sqref="I2:I50001"><formula1>"Aktif,Nonaktif,Lulus,Pindah"</formula1></dataValidation></dataValidations><pageMargins left="0.25" right="0.25" top="0.5" bottom="0.5" header="0.3" footer="0.3"/></worksheet>';
         $zip->addFromString('xl/worksheets/sheet1.xml', $dataSheet);
         $instructionRows = [
             ['PETUNJUK IMPORT PESERTA DIDIK', ''],
@@ -732,7 +746,7 @@ class StudentImportService
             ['2', 'NIPD dan NISN disimpan sebagai teks agar angka nol di depan tidak hilang.'],
             ['3', 'Jenis Kelamin menggunakan L atau P.'],
             ['4', 'Tanggal lahir menggunakan format YYYY-MM-DD atau DD/MM/YYYY.'],
-            ['5', 'Status menggunakan ACTIVE, INACTIVE, GRADUATED, atau TRANSFERRED.'],
+            ['5', 'Status dapat diisi: Aktif, Nonaktif, Lulus, atau Pindah (format sistem: ACTIVE, INACTIVE, GRADUATED, TRANSFERRED).'],
             ['6', 'Hapus baris contoh bila ada sebelum mengunggah file. Template ini sengaja tidak menyediakan data contoh.'],
         ];
         $instructionXml = '';

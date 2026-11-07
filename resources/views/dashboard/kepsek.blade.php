@@ -36,7 +36,7 @@
         <section class="rounded-2xl bg-brand-900 p-6 text-white shadow-xs" aria-labelledby="kepsek-status-title">
             <p id="kepsek-status-title" class="text-sm font-semibold text-accent-300">Status penerbitan</p>
             <p class="mt-1 text-xs text-slate-400">Ringkasan rapor pada periode aktif.</p>
-            <div class="mt-5 space-y-4 text-sm"><div class="flex items-center justify-between"><span class="text-slate-300">Belum siap dicetak</span><strong class="tabular-nums">{{ $statusCounts['draft'] + $statusCounts['submitted'] + $statusCounts['in_review'] + $statusCounts['revisions'] }}</strong></div><div class="flex items-center justify-between"><span class="text-slate-300">Siap dicetak</span><strong class="tabular-nums">{{ $statusCounts['approved'] }}</strong></div><div class="flex items-center justify-between"><span class="text-slate-300">Terkunci</span><strong class="tabular-nums">{{ $statusCounts['locked'] }}</strong></div></div>
+            <div class="mt-5 space-y-4 text-sm"><div class="flex items-center justify-between"><span class="text-slate-300">Belum siap dicetak</span><strong class="tabular-nums">{{ $statusCounts['waiting_review'] }}</strong></div><div class="flex items-center justify-between"><span class="text-slate-300">Siap dicetak</span><strong class="tabular-nums">{{ $statusCounts['approved'] }}</strong></div><div class="flex items-center justify-between"><span class="text-slate-300">Terkunci</span><strong class="tabular-nums">{{ $statusCounts['locked'] }}</strong></div></div>
             <x-button href="{{ route('admin.report-cards.index') }}" variant="secondary" size="sm" class="mt-7 w-full justify-center">Buka cetak rapor</x-button>
         </section>
     </div>

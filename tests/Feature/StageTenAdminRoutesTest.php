@@ -29,7 +29,9 @@ class StageTenAdminRoutesTest extends TestCase
         $this->actingAs($fixture['admin'])
             ->get(route('admin.report-cards.index'))
             ->assertOk()
-            ->assertSee('Daftar rapor peserta didik')
+            ->assertSee('Kelengkapan & cetak rapor')
+            ->assertSee('Antrean kelengkapan rapor')
+            ->assertSee('Nama peserta didik')
             ->assertSee('Siswa Tahap Sepuluh');
 
         $this->actingAs($fixture['admin'])

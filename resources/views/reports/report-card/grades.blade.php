@@ -12,12 +12,15 @@
         h1 { font-size: 15pt; margin: 6px 0 2px; text-transform: uppercase; }
         h2 { font-size: 12pt; margin: 15px 0 8px; text-align: center; text-transform: uppercase; }
         .meta { color: #374151; font-size: 8.5pt; }
-        .identity, .grades { border-collapse: collapse; width: 100%; }
+        .identity, .grades { border-collapse: collapse; table-layout: fixed; width: 100%; }
         .identity { margin: 10px 0 14px; }
         .identity td { border: 1px solid #374151; padding: 5px 6px; vertical-align: top; }
         .identity .label { background: #f3f4f6; font-weight: 700; width: 18%; }
         .identity .value { width: 32%; }
+        .grades-frame { border: 2px solid #374151; overflow: hidden; width: 100%; }
+        .grades { border: 0; }
         .grades th, .grades td { border: 1px solid #374151; padding: 5px 6px; vertical-align: top; }
+        .grades th:last-child, .grades td:last-child { border-right: 0; }
         .grades th { background: #f3f4f6; text-align: center; }
         .center { text-align: center; }
         .description { overflow-wrap: anywhere; white-space: pre-line; }
@@ -40,16 +43,18 @@
         <tr><td class="label">NIPD / NISN</td><td class="value">{{ $identity['student']['student_number'] ?? '-' }} / {{ $identity['student']['nisn'] ?? '-' }}</td><td class="label">Periode</td><td class="value">{{ $identity['academic_year']['name'] ?? '-' }} · {{ $identity['semester']['name'] ?? ($identity['semester']['code'] ?? '-') }}</td></tr>
     </table>
 
+    <div class="grades-frame" aria-label="Daftar nilai peserta didik">
     <table class="grades">
         <thead><tr><th style="width: 6%">No.</th><th style="width: 27%">Mata pelajaran</th>@if ($settings->show_kkm)<th style="width: 10%">KKM</th>@endif<th style="width: 12%">Nilai</th>@if ($settings->show_predicate)<th style="width: 12%">Predikat</th>@endif<th>Deskripsi capaian</th></tr></thead>
         <tbody>
         @forelse ($grades as $index => $grade)
-            <tr><td class="center">{{ $index + 1 }}</td><td><strong>{{ $grade->subject_name_snapshot }}</strong><br><small>{{ $grade->subject_short_name_snapshot }}</small></td>@if ($settings->show_kkm)<td class="center">{{ $grade->minimum_score_snapshot ?? '-' }}</td>@endif<td class="center">{{ $grade->score ?? '-' }}</td>@if ($settings->show_predicate)<td class="center">{{ $grade->predicate ?? $grade->predicate_snapshot ?? '-' }}</td>@endif<td class="description">{{ $grade->description ?: '-' }}</td></tr>
+            <tr><td class="center">{{ $index + 1 }}</td><td><strong>{{ $grade->subject_name_snapshot }}</strong></td>@if ($settings->show_kkm)<td class="center">{{ $grade->minimum_score_snapshot ?? '-' }}</td>@endif<td class="center">{{ $grade->score ?? '-' }}</td>@if ($settings->show_predicate)<td class="center">{{ $grade->predicate ?? $grade->predicate_snapshot ?? '-' }}</td>@endif<td class="description">{{ $grade->description ?: '-' }}</td></tr>
         @empty
-            <tr><td colspan="6" class="center">Belum ada nilai.</td></tr>
+            <tr><td colspan="{{ 4 + ($settings->show_kkm ? 1 : 0) + ($settings->show_predicate ? 1 : 0) }}" class="center">Belum ada nilai.</td></tr>
         @endforelse
         </tbody>
     </table>
+    </div>
 
     <div class="footer">{{ $footerText }}</div>
 </body>

@@ -7,6 +7,7 @@ use App\Enums\RoleCode;
 use App\Models\AcademicClass;
 use App\Models\AcademicYear;
 use App\Models\AttendanceSummary;
+use App\Models\AttitudeAssessment;
 use App\Models\Enrollment;
 use App\Models\HomeroomNote;
 use App\Models\Institution;
@@ -34,7 +35,7 @@ class LedgerExportServiceTest extends TestCase
         $source = $this->enrollment($fixture['student'], $fixture['source'], $fixture['year'], '2026-07-01', 'TRANSFERRED');
         $target = $this->enrollment($fixture['student'], $fixture['class'], $fixture['year'], '2026-09-16', 'ACTIVE', $source->id);
         $sourceAssignment = $this->assignment($fixture['source'], $fixture['subject'], $fixture['admin'], 'MAT-SRC');
-        $card = ReportCard::query()->create(['enrollment_id' => $source->id, 'semester_id' => $fixture['semester']->id, 'status' => 'APPROVED']);
+        $card = ReportCard::query()->create(['enrollment_id' => $source->id, 'semester_id' => $fixture['semester']->id, 'status' => 'DRAFT', 'document_number' => 'RAPOR-001']);
         ReportGrade::query()->create([
             'report_card_id' => $card->id,
             'subject_assignment_id' => $sourceAssignment->id,
@@ -48,6 +49,8 @@ class LedgerExportServiceTest extends TestCase
             'status' => 'DRAFT',
         ]);
         AttendanceSummary::query()->create(['report_card_id' => $card->id, 'sick_days' => 1, 'leave_days' => 2, 'unexcused_days' => 0]);
+        AttitudeAssessment::query()->create(['report_card_id' => $card->id, 'attitude_type' => 'SPIRITUAL', 'description' => 'Baik.']);
+        AttitudeAssessment::query()->create(['report_card_id' => $card->id, 'attitude_type' => 'SOCIAL', 'description' => 'Baik.']);
         HomeroomNote::query()->create(['report_card_id' => $card->id, 'note' => 'Pertahankan.']);
 
         $draftEnrollment = $this->enrollment(Student::query()->create([
@@ -73,7 +76,7 @@ class LedgerExportServiceTest extends TestCase
         $fixture = $this->fixture();
         $enrollment = $this->enrollment($fixture['student'], $fixture['class'], $fixture['year']);
         $assignment = $this->assignment($fixture['class'], $fixture['subject'], $fixture['admin'], 'MAT');
-        $card = ReportCard::query()->create(['enrollment_id' => $enrollment->id, 'semester_id' => $fixture['semester']->id, 'status' => 'LOCKED']);
+        $card = ReportCard::query()->create(['enrollment_id' => $enrollment->id, 'semester_id' => $fixture['semester']->id, 'status' => 'LOCKED', 'document_number' => 'RAPOR-002']);
         ReportGrade::query()->create([
             'report_card_id' => $card->id,
             'subject_assignment_id' => $assignment->id,
@@ -86,6 +89,9 @@ class LedgerExportServiceTest extends TestCase
             'description' => 'Sangat baik.',
             'status' => 'DRAFT',
         ]);
+        AttendanceSummary::query()->create(['report_card_id' => $card->id, 'sick_days' => 0, 'leave_days' => 0, 'unexcused_days' => 0]);
+        AttitudeAssessment::query()->create(['report_card_id' => $card->id, 'attitude_type' => 'SPIRITUAL', 'description' => 'Baik.']);
+        AttitudeAssessment::query()->create(['report_card_id' => $card->id, 'attitude_type' => 'SOCIAL', 'description' => 'Baik.']);
         $extraSubject = Subject::query()->create(['institution_id' => $fixture['institution']->id, 'code' => 'IPA', 'name' => 'Ilmu Pengetahuan Alam', 'short_name' => 'IPA']);
         $this->assignment($fixture['class'], $extraSubject, $fixture['admin'], 'IPA');
 

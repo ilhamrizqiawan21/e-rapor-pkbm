@@ -58,6 +58,18 @@ class StudentImportServiceTest extends TestCase
         $this->assertSame('XLSX-001', $preview['rows'][0]['values']['student_number']);
     }
 
+    public function test_indonesian_status_values_are_normalised_to_system_values(): void
+    {
+        $institution = Institution::query()->create(['name' => 'PKBM Status Indonesia']);
+        $preview = app(StudentImportService::class)->preview(
+            $this->csv("NIPD,Nama Lengkap,Status\nPD-Aktif,Siswa Aktif,Aktif\nPD-Lulus,Siswa Lulus,Lulus\nPD-Pindah,Siswa Pindah,Pindah\n"),
+            $institution,
+        );
+
+        $this->assertSame(3, $preview['valid_count']);
+        $this->assertSame(['ACTIVE', 'GRADUATED', 'TRANSFERRED'], array_column(array_column($preview['rows'], 'values'), 'status'));
+    }
+
     public function test_xlsx_keeps_empty_cells_in_their_original_columns(): void
     {
         $institution = Institution::query()->create(['name' => 'PKBM XLSX Empty Cell']);

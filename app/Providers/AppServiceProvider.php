@@ -3,7 +3,9 @@
 namespace App\Providers;
 
 use App\Contracts\PdfEngine;
+use App\Models\AcademicClass;
 use App\Services\AcademicPeriodContext;
+use App\Services\InstitutionBrandingService;
 use App\Services\Reports\ChromePdfEngine;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
@@ -34,10 +36,23 @@ class AppServiceProvider extends ServiceProvider
         View::composer('layouts.app', function ($view): void {
             $user = request()->user();
             $period = app(AcademicPeriodContext::class)->forInstitution($user?->institution_id);
+            $branding = app(InstitutionBrandingService::class)->resolve($user);
 
             $view->with([
                 'period' => $period,
                 'hasPeriod' => $period['academicYear'] !== null && $period['semester'] !== null,
+                'hasHomeroomClass' => $user?->hasRole('GURU') && AcademicClass::query()->where('homeroom_teacher_id', $user->id)->exists(),
+                'brandingInstitution' => $branding,
+                'brandingLogoUrl' => app(InstitutionBrandingService::class)->logoUrl($branding),
+            ]);
+        });
+
+        View::composer('layouts.guest', function ($view): void {
+            $branding = app(InstitutionBrandingService::class)->resolve();
+
+            $view->with([
+                'brandingInstitution' => $branding,
+                'brandingLogoUrl' => app(InstitutionBrandingService::class)->logoUrl($branding),
             ]);
         });
     }

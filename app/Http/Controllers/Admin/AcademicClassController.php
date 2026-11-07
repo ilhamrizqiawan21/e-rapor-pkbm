@@ -8,6 +8,7 @@ use App\Http\Requests\Admin\UpdateAcademicClassRequest;
 use App\Models\AcademicClass;
 use App\Models\AcademicYear;
 use App\Models\Level;
+use App\Models\PeriodPlacement;
 use App\Models\Program;
 use App\Models\User;
 use App\Services\HomeroomAssignmentService;
@@ -149,9 +150,11 @@ class AcademicClassController extends Controller
         $this->ensurePeriodOpen($academicClass->academicYear);
 
         abort_if(
-            $academicClass->enrollments()->exists() || $academicClass->subjectAssignments()->exists(),
+            $academicClass->enrollments()->exists()
+                || $academicClass->subjectAssignments()->exists()
+                || PeriodPlacement::query()->where('class_id', $academicClass->getKey())->exists(),
             422,
-            'Kelas yang sudah memiliki siswa atau penugasan mapel tidak dapat dihapus. Nonaktifkan kelas untuk mempertahankan histori.',
+            'Kelas yang sudah memiliki siswa, penugasan mapel, atau penempatan tahun baru tidak dapat dihapus. Nonaktifkan kelas untuk mempertahankan histori.',
         );
 
         $academicClass->delete();

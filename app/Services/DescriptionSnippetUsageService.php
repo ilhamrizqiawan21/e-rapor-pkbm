@@ -174,11 +174,11 @@ final class DescriptionSnippetUsageService
         $this->assertActiveInstitutionUser($actor);
 
         if ($snippet->institution_id !== $actor->institution_id || ! $snippet->active) {
-            throw new AuthorizationException('Snippet tidak tersedia untuk pengguna ini.');
+            throw new AuthorizationException('Template deskripsi tidak tersedia untuk pengguna ini.');
         }
 
         if ($snippet->subject_id !== null && $snippet->subject_id !== $subjectId) {
-            throw new AuthorizationException('Snippet tidak sesuai dengan mata pelajaran nilai.');
+            throw new AuthorizationException('Template deskripsi tidak sesuai dengan mata pelajaran nilai.');
         }
 
         $isShared = $snippet->visibility === DescriptionSnippetVisibility::Shared;
@@ -186,7 +186,7 @@ final class DescriptionSnippetUsageService
             && $snippet->owner_user_id === $actor->getKey();
 
         if (! $isShared && ! $isOwnedPrivate) {
-            throw new AuthorizationException('Snippet privat hanya dapat digunakan oleh pemiliknya.');
+            throw new AuthorizationException('Template pribadi hanya dapat digunakan oleh pemiliknya.');
         }
     }
 
@@ -211,12 +211,12 @@ final class DescriptionSnippetUsageService
 
         if (trim($description ?? '') === '') {
             throw ValidationException::withMessages([
-                'description' => 'Deskripsi final harus diisi sebelum disimpan sebagai snippet.',
+                'description' => 'Deskripsi final harus diisi sebelum disimpan sebagai template.',
             ]);
         }
 
         if ($visibility === DescriptionSnippetVisibility::Shared->value && ! $actor->hasRole('ADMIN')) {
-            throw new AuthorizationException('Hanya Admin yang dapat menyimpan snippet shared.');
+            throw new AuthorizationException('Hanya Admin yang dapat menyimpan template bersama.');
         }
     }
 }

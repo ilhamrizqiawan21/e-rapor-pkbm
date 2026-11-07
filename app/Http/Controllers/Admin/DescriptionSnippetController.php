@@ -92,7 +92,7 @@ class DescriptionSnippetController extends Controller
 
         return redirect()
             ->route('admin.description-snippets.show', $snippet)
-            ->with('status', 'Snippet deskripsi berhasil ditambahkan.');
+            ->with('status', 'Template deskripsi berhasil ditambahkan.');
     }
 
     public function show(Request $request, DescriptionSnippet $descriptionSnippet): View
@@ -119,7 +119,7 @@ class DescriptionSnippetController extends Controller
 
         return redirect()
             ->route('admin.description-snippets.show', $descriptionSnippet)
-            ->with('status', 'Snippet deskripsi berhasil diperbarui.');
+            ->with('status', 'Template deskripsi berhasil diperbarui.');
     }
 
     public function destroy(Request $request, DescriptionSnippet $descriptionSnippet): RedirectResponse
@@ -129,7 +129,7 @@ class DescriptionSnippetController extends Controller
 
         return redirect()
             ->route('admin.description-snippets.index')
-            ->with('status', 'Snippet deskripsi berhasil dihapus.');
+            ->with('status', 'Template deskripsi berhasil dihapus.');
     }
 
     /** @return array<string, mixed> */

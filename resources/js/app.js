@@ -17,8 +17,6 @@ window.mobileNavigation = () => ({
         foundation: true,
         assessment: true,
         reports: true,
-        settings: true,
-        account: true,
     },
 
     init() {

@@ -21,7 +21,7 @@ async function login(page: Page, account: RoleAccount): Promise<void> {
 }
 
 async function openAccountMenu(page: Page): Promise<void> {
-    await page.locator('header').getByRole('button', { name: /Akun|Admin Demo|Guru Demo|Kepala PKBM/ }).click();
+    await page.locator('header').getByRole('button', { name: 'Buka menu akun' }).click();
     await expect(page.locator('[role="menu"]')).toBeVisible();
 }
 
@@ -46,7 +46,7 @@ test.describe('02.05 authentication and authorization browser flows', () => {
 
             await expect(page.getByText('Dashboard ' + account.roleLabel, { exact: true })).toBeVisible();
             await openAccountMenu(page);
-            await expect(page.locator('[role="menu"]').getByText(account.roleLabel, { exact: true })).toBeVisible();
+            await expect(page.locator('[role="menu"]').getByText(new RegExp(`^Peran:\\s*${account.roleLabel}$`, 'i'))).toBeVisible();
         });
     }
 
@@ -93,7 +93,7 @@ test.describe('02.05 authentication and authorization browser flows', () => {
         expect(response?.status()).toBe(200);
         await openAccountMenu(page);
         await expect(page.locator('[role="menu"]').getByText('Kepala PKBM Demo', { exact: true })).toBeVisible();
-        await expect(page.locator('[role="menu"]').getByText('Kepala PKBM', { exact: true })).toBeVisible();
+        await expect(page.locator('[role="menu"]').getByText(/^Peran:\s*Kepala PKBM$/i)).toBeVisible();
     });
 
     test('logout removes the session and protects the dashboard again', async ({ page }) => {

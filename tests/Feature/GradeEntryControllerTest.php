@@ -30,6 +30,7 @@ class GradeEntryControllerTest extends TestCase
         Route::middleware(['web', 'auth'])->group(function (): void {
             Route::get('admin/grade-entry', [GradeEntryController::class, 'index'])->name('admin.grade-entry.index');
             Route::post('admin/grade-entry', [GradeEntryController::class, 'store'])->name('admin.grade-entry.store');
+            Route::post('admin/grade-entry/context', [GradeEntryController::class, 'storeContext'])->name('admin.grade-entry.store-context');
             Route::post('admin/grade-entry/all', [GradeEntryController::class, 'storeAll'])->name('admin.grade-entry.store-all');
         });
         Route::getRoutes()->refreshNameLookups();
@@ -70,6 +71,54 @@ class GradeEntryControllerTest extends TestCase
         $this->actingAs($guru)->post(route('admin.grade-entry.store-all'), $payload)->assertRedirect()->assertSessionHas('grade_errors');
         $this->assertDatabaseHas('report_grades', ['score' => 80, 'description' => 'Baik.']);
         $this->assertDatabaseCount('report_grades', 1);
+    }
+
+    public function test_save_all_keeps_shared_material_for_the_next_grade_entry_page(): void
+    {
+        [$guru, $assignment, $semester, $enrollment] = $this->academicSetup();
+        $material = 'memahami pengertian sifat terpuji';
+        $payload = $this->context($assignment, $semester, $enrollment) + [
+            'material' => $material,
+            'rows' => [
+                $enrollment->id => ['enrollment_id' => $enrollment->id, 'score' => 90],
+            ],
+        ];
+
+        $this->actingAs($guru)->post(route('admin.grade-entry.store-all'), $payload)
+            ->assertRedirect()
+            ->assertSessionHas('success', '1 baris nilai berhasil disimpan.');
+
+        $this->assertDatabaseHas('grade_entry_contexts', [
+            'semester_id' => $semester->id,
+            'subject_assignment_id' => $assignment->id,
+            'material' => $material,
+        ]);
+
+        $this->actingAs($guru)->get(route('admin.grade-entry.index', [
+            'academic_year_id' => $assignment->academicClass->academic_year_id,
+            'semester_id' => $semester->id,
+            'class_id' => $assignment->class_id,
+            'subject_id' => $assignment->subject_id,
+        ]))->assertOk()->assertSee($material);
+    }
+
+    public function test_context_can_be_saved_without_mutating_locked_grade_rows(): void
+    {
+        [$guru, $assignment, $semester, $enrollment] = $this->academicSetup();
+        $material = 'memahami pengertian sifat terpuji';
+        $context = $this->context($assignment, $semester, $enrollment);
+        unset($context['enrollment_id']);
+
+        $this->actingAs($guru)->post(route('admin.grade-entry.store-context'), $context + ['material' => $material])
+            ->assertOk()
+            ->assertJsonPath('message', 'Materi pembelajaran berhasil disimpan.');
+
+        $this->assertDatabaseHas('grade_entry_contexts', [
+            'semester_id' => $semester->id,
+            'subject_assignment_id' => $assignment->id,
+            'material' => $material,
+        ]);
+        $this->assertDatabaseCount('report_grades', 0);
     }
 
     public function test_other_teacher_cannot_open_or_save_this_subject_assignment(): void

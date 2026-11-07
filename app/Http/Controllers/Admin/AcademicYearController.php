@@ -11,6 +11,7 @@ use App\Http\Requests\Admin\UpdateAcademicYearRequest;
 use App\Models\AcademicYear;
 use App\Models\Semester;
 use App\Services\AcademicPeriodService;
+use App\Services\PeriodReadinessService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -18,7 +19,7 @@ use Illuminate\View\View;
 
 class AcademicYearController extends Controller
 {
-    public function index(Request $request): View
+    public function index(Request $request, PeriodReadinessService $readiness): View
     {
         Gate::authorize('viewAny', AcademicYear::class);
 
@@ -41,6 +42,8 @@ class AcademicYearController extends Controller
 
         return view('admin.academic-years.index', [
             'academicYears' => $academicYears,
+            'periodActions' => $request->user()->hasAnyRole(['ADMIN', 'KEPSEK'])
+                ? $academicYears->where('status', AcademicYearStatus::Active)->mapWithKeys(fn ($year) => [$year->id => $readiness->evaluate($year)])->all() : [],
             'statusOptions' => AcademicYearStatus::cases(),
             'modalAcademicYear' => new AcademicYear(['status' => AcademicYearStatus::Draft]),
         ]);
@@ -67,13 +70,14 @@ class AcademicYearController extends Controller
             ->with('status', 'Tahun pelajaran berhasil dibuat.');
     }
 
-    public function show(AcademicYear $academicYear): View
+    public function show(AcademicYear $academicYear, PeriodReadinessService $readiness): View
     {
         Gate::authorize('view', $academicYear);
         $academicYear->load(['semesters' => fn ($query) => $query->orderBy('sequence')]);
 
         return view('admin.academic-years.show', [
             'academicYear' => $academicYear,
+            'actionState' => auth()->user()->hasAnyRole(['ADMIN', 'KEPSEK']) && $academicYear->status === AcademicYearStatus::Active ? $readiness->evaluate($academicYear) : null,
             'modalSemester' => new Semester([
                 'code' => SemesterCode::Ganjil,
                 'name' => SemesterCode::Ganjil->label(),

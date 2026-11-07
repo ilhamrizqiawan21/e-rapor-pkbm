@@ -13,6 +13,7 @@ class E2eSeeder extends Seeder
     public function run(): void
     {
         $this->call(DatabaseSeeder::class);
+        $this->call(AcademicProgressionE2eSeeder::class);
 
         $institution = Institution::query()->firstOrFail();
 

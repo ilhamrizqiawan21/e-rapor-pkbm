@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="mx-auto max-w-3xl space-y-6">
-        <x-page-header eyebrow="Pengaturan PKBM / rapor" title="Penandatangan rapor" description="Atur data Kepala PKBM yang akan disimpan pada rapor saat rapor dikunci." back-href="{{ route('dashboard') }}" back-text="Kembali ke dashboard" />
+        <x-page-header eyebrow="Pengaturan PKBM / rapor" title="Penandatangan rapor" description="Atur data Kepala PKBM untuk dokumen rapor." back-href="{{ route('admin.institutions.index') }}" back-text="Kembali ke pengaturan PKBM" />
 
         @if (session('success'))
             <div class="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800" role="status">
@@ -31,7 +31,7 @@
                         </option>
                     @endforeach
                 </x-select>
-                <p class="mt-2 text-xs text-sky-800">Nama, jabatan, dan NIP/NIY akan diambil dari akun dan StaffProfile terpilih.</p>
+                <p class="mt-2 text-xs text-sky-800">Nama, jabatan, dan NIP/NIY diambil dari data akun yang dipilih.</p>
                 @error('headmaster_user_id')<p class="mt-1 text-sm text-rose-700" role="alert">{{ $message }}</p>@enderror
             </div>
 

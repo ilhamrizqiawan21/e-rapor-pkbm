@@ -57,7 +57,8 @@ class StudentImportController extends Controller
             ? " {$result['conflicted']} baris berubah setelah pratinjau dan dilewati."
             : '';
 
-        return back()->with('status', "Impor selesai: {$result['imported']} peserta didik ditambahkan, {$result['skipped']} baris dilewati.".$conflictMessage);
+        return redirect()->route('admin.students.index')
+            ->with('status', "Impor selesai: {$result['imported']} peserta didik ditambahkan, {$result['skipped']} baris dilewati.".$conflictMessage);
     }
 
     public function errorReport(Request $request, StudentImportService $service)

@@ -39,7 +39,7 @@ class DashboardRoleTest extends TestCase
             ->assertSee('Kelas aktif')
             ->assertSee('Kelas 1 A')
             ->assertSee('1 / 2')
-            ->assertSee('Siap dikunci');
+            ->assertSee('Siap dicetak');
     }
 
     public function test_guru_dashboard_only_exposes_their_assignments_and_progress(): void
@@ -74,7 +74,7 @@ class DashboardRoleTest extends TestCase
             ->assertSee('Fokus pada penilaian, kelas, dan rapor yang menjadi tanggung jawab Anda.')
             ->assertSee('Input nilai')
             ->assertSee('Bank deskripsi')
-            ->assertSee('Rapor kelas saya')
+            ->assertSee('Kelengkapan rapor')
             ->assertSee('Generator leger')
             ->assertDontSee('Data Guru')
             ->assertDontSee('Program & tingkat')
@@ -94,11 +94,10 @@ class DashboardRoleTest extends TestCase
             ->assertOk()
             ->assertSee('Dashboard Kepala PKBM')
             ->assertSee('Siswa Review')
-            ->assertSee('Pratinjau')
-            ->assertSee('Setujui')
-            ->assertSee('Kembalikan')
-            ->assertSee('Ringkasan per kelas')
-            ->assertSee('Tinjauan & persetujuan rapor')
+            ->assertSee('Buka rapor')
+            ->assertSee('Kesiapan per kelas')
+            ->assertSee('Status penerbitan')
+            ->assertSee('tanpa tahap pengajuan atau persetujuan')
             ->assertDontSee('Input nilai')
             ->assertDontSee('Bank deskripsi')
             ->assertDontSee('Pengaturan PKBM');
