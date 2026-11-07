@@ -47,4 +47,16 @@ class UserRoleFoundationTest extends TestCase
         $this->assertFalse($user->isActive());
         $this->assertSame(UserStatus::Inactive, $user->status);
     }
+
+    public function test_database_seeder_can_skip_demo_academic_data_for_online_installation(): void
+    {
+        $this->app['config']->set('erapor.seed_demo_data', false);
+
+        $this->seed(DatabaseSeeder::class);
+
+        $this->assertSame(3, User::query()->count());
+        $this->assertDatabaseCount('students', 0);
+        $this->assertDatabaseCount('academic_years', 0);
+        $this->assertDatabaseCount('subjects', 0);
+    }
 }

@@ -23,6 +23,10 @@ php artisan serve
 
 Buka `http://127.0.0.1:8000`.
 
+## Instalasi untuk client
+
+Gunakan [PANDUAN-INSTALASI-CLIENT.md](PANDUAN-INSTALASI-CLIENT.md) untuk memilih instalasi localhost dengan Laragon atau deployment online di VPS/server. Profil siap salin tersedia pada `.env.laragon.example`, `.env.staging.example`, dan `.env.production.example`.
+
 ## Menjalankan browser test
 
 Playwright menyiapkan database SQLite E2E terpisah (`database/database.e2e.sqlite`), menjalankan server Laravel pada port `8001`, lalu menguji Chromium desktop dan mobile.
@@ -53,10 +57,13 @@ Detail klasifikasi data, role boundary, retensi, dan respons insiden ada di [PRI
 
 Profil yang tersedia:
 
-- `.env.example`: development localhost/LAN dengan SQLite file `database/database.sqlite`.
+- `.env.example`: development umum dengan SQLite file `database/database.sqlite`.
+- `.env.laragon.example`: profil siap pakai untuk Windows/Laragon dengan SQLite dan URL virtual host Laragon.
 - `.env.testing.example`: PHPUnit dengan SQLite in-memory, cache/session array, queue sync, dan mail array.
 - `.env.staging.example`: contoh staging online dengan MySQL, HTTPS, queue/cache/session database, dan SMTP.
 - `.env.production.example`: contoh production online; semua credential dan `APP_KEY` wajib diisi pada server, bukan di-commit.
+
+`ERAPOR_SEED_DEMO_DATA=true` cocok untuk Laragon/demo. Gunakan `false` pada VPS production agar instalasi tidak membawa data contoh siswa dan rapor.
 
 Konfigurasi aplikasi menggunakan timezone `Asia/Jakarta`, locale `id`, format tanggal `dd/mm/YYYY`, format waktu `dd/mm/YYYY HH:mm`, serta angka Indonesia dengan pemisah ribuan titik dan desimal koma.
 

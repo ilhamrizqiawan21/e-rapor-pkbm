@@ -2,6 +2,11 @@
 
 return [
 
+    'seed_demo_data' => filter_var(
+        env('ERAPOR_SEED_DEMO_DATA', in_array((string) env('APP_ENV', 'production'), ['local', 'testing'], true)),
+        FILTER_VALIDATE_BOOL,
+    ),
+
     'formatting' => [
         'date' => env('APP_DATE_FORMAT', 'd/m/Y'),
         'datetime' => env('APP_DATETIME_FORMAT', 'd/m/Y H:i'),
