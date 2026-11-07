@@ -39,3 +39,41 @@
 [x-cloak] {
     display: none !important;
 }
+
+@layer components {
+    /* Keep the navigation rail visually quiet while preserving a clear scroll target. */
+    .sidebar-scrollbar {
+        overscroll-behavior: contain;
+        scrollbar-color: rgb(94 234 212 / 0.52) transparent;
+        scrollbar-gutter: stable;
+        scrollbar-width: thin;
+    }
+
+    .sidebar-scrollbar::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    .sidebar-scrollbar::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .sidebar-scrollbar::-webkit-scrollbar-thumb {
+        min-height: 48px;
+        border: 2px solid transparent;
+        border-radius: 9999px;
+        background-clip: padding-box;
+        background-color: rgb(94 234 212 / 0.52);
+    }
+
+    .sidebar-scrollbar:hover {
+        scrollbar-color: rgb(94 234 212 / 0.78) transparent;
+    }
+
+    .sidebar-scrollbar:hover::-webkit-scrollbar-thumb {
+        background-color: rgb(94 234 212 / 0.78);
+    }
+
+    .sidebar-scrollbar::-webkit-scrollbar-thumb:active {
+        background-color: rgb(153 246 228 / 0.92);
+    }
+}

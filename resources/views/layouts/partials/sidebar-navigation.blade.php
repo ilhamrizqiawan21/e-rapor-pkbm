@@ -7,7 +7,7 @@
     $linkActive = 'bg-accent-500/15 font-semibold text-white ring-1 ring-inset ring-accent-300/20';
 @endphp
 
-<nav id="{{ $mobile ? 'mobile-sidebar-navigation' : 'desktop-sidebar-navigation' }}" aria-label="Navigasi utama" class="flex min-h-0 flex-1 flex-col overflow-y-auto px-3 py-4 {{ $mobile ? 'text-sm' : '' }}">
+<nav id="{{ $mobile ? 'mobile-sidebar-navigation' : 'desktop-sidebar-navigation' }}" aria-label="Navigasi utama" class="sidebar-scrollbar flex min-h-0 flex-1 flex-col overflow-y-auto px-3 py-4 {{ $mobile ? 'text-sm' : '' }}">
     <div class="mb-3 px-2 {{ $mobile ? '' : 'hidden' }}" @if (! $mobile) x-show="!sidebarCollapsed" @endif>
         <p class="text-[10px] font-semibold uppercase tracking-[0.22em] text-accent-300">Ruang kerja</p>
         <p class="mt-1 text-xs leading-5 text-slate-400">Kelola data sampai rapor siap disahkan.</p>

@@ -27,7 +27,7 @@ window.mobileNavigation = () => ({
 
         this.$nextTick(() => {
             this.bindSidebarScrollPersistence();
-            requestAnimationFrame(() => this.restoreSidebarScrollPositions());
+            this.restoreSidebarScrollPositions();
         });
 
         this.$watch('mobileSidebarOpen', (isOpen) => {
@@ -119,7 +119,7 @@ window.mobileNavigation = () => ({
     openMobileSidebar(event) {
         this.menuTrigger = event.currentTarget;
         this.mobileSidebarOpen = true;
-        this.$nextTick(() => requestAnimationFrame(() => this.restoreSidebarScrollPositions()));
+        this.$nextTick(() => this.restoreSidebarScrollPositions());
     },
 
     closeMobileSidebar() {
