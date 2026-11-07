@@ -75,7 +75,12 @@
                 <div class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
                     <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                         <div class="text-sm text-slate-600"><span class="font-semibold text-slate-900">{{ $academicClass->name }}</span> · {{ $assignment->subject->name }} · <span class="font-semibold text-accent-700">KKM {{ $assignment->minimum_score }}</span></div>
-                        @if (auth()->user()->hasAnyRole(['ADMIN', 'GURU']))<x-button type="submit" variant="success" icon="save" data-save-all>Simpan semua nilai</x-button>@endif
+                        @if (auth()->user()->hasAnyRole(['ADMIN', 'GURU']))
+                            <div class="flex flex-wrap justify-end gap-2">
+                                <x-button :href="route('admin.grade-entry.import.create', $filterParams + ['academic_year_id' => $academicYear->id, 'semester_id' => $semester->id, 'class_id' => $academicClass->id, 'subject_id' => $assignment->subject_id, 'subject_assignment_id' => $assignment->id])" variant="excel" icon="excel">Impor dari Excel</x-button>
+                                <x-button type="submit" variant="success" icon="save" data-save-all>Simpan semua nilai</x-button>
+                            </div>
+                        @endif
                     </div>
                     <div class="mt-4 max-w-3xl rounded-xl border border-accent-100 bg-accent-50/60 p-4">
                         <label for="shared-material" class="block text-sm font-semibold text-slate-900">Materi / capaian pembelajaran</label>

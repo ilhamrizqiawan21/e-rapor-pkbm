@@ -14,6 +14,20 @@ test.describe('09 grade entry browser flows', () => {
 
         await page.goto('/admin/grade-entry');
         await expect(page.getByRole('heading', { name: 'Input nilai', exact: true })).toBeVisible();
-        await expect(page.getByText('Pilih konteks yang memiliki penugasan mata pelajaran aktif.', { exact: false })).toBeVisible();
+        await expect(page.getByText('Materi / capaian pembelajaran', { exact: true })).toBeVisible();
+        await expect(page.getByRole('link', { name: 'Impor dari Excel' })).toBeVisible();
+    });
+
+    test('admin can open the context-locked Excel import screen', async ({ page }) => {
+        await loginAsAdmin(page);
+
+        await page.goto('/admin/grade-entry');
+        const importLink = page.getByRole('link', { name: 'Impor dari Excel' });
+        await importLink.click();
+        await expect(page).toHaveURL(/\/admin\/grade-entry\/import(?:\?.*)?$/);
+        await expect(page.getByRole('heading', { name: 'Impor nilai dari Excel', exact: true })).toBeVisible();
+        await expect(page.getByText('Konteks file terkunci', { exact: true })).toBeVisible();
+        await expect(page.getByRole('link', { name: 'Unduh template resmi' })).toBeVisible();
+        await expect(page.getByRole('button', { name: 'Validasi dan preview' })).toBeVisible();
     });
 });
