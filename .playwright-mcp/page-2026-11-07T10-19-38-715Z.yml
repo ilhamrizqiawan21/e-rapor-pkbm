@@ -1,0 +1,266 @@
+- main [ref=f110e3]:
+  - generic [ref=f110e5]:
+    - generic [ref=f110e6]:
+      - button "Buka menu navigasi" [ref=f110e7]
+      - generic [ref=f110e11]:
+        - paragraph [ref=f110e12]: Periode aktif
+        - paragraph [ref=f110e14]: 2027/2028 · Semester Genap
+    - button "Buka menu akun" [ref=f110e17]:
+      - generic [aria-hidden] [ref=f110e18]: KP
+  - generic [ref=f110e22]:
+    - generic [ref=f110e24]:
+      - generic [ref=f110e25]:
+        - paragraph [ref=f110e26]: Dashboard Kepala PKBM · Pusat insight PKBM
+        - heading "Pantau kesiapan akademik dari satu layar" [level=1] [ref=f110e27]
+        - paragraph [ref=f110e28]: Ringkasan read-only untuk membantu Kepala PKBM melihat titik tertinggal sebelum rapor diterbitkan, tanpa tahap pengajuan atau persetujuan.
+      - generic [ref=f110e29]:
+        - generic [ref=f110e30]:
+          - paragraph [ref=f110e31]: Periode aktif
+          - paragraph [ref=f110e32]: 2027/2028 · Semester Genap
+        - generic [ref=f110e33]: Mode hanya baca
+    - region "Ringkasan institusi" [ref=f110e35]:
+      - article [ref=f110e36]:
+        - paragraph [ref=f110e37]: Kelas aktif
+        - paragraph [ref=f110e38]: "4"
+        - paragraph [ref=f110e39]: Pada periode aktif
+      - article [ref=f110e40]:
+        - paragraph [ref=f110e41]: Peserta didik
+        - paragraph [ref=f110e42]: "20"
+        - paragraph [ref=f110e43]: Penempatan aktif
+      - article [ref=f110e44]:
+        - paragraph [ref=f110e45]: Guru aktif
+        - paragraph [ref=f110e46]: "6"
+        - paragraph [ref=f110e47]: Dalam institusi
+      - article [ref=f110e48]:
+        - paragraph [ref=f110e49]: Penugasan mapel
+        - paragraph [ref=f110e50]: "40"
+        - paragraph [ref=f110e51]: Penugasan aktif pada periode
+      - article [ref=f110e52]:
+        - paragraph [ref=f110e53]: Mata pelajaran
+        - paragraph [ref=f110e54]: "10"
+        - paragraph [ref=f110e55]: Mapel aktif dalam institusi
+      - article [ref=f110e56]:
+        - paragraph [ref=f110e57]: Program pendidikan
+        - paragraph [ref=f110e58]: "3"
+        - paragraph [ref=f110e59]: Program PKBM
+      - article [ref=f110e60]:
+        - paragraph [ref=f110e61]: Cakupan rapor
+        - paragraph [ref=f110e62]: 25%
+        - paragraph [ref=f110e63]: 5 dari 20 peserta memiliki rapor
+    - region [ref=f110e64]:
+      - generic [ref=f110e65]:
+        - paragraph [ref=f110e66]: Tindak lanjut cepat
+        - heading "Mulai dari data yang paling membutuhkan perhatian" [level=2] [ref=f110e67]
+        - paragraph [ref=f110e68]: Semua halaman berikut aman untuk ditinjau tanpa mengubah data.
+      - generic [ref=f110e69]:
+        - link "Progres nilai" [ref=f110e70] [cursor=pointer]:
+          - /url: http://localhost:8000/admin/grade-monitoring
+        - link "Kelengkapan rapor" [ref=f110e71] [cursor=pointer]:
+          - /url: http://localhost:8000/admin/report-cards
+        - link "Histori audit" [ref=f110e72] [cursor=pointer]:
+          - /url: http://localhost:8000/admin/audit-logs
+    - generic [ref=f110e73]:
+      - region [ref=f110e74]:
+        - generic [ref=f110e75]:
+          - generic [ref=f110e76]:
+            - paragraph [ref=f110e77]: Prioritas hari ini
+            - heading "Rapor yang perlu dipantau" [level=2] [ref=f110e78]
+            - paragraph [ref=f110e79]: Daftar terbaru dengan komponen wajib yang belum lengkap.
+          - link "Lihat semua" [ref=f110e80] [cursor=pointer]:
+            - /url: http://localhost:8000/admin/report-cards
+        - generic [ref=f110e81]:
+          - generic [ref=f110e82]:
+            - generic [ref=f110e83]:
+              - paragraph [ref=f110e84]: Aisyah Putri
+              - paragraph [ref=f110e85]: Paket A Tingkat 1 · Diperbarui 07/11/2026 16:01
+            - link "Buka rapor" [ref=f110e86] [cursor=pointer]:
+              - /url: http://localhost:8000/admin/report-cards/22/completeness
+          - generic [ref=f110e87]:
+            - generic [ref=f110e88]:
+              - paragraph [ref=f110e89]: Bagas Ramadhan
+              - paragraph [ref=f110e90]: Paket A Tingkat 1 · Diperbarui 07/11/2026 16:01
+            - link "Buka rapor" [ref=f110e91] [cursor=pointer]:
+              - /url: http://localhost:8000/admin/report-cards/23/completeness
+          - generic [ref=f110e92]:
+            - generic [ref=f110e93]:
+              - paragraph [ref=f110e94]: Citra Lestari
+              - paragraph [ref=f110e95]: Paket A Tingkat 1 · Diperbarui 07/11/2026 16:01
+            - link "Buka rapor" [ref=f110e96] [cursor=pointer]:
+              - /url: http://localhost:8000/admin/report-cards/24/completeness
+          - generic [ref=f110e97]:
+            - generic [ref=f110e98]:
+              - paragraph [ref=f110e99]: Deni Kurniawan
+              - paragraph [ref=f110e100]: Paket A Tingkat 1 · Diperbarui 07/11/2026 16:01
+            - link "Buka rapor" [ref=f110e101] [cursor=pointer]:
+              - /url: http://localhost:8000/admin/report-cards/25/completeness
+          - generic [ref=f110e102]:
+            - generic [ref=f110e103]:
+              - paragraph [ref=f110e104]: Ahmad Fauzan
+              - paragraph [ref=f110e105]: Paket A Tingkat 1 · Diperbarui 07/11/2026 16:00
+            - link "Buka rapor" [ref=f110e106] [cursor=pointer]:
+              - /url: http://localhost:8000/admin/report-cards/21/completeness
+      - region [ref=f110e107]:
+        - paragraph [ref=f110e108]: Publikasi rapor
+        - heading "Status penerbitan" [level=2] [ref=f110e109]
+        - paragraph [ref=f110e110]: Ringkasan periode aktif, dipisahkan dari data input guru.
+        - generic [ref=f110e111]:
+          - generic [ref=f110e112]:
+            - term [ref=f110e113]: Belum siap
+            - definition [ref=f110e114]: "5"
+          - generic [ref=f110e115]:
+            - term [ref=f110e116]: Lengkap / siap cetak
+            - definition [ref=f110e117]: "0"
+          - generic [ref=f110e118]:
+            - term [ref=f110e119]: Perlu diperbarui
+            - definition [ref=f110e120]: "0"
+          - generic [ref=f110e121]:
+            - term [ref=f110e122]: Terkunci
+            - definition [ref=f110e123]: "0"
+        - link "Buka pusat rapor" [ref=f110e124] [cursor=pointer]:
+          - /url: http://localhost:8000/admin/report-cards
+    - region [ref=f110e125]:
+      - generic [ref=f110e126]:
+        - generic [ref=f110e127]:
+          - paragraph [ref=f110e128]: Kelengkapan komponen
+          - heading "Bagian mana yang paling banyak tertinggal?" [level=2] [ref=f110e129]
+        - paragraph [ref=f110e130]: Agregat dari rapor pada periode aktif.
+      - generic [ref=f110e131]:
+        - article [ref=f110e132]:
+          - generic [ref=f110e133]:
+            - generic [ref=f110e134]:
+              - paragraph [ref=f110e135]: Nomor dokumen
+              - paragraph
+            - generic [ref=f110e136]: 0%
+          - paragraph [ref=f110e138]: 0 dari 5 rapor lengkap
+        - article [ref=f110e139]:
+          - generic [ref=f110e140]:
+            - generic [ref=f110e141]:
+              - paragraph [ref=f110e142]: Sikap spiritual
+              - paragraph
+            - generic [ref=f110e143]: 0%
+          - paragraph [ref=f110e145]: 0 dari 5 rapor lengkap
+        - article [ref=f110e146]:
+          - generic [ref=f110e147]:
+            - generic [ref=f110e148]:
+              - paragraph [ref=f110e149]: Sikap sosial
+              - paragraph
+            - generic [ref=f110e150]: 0%
+          - paragraph [ref=f110e152]: 0 dari 5 rapor lengkap
+        - article [ref=f110e153]:
+          - generic [ref=f110e154]:
+            - generic [ref=f110e155]:
+              - paragraph [ref=f110e156]: Absensi
+              - paragraph
+            - generic [ref=f110e157]: 0%
+          - paragraph [ref=f110e159]: 0 dari 5 rapor lengkap
+        - article [ref=f110e160]:
+          - generic [ref=f110e161]:
+            - generic [ref=f110e162]:
+              - paragraph [ref=f110e163]: Nilai dan deskripsi mata pelajaran
+              - paragraph
+            - generic [ref=f110e164]: 0%
+          - paragraph [ref=f110e166]: 0 dari 5 rapor lengkap
+        - article [ref=f110e167]:
+          - generic [ref=f110e168]:
+            - generic [ref=f110e169]:
+              - paragraph [ref=f110e170]: Keputusan wali kelas
+              - paragraph
+            - generic [ref=f110e171]: 0%
+          - paragraph [ref=f110e173]: 0 dari 5 rapor lengkap
+    - region [ref=f110e174]:
+      - generic [ref=f110e175]:
+        - generic [ref=f110e176]:
+          - paragraph [ref=f110e177]: Cakupan kelas
+          - heading "Kesiapan per kelas" [level=2] [ref=f110e178]
+        - paragraph [ref=f110e179]: Klik kelas dari menu Data inti untuk melihat detail read-only.
+      - generic [ref=f110e180]:
+        - article [ref=f110e181]:
+          - generic [ref=f110e182]:
+            - paragraph [ref=f110e183]: Paket A Tingkat 1
+            - generic [ref=f110e184]: 0%
+          - paragraph [ref=f110e186]: 5 peserta · 5 rapor · 0 siap cetak
+        - article [ref=f110e187]:
+          - generic [ref=f110e188]:
+            - paragraph [ref=f110e189]: Paket B Tingkat 7A
+            - generic [ref=f110e190]: 0%
+          - paragraph [ref=f110e192]: 5 peserta · 0 rapor · 0 siap cetak
+        - article [ref=f110e193]:
+          - generic [ref=f110e194]:
+            - paragraph [ref=f110e195]: Paket B Tingkat 8A
+            - generic [ref=f110e196]: 0%
+          - paragraph [ref=f110e198]: 5 peserta · 0 rapor · 0 siap cetak
+        - article [ref=f110e199]:
+          - generic [ref=f110e200]:
+            - paragraph [ref=f110e201]: Paket C Tingkat 10A
+            - generic [ref=f110e202]: 0%
+          - paragraph [ref=f110e204]: 5 peserta · 0 rapor · 0 siap cetak
+    - generic [ref=f110e205]:
+      - region [ref=f110e206]:
+        - generic [ref=f110e207]:
+          - generic [ref=f110e208]:
+            - paragraph [ref=f110e209]: Akuntabilitas pengisian
+            - heading "Progres guru" [level=2] [ref=f110e210]
+          - generic [ref=f110e211]: Read-only
+        - generic [ref=f110e213]:
+          - generic [ref=f110e214]:
+            - paragraph [ref=f110e215]: Budi Santoso
+            - generic [ref=f110e216]: 0%
+          - paragraph [ref=f110e218]: 200 data perlu ditinjau
+      - region [ref=f110e219]:
+        - generic [ref=f110e220]:
+          - generic [ref=f110e221]:
+            - paragraph [ref=f110e222]: Akhir tahun
+            - heading "Kenaikan & kelulusan" [level=2] [ref=f110e223]
+          - link "Buka data" [ref=f110e224] [cursor=pointer]:
+            - /url: http://localhost:8000/academic-decisions
+        - generic [ref=f110e225]:
+          - generic [ref=f110e226]:
+            - paragraph [ref=f110e227]: Sudah diputuskan
+            - paragraph [ref=f110e228]: "10"
+          - generic [ref=f110e229]:
+            - paragraph [ref=f110e230]: Belum diputuskan
+            - paragraph [ref=f110e231]: "10"
+          - generic [ref=f110e232]:
+            - paragraph [ref=f110e233]: Naik kelas
+            - paragraph [ref=f110e234]: "8"
+          - generic [ref=f110e235]:
+            - paragraph [ref=f110e236]: Tetap tingkat
+            - paragraph [ref=f110e237]: "2"
+          - generic [ref=f110e238]:
+            - paragraph [ref=f110e239]: Lulus
+            - paragraph [ref=f110e240]: "0"
+          - generic [ref=f110e241]:
+            - paragraph [ref=f110e242]: Belum lulus
+            - paragraph [ref=f110e243]: "0"
+    - region [ref=f110e244]:
+      - generic [ref=f110e245]:
+        - generic [ref=f110e246]:
+          - paragraph [ref=f110e247]: Tata kelola
+          - heading "Aktivitas terbaru" [level=2] [ref=f110e248]
+        - link "Buka histori audit" [ref=f110e249] [cursor=pointer]:
+          - /url: http://localhost:8000/admin/audit-logs
+      - generic [ref=f110e250]:
+        - article [ref=f110e251]:
+          - paragraph [ref=f110e252]: report_card.exported
+          - paragraph [ref=f110e253]: Kepala PKBM Demo · App\Models\ReportCard
+          - paragraph [ref=f110e254]: 2026-11-07T17:17:20+07:00
+        - article [ref=f110e255]:
+          - paragraph [ref=f110e256]: report_card.exported
+          - paragraph [ref=f110e257]: Kepala PKBM Demo · App\Models\ReportCard
+          - paragraph [ref=f110e258]: 2026-11-07T17:06:19+07:00
+        - article [ref=f110e259]:
+          - paragraph [ref=f110e260]: report_card.exported
+          - paragraph [ref=f110e261]: Kepala PKBM Demo · App\Models\ReportCard
+          - paragraph [ref=f110e262]: 2026-11-07T17:06:17+07:00
+        - article [ref=f110e263]:
+          - paragraph [ref=f110e264]: report_card.exported
+          - paragraph [ref=f110e265]: Kepala PKBM Demo · App\Models\ReportCard
+          - paragraph [ref=f110e266]: 2026-11-07T17:06:15+07:00
+        - article [ref=f110e267]:
+          - paragraph [ref=f110e268]: auth.login
+          - paragraph [ref=f110e269]: Kepala PKBM Demo · App\Models\User
+          - paragraph [ref=f110e270]: 2026-11-07T17:04:36+07:00
+        - article [ref=f110e271]:
+          - paragraph [ref=f110e272]: auth.logout
+          - paragraph [ref=f110e273]: Admin Demo · App\Models\User
+          - paragraph [ref=f110e274]: 2026-11-07T17:04:31+07:00

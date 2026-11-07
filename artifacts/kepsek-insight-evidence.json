@@ -1,0 +1,50 @@
+{
+  "contract": "Dashboard Kepala PKBM read-only insight hub for active-period completeness, class readiness, teacher progress, academic decisions, and audit activity.",
+  "targetViewports": ["1440x900", "390x844"],
+  "accessibility": {
+    "status": "pass",
+    "evidence": "Verified named regions/headings, read-only labels, keyboard-visible navigation targets, and explicit mobile menu controls in Playwright snapshots."
+  },
+  "responsive": {
+    "status": "pass",
+    "evidence": "Desktop and mobile screenshots were inspected; mobile document width matched the 390px viewport with no horizontal overflow."
+  },
+  "contentStates": {
+    "loading": {
+      "status": "not-applicable",
+      "reason": "The server-rendered dashboard has no client loading state."
+    },
+    "empty": {
+      "status": "pass",
+      "evidence": "Dashboard renders bounded empty-state copy when insight collections have no rows."
+    },
+    "error": {
+      "status": "not-applicable",
+      "reason": "No error state was triggered during the authenticated smoke check."
+    },
+    "partial": {
+      "status": "pass",
+      "evidence": "Missing period or empty monitoring collections retain the dashboard structure and explain that data is unavailable."
+    },
+    "success": {
+      "status": "pass",
+      "evidence": "Active-period metrics, readiness bars, decision counts, and audit activity rendered from live data."
+    },
+    "permission": {
+      "status": "pass",
+      "evidence": "Kepala PKBM surfaces are explicitly marked read-only and write controls are absent or disabled."
+    }
+  },
+  "renderedEvidence": [
+    {
+      "viewport": "1440x900",
+      "artifact": "kepsek-insight-desktop.png",
+      "observation": "Desktop dashboard shows the insight hierarchy, institution metrics, quick actions, report queue, component readiness, class table, teacher progress, decisions, and audit activity without clipping."
+    },
+    {
+      "viewport": "390x844",
+      "artifact": "kepsek-insight-mobile.png",
+      "observation": "Mobile dashboard stacks cards and tables into readable blocks; navigation opens as a drawer and the document has no horizontal overflow."
+    }
+  ]
+}

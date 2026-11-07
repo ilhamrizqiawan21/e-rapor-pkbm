@@ -73,7 +73,9 @@ class ReportCardCompletenessController extends Controller
 
     public function edit(ReportCard $reportCard, ReportCardExtrasService $service, ReportCardCompletenessService $completeness): View
     {
-        Gate::authorize('view', $reportCard);
+        // Kepala PKBM needs the same read-only inspection surface as Admin;
+        // mutations remain protected by the manageCompleteness ability below.
+        Gate::authorize('viewCompleteness', $reportCard);
 
         return view('admin.report-cards.completeness.edit', [
             ...$service->formData($reportCard),

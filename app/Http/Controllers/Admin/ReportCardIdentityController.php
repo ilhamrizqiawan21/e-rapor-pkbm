@@ -14,7 +14,7 @@ class ReportCardIdentityController extends Controller
 {
     public function edit(ReportCard $reportCard, ReportCardIdentityService $identity): View
     {
-        Gate::authorize('view', $reportCard);
+        Gate::authorize('viewCompleteness', $reportCard);
 
         return view('admin.report-cards.identity.edit', [
             'reportCard' => $reportCard,

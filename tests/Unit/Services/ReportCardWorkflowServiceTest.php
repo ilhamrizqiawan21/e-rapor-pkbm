@@ -19,7 +19,6 @@ use App\Models\Subject;
 use App\Models\SubjectAssignment;
 use App\Models\User;
 use App\Services\ReportCardWorkflowService;
-use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\ValidationException;
@@ -29,26 +28,13 @@ class ReportCardWorkflowServiceTest extends TestCase
 {
     use LazilyRefreshDatabase;
 
-    public function test_report_card_completes_submit_review_reject_resubmit_approve_lock_and_safe_unlock(): void
+    public function test_admin_can_archive_a_complete_draft_and_safely_unlock_it(): void
     {
         $fixture = $this->fixture();
         $service = app(ReportCardWorkflowService::class);
         $reportCard = $fixture['reportCard'];
 
-        $this->assertSame('SUBMITTED', $service->submit($reportCard, $fixture['guru'])->status);
-        $this->assertSame('IN_REVIEW', $service->review($reportCard->refresh(), $fixture['guru'])->status);
-        $this->assertSame('NEEDS_REVISION', $service->reject($reportCard->refresh(), $fixture['kepsek'], 'Lengkapi deskripsi capaian.')->status);
-
-        $resubmitted = $service->submit($reportCard->refresh(), $fixture['guru']);
-        $this->assertSame('SUBMITTED', $resubmitted->status);
-        $this->assertNull($resubmitted->rejection_reason);
-
-        $this->assertSame('IN_REVIEW', $service->review($resubmitted, $fixture['guru'])->status);
-        $approved = $service->approve($reportCard->refresh(), $fixture['kepsek']);
-        $this->assertSame('APPROVED', $approved->status);
-        $this->assertSame($fixture['kepsek']->id, $approved->approved_by_user_id);
-
-        $locked = $service->lock($approved, $fixture['admin']);
+        $locked = $service->lock($reportCard, $fixture['admin']);
         $this->assertSame('LOCKED', $locked->status);
         $this->assertNotNull($locked->locked_at);
         $this->assertSame($fixture['admin']->id, $locked->locked_by_user_id);
@@ -59,12 +45,7 @@ class ReportCardWorkflowServiceTest extends TestCase
         $this->assertSame($fixture['admin']->id, $unlocked->unlocked_by_user_id);
         $this->assertSame('Perbaikan administrasi nomor dokumen.', $unlocked->unlock_reason);
 
-        $this->assertDatabaseCount('audit_logs', 8);
-        $this->assertDatabaseHas('audit_logs', [
-            'report_card_id' => $reportCard->id,
-            'action' => 'report_card.rejected',
-            'reason' => 'Lengkapi deskripsi capaian.',
-        ]);
+        $this->assertDatabaseCount('audit_logs', 2);
         $this->assertDatabaseHas('audit_logs', [
             'report_card_id' => $reportCard->id,
             'action' => 'report_card.unlocked',
@@ -72,13 +53,14 @@ class ReportCardWorkflowServiceTest extends TestCase
         ]);
     }
 
-    public function test_invalid_transition_and_missing_rejection_reason_are_rejected(): void
+    public function test_incomplete_report_card_cannot_be_archived(): void
     {
         $fixture = $this->fixture();
         $service = app(ReportCardWorkflowService::class);
 
         $this->expectException(ValidationException::class);
-        $service->reject($fixture['reportCard'], $fixture['guru'], '');
+        $fixture['reportCard']->update(['document_number' => null]);
+        $service->lock($fixture['reportCard'], $fixture['admin']);
     }
 
     public function test_unlock_requires_reason_and_illegal_status_transitions_are_rejected(): void
@@ -90,29 +72,16 @@ class ReportCardWorkflowServiceTest extends TestCase
         $service->unlock($fixture['reportCard']->forceFill(['status' => 'LOCKED']), $fixture['admin']);
     }
 
-    public function test_workflow_keeps_transition_history_and_rejects_non_sequential_actions(): void
-    {
-        $fixture = $this->fixture();
-        $service = app(ReportCardWorkflowService::class);
-
-        $this->expectException(AuthorizationException::class);
-        $service->approve($fixture['reportCard'], $fixture['kepsek']);
-    }
-
-    public function test_only_allowed_roles_can_execute_workflow_actions(): void
+    public function test_approval_workflow_abilities_are_no_longer_available(): void
     {
         $fixture = $this->fixture();
         $reportCard = $fixture['reportCard'];
-        $service = app(ReportCardWorkflowService::class);
 
-        $this->assertTrue(Gate::forUser($fixture['guru'])->allows('submit', $reportCard));
-        $this->assertFalse(Gate::forUser($fixture['admin'])->allows('submit', $reportCard));
+        $this->assertFalse(Gate::forUser($fixture['guru'])->allows('submit', $reportCard));
+        $this->assertFalse(Gate::forUser($fixture['guru'])->allows('review', $reportCard));
+        $this->assertFalse(Gate::forUser($fixture['kepsek'])->allows('reject', $reportCard));
+        $this->assertFalse(Gate::forUser($fixture['kepsek'])->allows('approve', $reportCard));
         $this->assertFalse(Gate::forUser($fixture['kepsek'])->allows('lock', $reportCard));
-
-        $service->submit($reportCard, $fixture['guru']);
-        $service->review($reportCard->refresh(), $fixture['guru']);
-        $service->approve($reportCard->refresh(), $fixture['kepsek']);
-
         $this->assertTrue(Gate::forUser($fixture['admin'])->allows('lock', $reportCard->refresh()));
         $this->assertFalse(Gate::forUser($fixture['guru'])->allows('unlock', $reportCard->refresh()->forceFill(['status' => 'LOCKED'])));
     }

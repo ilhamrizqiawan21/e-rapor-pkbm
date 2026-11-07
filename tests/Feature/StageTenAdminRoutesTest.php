@@ -12,10 +12,10 @@ use App\Models\Program;
 use App\Models\ReportCard;
 use App\Models\Semester;
 use App\Models\Student;
+use App\Models\Subject;
+use App\Models\SubjectAssignment;
 use App\Models\User;
-use App\Services\ReportCardWorkflowService;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
-use Illuminate\Validation\ValidationException;
 use Tests\TestCase;
 
 class StageTenAdminRoutesTest extends TestCase
@@ -51,22 +51,58 @@ class StageTenAdminRoutesTest extends TestCase
             ->assertSee('catatan wali kelas');
     }
 
-    public function test_approval_is_rejected_when_required_components_are_missing(): void
+    public function test_kepsek_cannot_approve_report_cards(): void
     {
         $fixture = $this->fixture(['status' => 'IN_REVIEW']);
 
-        $this->expectException(ValidationException::class);
-        app(ReportCardWorkflowService::class)->approve($fixture['reportCard'], $fixture['kepsek']);
+        $this->actingAs($fixture['kepsek'])
+            ->post('/admin/report-cards/'.$fixture['reportCard']->id.'/approve')
+            ->assertNotFound();
     }
 
     public function test_non_homeroom_teacher_cannot_change_document_number(): void
     {
         $fixture = $this->fixture();
         $otherGuru = User::factory()->withRole(RoleCode::Guru)->create(['institution_id' => $fixture['institution']->id]);
+        $subject = Subject::query()->create([
+            'institution_id' => $fixture['institution']->id,
+            'code' => 'STAGE-TEN-OTHER',
+            'name' => 'Mapel Guru Lain',
+            'short_name' => 'MGL',
+        ]);
+        SubjectAssignment::query()->create([
+            'class_id' => $fixture['class']->id,
+            'subject_id' => $subject->id,
+            'teacher_id' => $otherGuru->id,
+        ]);
 
+        $this->actingAs($otherGuru)
+            ->get(route('admin.report-cards.identity.edit', $fixture['reportCard']))
+            ->assertForbidden();
         $this->actingAs($otherGuru)
             ->put(route('admin.report-cards.identity.update', $fixture['reportCard']), ['document_number' => 'RAPOR-010'])
             ->assertForbidden();
+    }
+
+    public function test_kepsek_can_view_report_card_surfaces_without_edit_controls(): void
+    {
+        $fixture = $this->fixture();
+
+        $this->actingAs($fixture['kepsek'])
+            ->get(route('admin.report-cards.completeness.edit', $fixture['reportCard']))
+            ->assertOk()
+            ->assertSee('Mode hanya baca')
+            ->assertDontSee('Simpan catatan');
+
+        $this->actingAs($fixture['kepsek'])
+            ->get(route('admin.report-cards.identity.edit', $fixture['reportCard']))
+            ->assertOk()
+            ->assertSee('Identitas dan nomor dokumen');
+
+        $this->actingAs($fixture['kepsek'])
+            ->get(route('admin.report-cards.assessments.show', $fixture['reportCard']))
+            ->assertOk()
+            ->assertSee('Sikap dan absensi');
     }
 
     /** @param array<string, mixed> $reportCardAttributes */

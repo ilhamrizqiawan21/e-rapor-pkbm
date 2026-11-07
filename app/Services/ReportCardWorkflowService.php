@@ -19,103 +19,26 @@ final class ReportCardWorkflowService
         private readonly ReportCardCompletenessService $completeness,
     ) {}
 
-    public function submit(ReportCard $reportCard, User $actor): ReportCard
-    {
-        return $this->transition(
-            $reportCard,
-            $actor,
-            'submit',
-            ['DRAFT', 'NEEDS_REVISION'],
-            'SUBMITTED',
-            fn (ReportCard $locked, User $user): array => [
-                'submitted_at' => now(),
-                'submitted_by_user_id' => $user->getKey(),
-                'reviewed_at' => null,
-                'reviewed_by_user_id' => null,
-                'rejected_at' => null,
-                'rejected_by_user_id' => null,
-                'rejection_reason' => null,
-                'approved_at' => null,
-                'approved_by_user_id' => null,
-            ],
-        );
-    }
-
-    public function review(ReportCard $reportCard, User $actor): ReportCard
-    {
-        return $this->transition(
-            $reportCard,
-            $actor,
-            'review',
-            ['SUBMITTED'],
-            'IN_REVIEW',
-            fn (ReportCard $locked, User $user): array => [
-                'reviewed_at' => now(),
-                'reviewed_by_user_id' => $user->getKey(),
-            ],
-        );
-    }
-
-    public function reject(ReportCard $reportCard, User $actor, string $reason): ReportCard
-    {
-        $reason = trim($reason);
-
-        if ($reason === '') {
-            throw ValidationException::withMessages(['reason' => 'Alasan penolakan wajib diisi.']);
-        }
-
-        return $this->transition(
-            $reportCard,
-            $actor,
-            'reject',
-            ['IN_REVIEW'],
-            'NEEDS_REVISION',
-            fn (ReportCard $locked, User $user): array => [
-                'rejected_at' => now(),
-                'rejected_by_user_id' => $user->getKey(),
-                'rejection_reason' => $reason,
-                'approved_at' => null,
-                'approved_by_user_id' => null,
-            ],
-            $reason,
-        );
-    }
-
-    public function approve(ReportCard $reportCard, User $actor): ReportCard
-    {
-        return $this->transition(
-            $reportCard,
-            $actor,
-            'approve',
-            ['IN_REVIEW'],
-            'APPROVED',
-            function (ReportCard $locked, User $user): array {
-                $this->completeness->assertComplete($locked);
-
-                return [
-                    'approved_at' => now(),
-                    'approved_by_user_id' => $user->getKey(),
-                ];
-            },
-        );
-    }
-
     public function lock(ReportCard $reportCard, User $actor): ReportCard
     {
         return $this->transition(
             $reportCard,
             $actor,
             'lock',
-            ['APPROVED'],
+            ['DRAFT', 'SUBMITTED', 'IN_REVIEW', 'NEEDS_REVISION', 'APPROVED'],
             'LOCKED',
-            fn (ReportCard $locked, User $user): array => [
-                'locked_at' => now(),
-                'locked_by_user_id' => $user->getKey(),
-                'unlocked_at' => null,
-                'unlocked_by_user_id' => null,
-                'unlock_reason' => null,
-                'identity_snapshot' => $this->identity->snapshot($locked),
-            ],
+            function (ReportCard $locked, User $user): array {
+                $this->completeness->assertComplete($locked);
+
+                return [
+                    'locked_at' => now(),
+                    'locked_by_user_id' => $user->getKey(),
+                    'unlocked_at' => null,
+                    'unlocked_by_user_id' => null,
+                    'unlock_reason' => null,
+                    'identity_snapshot' => $this->identity->snapshot($locked),
+                ];
+            },
         );
     }
 
@@ -194,10 +117,6 @@ final class ReportCardWorkflowService
             'report_card_id' => $reportCard->getKey(),
             'user_id' => $actor->getKey(),
             'action' => 'report_card.'.match ($ability) {
-                'submit' => 'submitted',
-                'review' => 'reviewed',
-                'reject' => 'rejected',
-                'approve' => 'approved',
                 'lock' => 'locked',
                 'unlock' => 'unlocked',
                 default => $ability,

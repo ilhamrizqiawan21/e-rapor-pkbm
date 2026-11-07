@@ -15,6 +15,22 @@ test.describe('13-14 leger and dashboard browser flows', () => {
 
         await expect(page.getByRole('heading', { name: 'Leger nilai', exact: true })).toBeVisible();
         await expect(page.getByText('2026/2027', { exact: true }).first()).toBeVisible();
+
+        if (test.info().project.name === 'chromium') {
+            const widths = await page.locator('table').first().evaluate((table) => ({
+                table: table.getBoundingClientRect().width,
+                container: table.parentElement?.getBoundingClientRect().width ?? 0,
+            }));
+
+            expect(widths.table).toBeGreaterThanOrEqual(widths.container - 1);
+        }
+
+        const dimensions = await page.evaluate(() => ({
+            viewport: window.innerWidth,
+            document: document.documentElement.scrollWidth,
+        }));
+
+        expect(dimensions.document).toBeLessThanOrEqual(dimensions.viewport + 1);
     });
 
     test('role dashboards render their monitoring surfaces', async ({ page }) => {

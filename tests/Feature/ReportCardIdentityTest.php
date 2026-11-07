@@ -6,6 +6,8 @@ use App\Enums\RoleCode;
 use App\Http\Controllers\Admin\ReportCardIdentityController;
 use App\Models\AcademicClass;
 use App\Models\AcademicYear;
+use App\Models\AttendanceSummary;
+use App\Models\AttitudeAssessment;
 use App\Models\Enrollment;
 use App\Models\Institution;
 use App\Models\Level;
@@ -79,6 +81,24 @@ class ReportCardIdentityTest extends TestCase
     {
         $fixture = $this->fixture();
         $fixture['reportCard']->update(['status' => 'APPROVED', 'document_number' => 'RAPOR-001']);
+        AttitudeAssessment::query()->insert([
+            [
+                'report_card_id' => $fixture['reportCard']->getKey(),
+                'attitude_type' => 'SPIRITUAL',
+                'description' => 'Menunjukkan sikap spiritual yang baik.',
+            ],
+            [
+                'report_card_id' => $fixture['reportCard']->getKey(),
+                'attitude_type' => 'SOCIAL',
+                'description' => 'Menunjukkan sikap sosial yang baik.',
+            ],
+        ]);
+        AttendanceSummary::query()->create([
+            'report_card_id' => $fixture['reportCard']->getKey(),
+            'sick_days' => 0,
+            'leave_days' => 0,
+            'unexcused_days' => 0,
+        ]);
 
         $locked = app(ReportCardWorkflowService::class)->lock($fixture['reportCard']->refresh(), $fixture['admin']);
 

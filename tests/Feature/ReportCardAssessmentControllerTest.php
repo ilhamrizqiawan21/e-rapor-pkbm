@@ -13,6 +13,8 @@ use App\Models\Program;
 use App\Models\ReportCard;
 use App\Models\Semester;
 use App\Models\Student;
+use App\Models\Subject;
+use App\Models\SubjectAssignment;
 use App\Models\User;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 use Illuminate\Support\Facades\Route;
@@ -49,8 +51,20 @@ class ReportCardAssessmentControllerTest extends TestCase
     {
         [$reportCard, $guru] = $this->context();
         $otherGuru = User::factory()->withRole(RoleCode::Guru)->create(['institution_id' => $guru->institution_id]);
+        $subject = Subject::query()->create([
+            'institution_id' => $guru->institution_id,
+            'code' => 'ASSESSMENT-OTHER',
+            'name' => 'Mapel Guru Lain',
+            'short_name' => 'MGL',
+        ]);
+        SubjectAssignment::query()->create([
+            'class_id' => $reportCard->enrollment->class_id,
+            'subject_id' => $subject->id,
+            'teacher_id' => $otherGuru->id,
+        ]);
 
         $this->actingAs($guru)->post(route('admin.report-cards.assessments.attendance', $reportCard), ['sick_days' => 300, 'leave_days' => 67, 'unexcused_days' => 1])->assertSessionHasErrors('attendance');
+        $this->actingAs($otherGuru)->get(route('admin.report-cards.assessments.show', $reportCard))->assertForbidden();
         $this->actingAs($otherGuru)->post(route('admin.report-cards.assessments.attitude', $reportCard), ['attitude_type' => 'SOCIAL', 'description' => 'Tidak boleh.'])->assertForbidden();
     }
 

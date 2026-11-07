@@ -28,7 +28,13 @@
                         </div>
                     </div>
                     <div class="hidden overflow-x-auto md:block">
-                        <table class="min-w-[720px] divide-y divide-slate-200 text-sm">
+                        <table class="w-full min-w-[720px] table-fixed divide-y divide-slate-200 text-sm">
+                            <colgroup>
+                                <col class="w-[32%]">
+                                <col class="w-[22%]">
+                                <col class="w-[18%]">
+                                <col class="w-[28%]">
+                            </colgroup>
                             <thead class="bg-slate-50">
                                 <tr><x-table.th>Kelas</x-table.th><x-table.th>Program</x-table.th><x-table.th>Tingkat</x-table.th><x-table.th align="right">Aksi</x-table.th></tr>
                             </thead>

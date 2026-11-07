@@ -72,7 +72,11 @@
                                 $componentHref = match ($component['key']) {
                                     'document_number' => route('admin.report-cards.identity.edit', $reportCard),
                                     'attitude_spiritual', 'attitude_social', 'attendance' => route('admin.report-cards.assessments.show', $reportCard),
-                                    'grades' => route('admin.grade-entry.index', ['class_id' => $academicClass?->id]),
+                                    'grades' => route('admin.grade-monitoring.index', [
+                                        'academic_year_id' => $reportCard->semester?->academic_year_id,
+                                        'semester_id' => $reportCard->semester_id,
+                                        'class_id' => $academicClass?->id,
+                                    ]),
                                     'academic_decision' => route('academic-decisions.index', ['class_id' => $academicClass?->id]),
                                     default => null,
                                 };
@@ -132,7 +136,7 @@
                             <h3 class="mt-1 text-xl font-semibold text-slate-950">Ekstrakurikuler</h3>
                             <p class="mt-1 text-sm text-slate-600">Tambahkan kegiatan dan keterangan capaian sesuai urutan yang akan tampil pada rapor.</p>
                         </div>
-                        <button type="button" @click="addRow()" @disabled(! $editable) class="inline-flex min-h-10 items-center justify-center rounded-lg border border-brand-200 bg-brand-50 px-3 py-2 text-sm font-semibold text-brand-900 transition-colors hover:bg-brand-100 focus:outline-hidden focus-visible:ring-2 focus-visible:ring-brand-500 disabled:cursor-not-allowed disabled:opacity-50">+ Tambah kegiatan</button>
+                        <button type="button" @click="addRow()" @disabled(! $editable) class="inline-flex min-h-10 shrink-0 items-center justify-center whitespace-nowrap rounded-lg border border-brand-200 bg-brand-50 px-3 py-2 text-sm font-semibold text-brand-900 transition-colors hover:bg-brand-100 focus:outline-hidden focus-visible:ring-2 focus-visible:ring-brand-500 disabled:cursor-not-allowed disabled:opacity-50">+ Tambah kegiatan</button>
                     </div>
 
                     <form class="mt-5 space-y-4" method="POST" action="{{ route('admin.report-cards.completeness.extracurriculars.update', $reportCard) }}">

@@ -4,12 +4,17 @@ namespace App\Services;
 
 use App\Enums\RoleCode;
 use App\Models\AcademicClass;
+use App\Models\AcademicDecision;
+use App\Models\AcademicDecisionBatch;
 use App\Models\AcademicYear;
+use App\Models\AuditLog;
 use App\Models\ClassTransfer;
 use App\Models\Enrollment;
+use App\Models\Program;
 use App\Models\ReportCard;
 use App\Models\ReportGrade;
 use App\Models\Semester;
+use App\Models\Subject;
 use App\Models\SubjectAssignment;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
@@ -150,6 +155,8 @@ final class DashboardService
     {
         $hasPeriod = $period['academicYear'] !== null && $period['semester'] !== null;
         $statusCounts = $this->reportStatusCounts($user, $period);
+        $classSummary = $hasPeriod ? $this->kepsekClassSummary($user, $period) : collect();
+        $institutionMetrics = $this->kepsekInstitutionMetrics($user, $period, $statusCounts);
 
         return [
             'role' => RoleCode::Kepsek->value,
@@ -163,9 +170,287 @@ final class DashboardService
                 ['label' => 'Terkunci', 'value' => $statusCounts['locked'], 'detail' => 'Arsip final'],
             ],
             'statusCounts' => $statusCounts,
-            'classSummary' => $hasPeriod ? $this->kepsekClassSummary($user, $period) : collect(),
+            'institutionMetrics' => $institutionMetrics,
+            'componentSummary' => $hasPeriod ? $this->kepsekComponentSummary($user, $period) : collect(),
+            'classSummary' => $classSummary,
+            'teacherProgress' => $hasPeriod ? $this->kepsekTeacherProgress($user, $period) : collect(),
+            'subjectProgress' => $hasPeriod ? $this->kepsekSubjectProgress($user, $period) : collect(),
+            'decisionSummary' => $hasPeriod ? $this->kepsekDecisionSummary($user, $period) : $this->emptyDecisionSummary(),
+            'recentAudit' => $this->recentAudit($user),
             'reviewQueue' => $hasPeriod ? $this->reviewQueue($user, $period) : collect(),
         ];
+    }
+
+    /** @param array{academicYear: ?AcademicYear, semester: ?Semester, label: string} $period */
+    private function kepsekInstitutionMetrics(User $user, array $period, array $statusCounts): array
+    {
+        $institutionId = $user->institution_id;
+        $year = $period['academicYear'];
+        $hasPeriod = $year !== null && $period['semester'] !== null;
+        $classCount = $hasPeriod
+            ? AcademicClass::query()
+                ->where('academic_year_id', $year->getKey())
+                ->where('status', 'ACTIVE')
+                ->whereHas('program', fn (Builder $query) => $query->where('institution_id', $institutionId))
+                ->count()
+            : 0;
+        $studentCount = $hasPeriod
+            ? Enrollment::query()
+                ->where('academic_year_id', $year->getKey())
+                ->where('enrollment_status', 'ACTIVE')
+                ->whereHas('academicClass', fn (Builder $query) => $query
+                    ->where('status', 'ACTIVE')
+                    ->whereHas('program', fn (Builder $program) => $program->where('institution_id', $institutionId)))
+                ->distinct('student_id')
+                ->count('student_id')
+            : 0;
+        $assignmentCount = $hasPeriod
+            ? SubjectAssignment::query()
+                ->where('active', true)
+                ->whereHas('academicClass', fn (Builder $query) => $query
+                    ->where('academic_year_id', $year->getKey())
+                    ->whereHas('program', fn (Builder $program) => $program->where('institution_id', $institutionId)))
+                ->count()
+            : 0;
+        $teacherCount = User::query()
+            ->where('institution_id', $institutionId)
+            ->where('status', 'ACTIVE')
+            ->whereHas('roles', fn (Builder $query) => $query->where('code', RoleCode::Guru->value))
+            ->count();
+        $subjectCount = Subject::query()->where('institution_id', $institutionId)->where('active', true)->count();
+        $programCount = Program::query()->where('institution_id', $institutionId)->count();
+        $reportCardCount = $statusCounts['waiting_review'] + $statusCounts['approved'] + $statusCounts['locked'];
+        $coveragePercent = $studentCount > 0 ? (int) round(($reportCardCount / $studentCount) * 100) : 0;
+
+        return [
+            ['key' => 'classes', 'label' => 'Kelas aktif', 'value' => $classCount, 'detail' => 'Pada periode aktif'],
+            ['key' => 'students', 'label' => 'Peserta didik', 'value' => $studentCount, 'detail' => 'Penempatan aktif'],
+            ['key' => 'teachers', 'label' => 'Guru aktif', 'value' => $teacherCount, 'detail' => 'Dalam institusi'],
+            ['key' => 'assignments', 'label' => 'Penugasan mapel', 'value' => $assignmentCount, 'detail' => 'Penugasan aktif pada periode'],
+            ['key' => 'subjects', 'label' => 'Mata pelajaran', 'value' => $subjectCount, 'detail' => 'Mapel aktif dalam institusi'],
+            ['key' => 'programs', 'label' => 'Program pendidikan', 'value' => $programCount, 'detail' => 'Program PKBM'],
+            ['key' => 'report_coverage', 'label' => 'Cakupan rapor', 'value' => $coveragePercent, 'suffix' => '%', 'detail' => sprintf('%d dari %d peserta memiliki rapor', $reportCardCount, $studentCount)],
+        ];
+    }
+
+    /** @param array{academicYear: ?AcademicYear, semester: ?Semester, label: string} $period */
+    private function kepsekComponentSummary(User $user, array $period): Collection
+    {
+        $cards = $this->reportCards($user, $period)
+            ->with(['enrollment.academicClass.subjectAssignments', 'grades', 'semester.academicYear'])
+            ->get();
+        $summary = [];
+
+        foreach ($cards as $card) {
+            foreach ($this->completeness->summary($card)['components'] as $component) {
+                $key = $component['key'];
+                $summary[$key] ??= [
+                    'key' => $key,
+                    'label' => $component['label'],
+                    'total' => $cards->count(),
+                    'complete' => 0,
+                    'incomplete' => 0,
+                    'percentage' => 0,
+                ];
+                if ($component['complete']) {
+                    $summary[$key]['complete']++;
+                } else {
+                    $summary[$key]['incomplete']++;
+                }
+            }
+        }
+
+        foreach ($summary as &$component) {
+            $component['percentage'] = $component['total'] > 0
+                ? (int) round(($component['complete'] / $component['total']) * 100)
+                : 0;
+        }
+        unset($component);
+
+        return collect(array_values($summary));
+    }
+
+    /** @param array{academicYear: ?AcademicYear, semester: ?Semester, label: string} $period */
+    private function kepsekTeacherProgress(User $user, array $period): Collection
+    {
+        $year = $period['academicYear'];
+        $semester = $period['semester'];
+        if ($year === null || $semester === null) {
+            return collect();
+        }
+
+        $assignments = SubjectAssignment::query()
+            ->with(['teacher', 'subject', 'academicClass'])
+            ->where('active', true)
+            ->whereHas('academicClass', fn (Builder $query) => $query
+                ->where('academic_year_id', $year->getKey())
+                ->whereHas('program', fn (Builder $program) => $program->where('institution_id', $user->institution_id)))
+            ->orderBy('teacher_id')
+            ->orderBy('display_order')
+            ->get();
+        $students = Enrollment::query()
+            ->where('academic_year_id', $year->getKey())
+            ->where('enrollment_status', 'ACTIVE')
+            ->whereIn('class_id', $assignments->pluck('class_id')->unique())
+            ->selectRaw('class_id, count(*) as student_count')
+            ->groupBy('class_id')
+            ->pluck('student_count', 'class_id');
+        $filled = ReportGrade::query()
+            ->join('report_cards', 'report_cards.id', '=', 'report_grades.report_card_id')
+            ->where('report_cards.semester_id', $semester->getKey())
+            ->whereNotNull('report_grades.score')
+            ->whereNotNull('report_grades.description')
+            ->where('report_grades.description', '<>', '')
+            ->selectRaw('report_grades.subject_assignment_id, count(report_grades.id) as filled_count')
+            ->groupBy('report_grades.subject_assignment_id')
+            ->pluck('filled_count', 'subject_assignment_id');
+
+        return $assignments->groupBy('teacher_id')->map(function (Collection $items, mixed $teacherId) use ($students, $filled): array {
+            $expected = $items->sum(fn (SubjectAssignment $assignment): int => (int) ($students[$assignment->class_id] ?? 0));
+            $filledCount = $items->sum(fn (SubjectAssignment $assignment): int => (int) ($filled[$assignment->getKey()] ?? 0));
+
+            return [
+                'teacher_id' => $teacherId !== null ? (int) $teacherId : null,
+                'teacher_name' => $items->first()?->teacher?->name ?? 'Guru belum dipetakan',
+                'assignment_count' => $items->count(),
+                'class_count' => $items->pluck('class_id')->unique()->count(),
+                'expected' => $expected,
+                'filled' => $filledCount,
+                'pending' => max(0, $expected - $filledCount),
+                'progress_percent' => $expected > 0 ? (int) round(($filledCount / $expected) * 100) : 0,
+            ];
+        })->sortBy('progress_percent')->values();
+    }
+
+    /** @param array{academicYear: ?AcademicYear, semester: ?Semester, label: string} $period */
+    private function kepsekSubjectProgress(User $user, array $period): Collection
+    {
+        $year = $period['academicYear'];
+        $semester = $period['semester'];
+        if ($year === null || $semester === null) {
+            return collect();
+        }
+
+        $assignments = SubjectAssignment::query()
+            ->with('subject')
+            ->where('active', true)
+            ->whereHas('academicClass', fn (Builder $query) => $query
+                ->where('academic_year_id', $year->getKey())
+                ->whereHas('program', fn (Builder $program) => $program->where('institution_id', $user->institution_id)))
+            ->get();
+        $students = Enrollment::query()
+            ->where('academic_year_id', $year->getKey())
+            ->where('enrollment_status', 'ACTIVE')
+            ->whereIn('class_id', $assignments->pluck('class_id')->unique())
+            ->selectRaw('class_id, count(*) as student_count')
+            ->groupBy('class_id')
+            ->pluck('student_count', 'class_id');
+        $filled = ReportGrade::query()
+            ->join('report_cards', 'report_cards.id', '=', 'report_grades.report_card_id')
+            ->where('report_cards.semester_id', $semester->getKey())
+            ->whereNotNull('report_grades.score')
+            ->whereNotNull('report_grades.description')
+            ->where('report_grades.description', '<>', '')
+            ->selectRaw('report_grades.subject_assignment_id, count(report_grades.id) as filled_count')
+            ->groupBy('report_grades.subject_assignment_id')
+            ->pluck('filled_count', 'subject_assignment_id');
+
+        return $assignments->groupBy('subject_id')->map(function (Collection $items, mixed $subjectId) use ($students, $filled): array {
+            $expected = $items->sum(fn (SubjectAssignment $assignment): int => (int) ($students[$assignment->class_id] ?? 0));
+            $filledCount = $items->sum(fn (SubjectAssignment $assignment): int => (int) ($filled[$assignment->getKey()] ?? 0));
+
+            return [
+                'subject_id' => $subjectId !== null ? (int) $subjectId : null,
+                'subject_name' => $items->first()?->subject?->name ?? 'Mapel belum dipetakan',
+                'assignment_count' => $items->count(),
+                'teacher_count' => $items->pluck('teacher_id')->filter()->unique()->count(),
+                'class_count' => $items->pluck('class_id')->unique()->count(),
+                'expected' => $expected,
+                'filled' => $filledCount,
+                'pending' => max(0, $expected - $filledCount),
+                'progress_percent' => $expected > 0 ? (int) round(($filledCount / $expected) * 100) : 0,
+            ];
+        })->sortBy('progress_percent')->values();
+    }
+
+    /** @param array{academicYear: ?AcademicYear, semester: ?Semester, label: string} $period */
+    private function kepsekDecisionSummary(User $user, array $period): array
+    {
+        $year = $period['academicYear'];
+        if ($year === null) {
+            return $this->emptyDecisionSummary();
+        }
+
+        $classes = AcademicClass::query()
+            ->where('academic_year_id', $year->getKey())
+            ->where('status', 'ACTIVE')
+            ->whereHas('program', fn (Builder $query) => $query->where('institution_id', $user->institution_id))
+            ->get(['id']);
+        $classIds = $classes->pluck('id');
+        $studentIds = Enrollment::query()
+            ->whereIn('class_id', $classIds)
+            ->where('academic_year_id', $year->getKey())
+            ->where('enrollment_status', 'ACTIVE')
+            ->pluck('student_id')
+            ->unique();
+        $decisions = AcademicDecision::query()
+            ->where('academic_year_id', $year->getKey())
+            ->whereIn('class_id', $classIds)
+            ->whereIn('student_id', $studentIds)
+            ->get(['student_id', 'decision']);
+        $decided = $decisions->where('decision', '!=', 'UNDECIDED')->pluck('student_id')->unique()->count();
+        $batches = AcademicDecisionBatch::query()->where('academic_year_id', $year->getKey())->whereIn('class_id', $classIds)->get(['status']);
+        $totalStudents = $studentIds->count();
+
+        return [
+            'total_students' => $totalStudents,
+            'decided' => $decided,
+            'pending' => max(0, $totalStudents - $decided),
+            'promote' => $decisions->where('decision', 'PROMOTE')->count(),
+            'repeat' => $decisions->where('decision', 'REPEAT')->count(),
+            'graduate' => $decisions->where('decision', 'GRADUATE')->count(),
+            'not_graduated' => $decisions->where('decision', 'NOT_GRADUATED')->count(),
+            'classes_total' => $classIds->count(),
+            'classes_finalized' => $batches->where('status', 'FINALIZED')->count(),
+            'classes_pending' => max(0, $classIds->count() - $batches->where('status', 'FINALIZED')->count()),
+        ];
+    }
+
+    /** @return array<string, int> */
+    private function emptyDecisionSummary(): array
+    {
+        return [
+            'total_students' => 0,
+            'decided' => 0,
+            'pending' => 0,
+            'promote' => 0,
+            'repeat' => 0,
+            'graduate' => 0,
+            'not_graduated' => 0,
+            'classes_total' => 0,
+            'classes_finalized' => 0,
+            'classes_pending' => 0,
+        ];
+    }
+
+    private function recentAudit(User $user): Collection
+    {
+        return AuditLog::query()
+            ->where('institution_id', $user->institution_id)
+            ->with('user')
+            ->latest('created_at')
+            ->latest('id')
+            ->limit(8)
+            ->get()
+            ->map(fn (AuditLog $log): array => [
+                'id' => $log->getKey(),
+                'action' => $log->action,
+                'entity_type' => $log->entity_type,
+                'entity_id' => $log->entity_id,
+                'actor' => $log->user?->name ?? 'Sistem',
+                'reason' => $log->reason,
+                'created_at' => $log->created_at?->toIso8601String(),
+            ]);
     }
 
     /** @param array{academicYear: ?AcademicYear, semester: ?Semester, label: string} $period */
@@ -279,16 +564,26 @@ final class DashboardService
     /** @param array{academicYear: ?AcademicYear, semester: ?Semester, label: string} $period */
     private function kepsekClassSummary(User $user, array $period): Collection
     {
-        $classes = AcademicClass::query()->where('academic_year_id', $period['academicYear']->getKey())->where('status', 'ACTIVE')->whereHas('program', fn (Builder $query) => $query->where('institution_id', $user->institution_id))->orderBy('name')->get();
+        $classes = AcademicClass::query()->where('academic_year_id', $period['academicYear']->getKey())->where('status', 'ACTIVE')->whereHas('program', fn (Builder $query) => $query->where('institution_id', $user->institution_id))->withCount(['enrollments as student_count' => fn (Builder $query) => $query->where('academic_year_id', $period['academicYear']->getKey())->where('enrollment_status', 'ACTIVE')])->orderBy('name')->get();
         $grouped = $this->reportCards($user, $period)->select('academic_classes.id as class_id', 'report_cards.status')->selectRaw('count(*) as aggregate')->groupBy('academic_classes.id', 'report_cards.status')->get()->groupBy('class_id');
+        $cardsByClass = $this->reportCards($user, $period)
+            ->with(['enrollment.academicClass.subjectAssignments', 'grades'])
+            ->get()
+            ->groupBy(fn (ReportCard $card): ?int => $card->enrollment?->class_id);
 
-        return $classes->map(function (AcademicClass $class) use ($grouped): AcademicClass {
+        return $classes->map(function (AcademicClass $class) use ($grouped, $cardsByClass): AcademicClass {
             $statuses = $grouped->get($class->getKey(), collect())->pluck('aggregate', 'status');
-            $class->setAttribute('report_count', $statuses->sum());
+            $cards = $cardsByClass->get($class->getKey(), collect());
+            $readyCount = $cards->filter(fn (ReportCard $card): bool => $this->completeness->summary($card)['complete'])->count();
+            $class->setAttribute('report_count', $cards->count());
             $class->setAttribute('waiting_review_count', (int) ($statuses['SUBMITTED'] ?? 0) + (int) ($statuses['IN_REVIEW'] ?? 0));
-            $class->setAttribute('approved_count', (int) ($statuses['APPROVED'] ?? 0));
+            $class->setAttribute('approved_count', $readyCount);
+            $class->setAttribute('ready_count', $readyCount);
+            $class->setAttribute('incomplete_count', max(0, $cards->count() - $readyCount));
+            $class->setAttribute('workflow_approved_count', (int) ($statuses['APPROVED'] ?? 0));
             $class->setAttribute('revision_count', (int) ($statuses['NEEDS_REVISION'] ?? 0));
             $class->setAttribute('locked_count', (int) ($statuses['LOCKED'] ?? 0));
+            $class->setAttribute('progress_percent', $cards->count() > 0 ? (int) round(($readyCount / $cards->count()) * 100) : 0);
 
             return $class;
         });

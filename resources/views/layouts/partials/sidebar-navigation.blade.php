@@ -63,7 +63,7 @@
                 @endif
                 @php($active = $isActive(['admin.academic-years.*']))
                 <a href="{{ route('admin.academic-years.index') }}" @if ($mobile) @click="closeMobileSidebar()" @endif @if (! $mobile) :class="sidebarCollapsed ? 'justify-center !px-2' : 'px-3'" @endif title="Tahun pelajaran" class="{{ $linkBase }} {{ $active ? $linkActive : $linkIdle }} px-3 py-2"><span class="{{ $active ? 'text-accent-200' : 'text-slate-400 group-hover:text-accent-200' }}"><x-nav-icon name="academic-year" /></span>@if ($mobile)<span>Tahun pelajaran</span>@else<span x-show="!sidebarCollapsed">Tahun pelajaran</span>@endif</a>
-                @if ($isAdmin)
+                @if ($isAdmin || $isKepsek)
                     @php($active = $isActive(['admin.programs.*']))
                     <a href="{{ route('admin.programs.index') }}" @if ($mobile) @click="closeMobileSidebar()" @endif @if (! $mobile) :class="sidebarCollapsed ? 'justify-center !px-2' : 'px-3'" @endif title="Program & tingkat" class="{{ $linkBase }} {{ $active ? $linkActive : $linkIdle }} px-3 py-2"><span class="{{ $active ? 'text-accent-200' : 'text-slate-400 group-hover:text-accent-200' }}"><x-nav-icon name="programs" /></span>@if ($mobile)<span>Program & tingkat</span>@else<span x-show="!sidebarCollapsed">Program & tingkat</span>@endif</a>
                 @endif
@@ -100,6 +100,10 @@
             <svg @if (! $mobile) x-show="!sidebarCollapsed" @endif :class="{ 'rotate-180': navGroups.reports }" class="h-4 w-4 shrink-0 text-slate-500 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="m6 9 6 6 6-6" /></svg>
         </button>
         <div x-show="navGroups.reports" x-transition.opacity class="mt-1 space-y-1 border-l border-white/10 pl-3" @if (! $mobile) :class="{ 'ml-0 border-0 pl-0': sidebarCollapsed }" @endif>
+            @if ($isKepsek && \Illuminate\Support\Facades\Route::has('admin.grade-monitoring.index'))
+                @php($active = $isActive(['admin.grade-monitoring.*']))
+                <a href="{{ route('admin.grade-monitoring.index') }}" @if ($mobile) @click="closeMobileSidebar()" @endif @if (! $mobile) :class="sidebarCollapsed ? 'justify-center !px-2' : 'px-3'" @endif title="Progres nilai" class="{{ $linkBase }} {{ $active ? $linkActive : $linkIdle }} px-3 py-2"><span class="{{ $active ? 'text-accent-200' : 'text-slate-400 group-hover:text-accent-200' }}"><x-nav-icon name="grades" /></span>@if ($mobile)<span>Progres nilai</span>@else<span x-show="!sidebarCollapsed">Progres nilai</span>@endif</a>
+            @endif
             @if($isAdmin || $isKepsek || ($hasHomeroomClass ?? false))
                 @php($active = $isActive(['academic-decisions.*']))
                 <a href="{{ route('academic-decisions.index') }}" @if ($mobile) @click="closeMobileSidebar()" @else :class="sidebarCollapsed ? 'justify-center !px-2' : 'px-3'" @endif title="Kenaikan & Kelulusan" class="{{ $linkBase }} {{ $active ? $linkActive : $linkIdle }} px-3 py-2"><x-nav-icon name="classes" />@if($mobile)<span>Kenaikan & Kelulusan</span>@else<span x-show="!sidebarCollapsed">Kenaikan & Kelulusan</span>@endif</a>

@@ -1,0 +1,221 @@
+- generic [ref=f9e2]:
+  - complementary "Sidebar utama" [ref=f9e3]:
+    - generic [ref=f9e4]:
+      - link "PC PKBM E-Rapor" [ref=f9e5] [cursor=pointer]:
+        - /url: http://127.0.0.1:8002
+        - generic [ref=f9e6]: PC
+        - generic [ref=f9e7]:
+          - generic [ref=f9e8]: PKBM
+          - generic [ref=f9e9]: E-Rapor
+      - button "Ciutkan sidebar" [expanded] [ref=f9e10]
+    - navigation "Navigasi utama" [ref=f9e13]:
+      - link "Dashboard" [ref=f9e14] [cursor=pointer]:
+        - /url: http://127.0.0.1:8002
+      - generic [ref=f9e19]:
+        - button "Data inti" [expanded] [ref=f9e20]
+        - generic [ref=f9e27]:
+          - link "Data Guru" [ref=f9e28] [cursor=pointer]:
+            - /url: http://127.0.0.1:8002/admin/teachers
+          - link "Peserta didik" [ref=f9e36] [cursor=pointer]:
+            - /url: http://127.0.0.1:8002/admin/students
+          - link "Mata pelajaran" [ref=f9e42] [cursor=pointer]:
+            - /url: http://127.0.0.1:8002/admin/subjects
+          - link "Bank deskripsi" [ref=f9e48] [cursor=pointer]:
+            - /url: http://127.0.0.1:8002/admin/description-snippets
+          - link "Rentang predikat" [ref=f9e53] [cursor=pointer]:
+            - /url: http://127.0.0.1:8002/admin/predicate-ranges
+          - link "Tahun pelajaran" [ref=f9e57] [cursor=pointer]:
+            - /url: http://127.0.0.1:8002/admin/academic-years
+          - link "Program & tingkat" [ref=f9e62] [cursor=pointer]:
+            - /url: http://127.0.0.1:8002/admin/programs
+          - link "Kelas / rombel" [ref=f9e67] [cursor=pointer]:
+            - /url: http://127.0.0.1:8002/admin/academic-classes
+          - link "Penugasan guru & mapel" [ref=f9e73] [cursor=pointer]:
+            - /url: http://127.0.0.1:8002/admin/academic-classes/subject-assignments/bulk
+      - generic [ref=f9e79]:
+        - button "Penilaian" [expanded] [ref=f9e80]
+        - link "Input nilai" [ref=f9e91] [cursor=pointer]:
+          - /url: http://127.0.0.1:8002/admin/grade-entry
+      - generic [ref=f9e99]:
+        - button "Rapor & leger" [expanded] [ref=f9e100]
+        - generic [ref=f9e108]:
+          - link "Kenaikan & Kelulusan" [ref=f9e109] [cursor=pointer]:
+            - /url: http://127.0.0.1:8002/academic-decisions
+          - link "Kelengkapan rapor" [ref=f9e114] [cursor=pointer]:
+            - /url: http://127.0.0.1:8002/admin/report-cards
+          - link "Generator leger" [ref=f9e120] [cursor=pointer]:
+            - /url: http://127.0.0.1:8002/admin/ledger
+          - link "Histori audit" [ref=f9e125] [cursor=pointer]:
+            - /url: http://127.0.0.1:8002/admin/audit-logs
+      - generic [ref=f9e132]:
+        - link "Akun" [ref=f9e133] [cursor=pointer]:
+          - /url: http://127.0.0.1:8002/account/profile
+        - link "Pengaturan PKBM" [ref=f9e139] [cursor=pointer]:
+          - /url: http://127.0.0.1:8002/admin/institutions
+      - generic [ref=f9e145]:
+        - generic [aria-hidden] [ref=f9e146]: AD
+        - generic [ref=f9e147]:
+          - paragraph [ref=f9e148]: Admin Demo
+          - paragraph [ref=f9e149]: Admin
+    - generic [ref=f9e150]: Administrasi akademik PKBM
+  - main [ref=f9e151]:
+    - generic [ref=f9e153]:
+      - generic [ref=f9e160]:
+        - paragraph [ref=f9e161]: Periode aktif
+        - paragraph [ref=f9e163]: 2026/2027 · Semester Ganjil
+      - generic [ref=f9e164]:
+        - generic [ref=f9e165]: Siap digunakan
+        - button "Buka menu akun" [ref=f9e169]:
+          - generic [aria-hidden] [ref=f9e170]: AD
+          - generic [ref=f9e171]:
+            - generic [ref=f9e172]: Admin Demo
+            - generic [ref=f9e173]: Admin
+    - generic [ref=f9e177]:
+      - generic [ref=f9e179]:
+        - navigation "Breadcrumb" [ref=f9e181]:
+          - link "Dashboard" [ref=f9e182] [cursor=pointer]:
+            - /url: http://127.0.0.1:8002
+          - link "antrean rapor" [ref=f9e185] [cursor=pointer]:
+            - /url: http://127.0.0.1:8002/admin/report-cards
+          - generic [ref=f9e188]: Tinjau dan lengkapi rapor
+        - link "Kembali ke antrean rapor" [ref=f9e189] [cursor=pointer]:
+          - /url: http://127.0.0.1:8002/admin/report-cards
+        - paragraph [ref=f9e192]: Kelengkapan rapor
+        - heading "Tinjau dan lengkapi rapor" [level=1] [ref=f9e193]
+        - paragraph [ref=f9e194]: Selesaikan komponen wajib terlebih dahulu, kemudian tambahkan informasi pendukung sebelum rapor diterbitkan.
+      - generic [ref=f9e195]:
+        - complementary "Ringkasan dan checklist rapor" [ref=f9e196]:
+          - generic [ref=f9e197]:
+            - generic [ref=f9e198]:
+              - paragraph [ref=f9e199]: Peserta didik
+              - heading "Salsa Nirmala" [level=2] [ref=f9e200]
+              - paragraph [ref=f9e201]: PD-26020
+            - generic [ref=f9e202]:
+              - generic [ref=f9e203]:
+                - term [ref=f9e204]: Kelas
+                - definition [ref=f9e205]: Paket C Tingkat 10A
+              - generic [ref=f9e206]:
+                - term [ref=f9e207]: Periode
+                - definition [ref=f9e208]: 2026/2027 · Semester Ganjil
+          - region [ref=f9e209]:
+            - generic [ref=f9e210]:
+              - generic [ref=f9e211]:
+                - paragraph [ref=f9e212]: Progres wajib
+                - heading "5/5 lengkap" [level=2] [ref=f9e213]
+              - generic [ref=f9e214]: 100%
+            - list [ref=f9e217]:
+              - listitem [ref=f9e218]:
+                - link "Nomor dokumen Sudah lengkap" [ref=f9e219] [cursor=pointer]:
+                  - /url: http://127.0.0.1:8002/admin/report-cards/20/identity
+                  - generic [aria-hidden] [ref=f9e220]: ✓
+                  - generic [ref=f9e221]:
+                    - generic [ref=f9e222]: Nomor dokumen
+                    - generic [ref=f9e223]: Sudah lengkap
+                  - generic [aria-hidden] [ref=f9e224]: →
+              - listitem [ref=f9e225]:
+                - link "Sikap spiritual Sudah lengkap" [ref=f9e226] [cursor=pointer]:
+                  - /url: http://127.0.0.1:8002/admin/report-cards/20/assessments
+                  - generic [aria-hidden] [ref=f9e227]: ✓
+                  - generic [ref=f9e228]:
+                    - generic [ref=f9e229]: Sikap spiritual
+                    - generic [ref=f9e230]: Sudah lengkap
+                  - generic [aria-hidden] [ref=f9e231]: →
+              - listitem [ref=f9e232]:
+                - link "Sikap sosial Sudah lengkap" [ref=f9e233] [cursor=pointer]:
+                  - /url: http://127.0.0.1:8002/admin/report-cards/20/assessments
+                  - generic [aria-hidden] [ref=f9e234]: ✓
+                  - generic [ref=f9e235]:
+                    - generic [ref=f9e236]: Sikap sosial
+                    - generic [ref=f9e237]: Sudah lengkap
+                  - generic [aria-hidden] [ref=f9e238]: →
+              - listitem [ref=f9e239]:
+                - link "Absensi Sudah lengkap" [ref=f9e240] [cursor=pointer]:
+                  - /url: http://127.0.0.1:8002/admin/report-cards/20/assessments
+                  - generic [aria-hidden] [ref=f9e241]: ✓
+                  - generic [ref=f9e242]:
+                    - generic [ref=f9e243]: Absensi
+                    - generic [ref=f9e244]: Sudah lengkap
+                  - generic [aria-hidden] [ref=f9e245]: →
+              - listitem [ref=f9e246]:
+                - link "Nilai dan deskripsi mata pelajaran Sudah lengkap" [ref=f9e247] [cursor=pointer]:
+                  - /url: http://127.0.0.1:8002/admin/grade-entry?class_id=4
+                  - generic [aria-hidden] [ref=f9e248]: ✓
+                  - generic [ref=f9e249]:
+                    - generic [ref=f9e250]: Nilai dan deskripsi mata pelajaran
+                    - generic [ref=f9e251]: Sudah lengkap
+                  - generic [aria-hidden] [ref=f9e252]: →
+          - region "Pratinjau bagian rapor" [ref=f9e253]:
+            - paragraph [ref=f9e254]: Pratinjau bagian
+            - generic [ref=f9e255]:
+              - link "Identitas" [ref=f9e256] [cursor=pointer]:
+                - /url: http://127.0.0.1:8002/admin/report-cards/20/pdf/identity?preview=1
+              - link "Nilai" [ref=f9e259] [cursor=pointer]:
+                - /url: http://127.0.0.1:8002/admin/report-cards/20/pdf/grades?preview=1
+        - main [ref=f9e262]:
+          - generic [ref=f9e263]:
+            - generic [ref=f9e264]:
+              - generic [ref=f9e265]:
+                - paragraph [ref=f9e266]: Tahap akhir
+                - generic [ref=f9e267]:
+                  - heading "Terbitkan rapor" [level=3] [ref=f9e268]
+                  - generic [ref=f9e269]: Siap dicetak
+                - paragraph [ref=f9e271]: Setelah checklist wajib lengkap, pratinjau dan cetak dokumen final dari bagian ini.
+              - link "Lihat histori audit" [ref=f9e272] [cursor=pointer]:
+                - /url: http://127.0.0.1:8002/admin/audit-logs?entity_type=report_card&amp;entity_id=20
+            - generic [ref=f9e275]:
+              - paragraph [ref=f9e276]: Rapor sudah lengkap dan siap diterbitkan.
+              - paragraph [ref=f9e277]: Tidak perlu diajukan atau menunggu persetujuan Kepala PKBM.
+            - generic [ref=f9e278]:
+              - link "Pratinjau PDF" [ref=f9e279] [cursor=pointer]:
+                - /url: http://127.0.0.1:8002/admin/report-cards/20/pdf/preview
+              - link "Unduh PDF" [ref=f9e283] [cursor=pointer]:
+                - /url: http://127.0.0.1:8002/admin/report-cards/20/pdf/download
+              - link "Cetak PDF" [ref=f9e286] [cursor=pointer]:
+                - /url: http://127.0.0.1:8002/admin/report-cards/20/pdf/print
+              - button "Arsipkan rapor" [ref=f9e290]
+          - generic [ref=f9e294]:
+            - paragraph [ref=f9e295]: Isi tambahan rapor
+            - heading "Ekstrakurikuler dan catatan wali kelas" [level=2] [ref=f9e296]
+            - paragraph [ref=f9e297]: Bagian berikut bersifat pendukung dan tidak mengubah hitungan komponen wajib di atas.
+          - generic [ref=f9e298]:
+            - generic [ref=f9e299]:
+              - generic [ref=f9e300]:
+                - paragraph [ref=f9e301]: Bagian tambahan
+                - heading "Ekstrakurikuler" [level=3] [ref=f9e302]
+                - paragraph [ref=f9e303]: Tambahkan kegiatan dan keterangan capaian sesuai urutan yang akan tampil pada rapor.
+              - button "+ Tambah kegiatan" [ref=f9e304]
+            - generic [ref=f9e305]:
+              - article [ref=f9e307]:
+                - generic [ref=f9e308]:
+                  - generic [ref=f9e309]:
+                    - text: Nama kegiatan
+                    - textbox "Nama kegiatan" [ref=f9e310]:
+                      - /placeholder: "Contoh: Pramuka"
+                      - text: Pramuka
+                  - generic [ref=f9e311]:
+                    - text: Keterangan
+                    - textbox "Keterangan" [ref=f9e312]:
+                      - /placeholder: "Contoh: Aktif dan menunjukkan tanggung jawab."
+                      - text: Aktif mengikuti kegiatan dan menunjukkan kerja sama yang baik.
+                  - generic [ref=f9e313]:
+                    - button "Naikkan kegiatan baris 1" [disabled] [ref=f9e314]: Naik
+                    - button "Turunkan kegiatan baris 1" [disabled] [ref=f9e315]: Turun
+                    - button "Hapus" [ref=f9e316]
+              - button "Simpan ekstrakurikuler" [ref=f9e318]
+          - generic [ref=f9e321]:
+            - generic [ref=f9e322]:
+              - paragraph [ref=f9e323]: Bagian tambahan
+              - heading "Catatan wali kelas" [level=3] [ref=f9e324]
+              - paragraph [ref=f9e325]: Tulis catatan atau saran yang akan tampil pada halaman rapor peserta didik.
+            - generic [ref=f9e326]:
+              - generic [ref=f9e327]:
+                - generic [ref=f9e328]:
+                  - generic [ref=f9e329]: Catatan / saran
+                  - generic [ref=f9e330]: 66/500 karakter
+                - textbox "Catatan / saran" [ref=f9e331]:
+                  - /placeholder: Tulis catatan wali kelas...
+                  - text: Pertahankan semangat belajar dan kembangkan potensi yang dimiliki.
+                - generic [ref=f9e332]:
+                  - paragraph [ref=f9e333]: Maksimal 500 karakter. Kosongkan untuk menghapus catatan.
+                  - button "Gunakan bank deskripsi" [ref=f9e334]
+              - button "Simpan catatan" [ref=f9e336]

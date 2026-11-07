@@ -36,6 +36,7 @@ class AcademicRolloverTest extends TestCase
     {
         $f = $this->fixture();
         $this->assign($f, 'PROMOTE');
+        $this->finalize($f);
         $this->prepare($f);
         $this->place($f);
         $this->actingAs($f['admin'])->post(route('admin.academic-years.transition.store', $f['source']), ['fingerprint' => str_repeat('a', 64), 'confirm' => 1])->assertSessionHasErrors('transition');
@@ -85,6 +86,7 @@ class AcademicRolloverTest extends TestCase
         $this->assertFalse($state['ready']);
         $this->assertSame(1, $state['counts']['missing_destinations']);
         $this->assign($f, 'PROMOTE');
+        $this->finalize($f);
         Enrollment::query()->create(['student_id' => $f['student']->id, 'academic_year_id' => $f['target']->id, 'class_id' => $f['destination']->id, 'start_date' => '2027-07-01']);
         $state = $this->review($f);
         $this->assertFalse($state['ready']);
@@ -111,6 +113,7 @@ class AcademicRolloverTest extends TestCase
     {
         $f = $this->fixture(level: 6);
         $this->assign($f, 'GRADUATE');
+        $this->finalize($f);
         $this->prepare($f);
         $this->place($f, 'FINISH', false);
         $state = $this->review($f);
@@ -126,6 +129,7 @@ class AcademicRolloverTest extends TestCase
             $f = $this->fixture(level: $level, suffix: (string) $level);
             $f['destination']->update(['level_id' => $f['class']->level_id]);
             $this->assign($f, $code);
+            $this->finalize($f);
             $this->prepare($f);
             $this->place($f);
             $state = $this->review($f);
@@ -139,6 +143,7 @@ class AcademicRolloverTest extends TestCase
     {
         $f = $this->fixture(level: 9);
         $this->assign($f, 'GRADUATE');
+        $this->finalize($f);
         $this->prepare($f);
         $this->place($f);
         $state = $this->review($f);
@@ -156,6 +161,7 @@ class AcademicRolloverTest extends TestCase
     {
         $f = $this->fixture();
         $this->assign($f, 'PROMOTE');
+        $this->finalize($f);
         $this->prepare($f);
         $other = $this->fixture(suffix: 'other');
         $prep = PeriodPreparation::query()->where('source_year_id', $f['source']->id)->firstOrFail();
@@ -218,6 +224,7 @@ class AcademicRolloverTest extends TestCase
     {
         $f = $this->fixture();
         $this->assign($f, 'PROMOTE');
+        $this->finalize($f);
         $this->prepare($f);
         $this->place($f);
         $state = $this->review($f);
@@ -257,6 +264,11 @@ class AcademicRolloverTest extends TestCase
         $this->actingAs($f['teacher'])->put(route('academic-decisions.update', $f['class']), ['rows' => [
             $f['enrollment']->id => ['decision' => $code, 'revision' => $revision],
         ]])->assertRedirect();
+    }
+
+    private function finalize(array $f): void
+    {
+        $this->actingAs($f['teacher'])->post(route('academic-decisions.finalize', $f['class']))->assertRedirect();
     }
 
     private function prepare(array $f): void

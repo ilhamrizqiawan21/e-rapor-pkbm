@@ -40,8 +40,11 @@ test('homeroom decision and persistent admin preparation lead to a new empty sch
     await page.goto('/academic-decisions');
     const sourceClass = await page.getByLabel('Kelas dan tahun pelajaran').inputValue();
     await page.getByLabel('Keputusan Ahmad Peralihan', { exact: true }).selectOption('PROMOTE');
-    await page.getByRole('button', { name: 'Simpan keputusan', exact: true }).click();
+    await page.getByRole('button', { name: 'Simpan draf', exact: true }).click();
     await expect(page.getByRole('status').filter({ hasText: 'Keputusan kelas berhasil disimpan.' })).toBeVisible();
+    page.once('dialog', (dialog) => dialog.accept());
+    await page.getByRole('button', { name: 'Tetapkan keputusan akhir', exact: true }).click();
+    await expect(page.getByRole('status').filter({ hasText: 'Keputusan akhir kelas sudah ditetapkan.' })).toBeVisible();
     await page.screenshot({ path: testInfo.outputPath('homeroom-decisions.png'), fullPage: true });
 
     await login(page, 'period-admin-' + device);
@@ -66,7 +69,7 @@ test('homeroom decision and persistent admin preparation lead to a new empty sch
     await login(page, 'period-guru-' + device);
     await page.goto('/academic-decisions?class_id=' + sourceClass);
     await expect(page.getByText('Naik ke tingkat 2', { exact: true })).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Simpan keputusan', exact: true })).toHaveCount(0);
+    await expect(page.getByRole('button', { name: 'Simpan draf', exact: true })).toHaveCount(0);
     await page.goto('/admin/grade-entry');
     await expect(page.getByText('Belum diisi', { exact: true }).first()).toBeVisible();
     expect(errors).toEqual([]);

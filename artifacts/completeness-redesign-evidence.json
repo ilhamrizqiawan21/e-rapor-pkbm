@@ -1,0 +1,63 @@
+{
+  "contract": "Admin dan wali kelas dapat memindai antrean rapor, melihat kekurangan, memilih satu aksi utama, dan membuka checklist detail tanpa overflow pada desktop maupun mobile.",
+  "targetViewports": [
+    "1440x900",
+    "390x844"
+  ],
+  "accessibility": {
+    "status": "pass",
+    "evidence": "Struktur memakai heading berurutan, landmark section/main/aside, label form, status teks selain warna, focus-visible, dan target sentuh minimal 40px."
+  },
+  "responsive": {
+    "status": "pass",
+    "evidence": "Tes Playwright desktop dan mobile memastikan lebar dokumen tidak melebihi viewport; tabel berubah menjadi kartu dan detail dua kolom berubah menjadi satu kolom."
+  },
+  "contentStates": {
+    "loading": {
+      "status": "not-applicable",
+      "reason": "Halaman dirender sinkron oleh server dan tidak memiliki pengambilan data asinkron."
+    },
+    "empty": {
+      "status": "pass",
+      "evidence": "Daftar kosong menjelaskan bahwa rapor dibuat dari Input nilai dan menyediakan tautan ke tindakan tersebut."
+    },
+    "error": {
+      "status": "pass",
+      "evidence": "Validasi dan error sesi tetap ditampilkan melalui pola alert global aplikasi."
+    },
+    "partial": {
+      "status": "pass",
+      "evidence": "Rapor yang belum lengkap menampilkan jumlah komponen, progress bar, dua kekurangan pertama, dan jumlah kekurangan lainnya."
+    },
+    "success": {
+      "status": "pass",
+      "evidence": "Rapor lengkap menampilkan status Siap dicetak serta aksi Cetak rapor dan Rincian."
+    },
+    "permission": {
+      "status": "pass",
+      "evidence": "Pengguna tanpa hak edit melihat mode hanya baca dan tombol Lihat rincian, sementara kontrol form dinonaktifkan."
+    }
+  },
+  "renderedEvidence": [
+    {
+      "viewport": "1440x900",
+      "artifact": "completeness-redesign-desktop.png",
+      "observation": "Antrean desktop menampilkan ringkasan, filter, progres, status, dan aksi utama dengan kolom yang stabil."
+    },
+    {
+      "viewport": "1440x900",
+      "artifact": "completeness-detail-redesign-desktop.png",
+      "observation": "Detail desktop memakai checklist sticky dan area kerja yang terpisah jelas."
+    },
+    {
+      "viewport": "390x844",
+      "artifact": "completeness-redesign-mobile.png",
+      "observation": "Daftar mobile berubah menjadi kartu tanpa tabel horizontal atau aksi yang terpotong."
+    },
+    {
+      "viewport": "390x844",
+      "artifact": "completeness-detail-redesign-mobile.png",
+      "observation": "Detail mobile menumpuk identitas, checklist, penerbitan, dan formulir dalam urutan kerja yang jelas."
+    }
+  ]
+}

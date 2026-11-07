@@ -6,10 +6,9 @@
         $selectedClass = $classes->firstWhere('id', (int) ($filters['class_id'] ?? 0));
         $selectedSemester = $semesters->firstWhere('id', (int) ($filters['semester_id'] ?? 0));
         $canExportBatch = $selectedClass && $selectedSemester && (auth()->user()->hasAnyRole(['ADMIN', 'KEPSEK']) || (auth()->user()->hasRole('GURU') && $selectedClass->homeroom_teacher_id === auth()->id()));
-        $pageSummaries = $progress->values();
-        $readyOnPage = $pageSummaries->where('complete', true)->count();
-        $needsAttentionOnPage = $pageSummaries->where('complete', false)->count();
         $lockedOnPage = $reportCards->getCollection()->where('status', 'LOCKED')->count();
+        $readyOnPage = $reportCards->getCollection()->filter(fn ($reportCard) => $reportCard->status !== 'LOCKED' && $progress[$reportCard->getKey()]['complete'])->count();
+        $needsAttentionOnPage = $reportCards->getCollection()->filter(fn ($reportCard) => $reportCard->status !== 'LOCKED' && ! $progress[$reportCard->getKey()]['complete'])->count();
     @endphp
 
     <div class="mx-auto max-w-7xl space-y-6">
@@ -23,7 +22,7 @@
             <div class="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800" role="status">{{ session('status') }}</div>
         @endif
 
-        <section class="grid gap-3 sm:grid-cols-2 xl:grid-cols-4" aria-label="Ringkasan kelengkapan rapor">
+        <section class="grid grid-cols-2 gap-3 xl:grid-cols-4" aria-label="Ringkasan kelengkapan rapor">
             <div class="rounded-2xl border border-slate-200 bg-white px-5 py-4 shadow-sm">
                 <p class="text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">Total hasil</p>
                 <p class="mt-2 text-2xl font-semibold text-slate-950">{{ $reportCards->total() }}</p>

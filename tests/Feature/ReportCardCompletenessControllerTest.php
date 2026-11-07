@@ -15,6 +15,8 @@ use App\Models\ReportCard;
 use App\Models\ReportExtracurricular;
 use App\Models\Semester;
 use App\Models\Student;
+use App\Models\Subject;
+use App\Models\SubjectAssignment;
 use App\Models\User;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 use Illuminate\Support\Facades\Route;
@@ -128,6 +130,17 @@ class ReportCardCompletenessControllerTest extends TestCase
     {
         [$homeroom, $reportCard] = $this->reportCardSetup();
         $otherGuru = User::factory()->withRole(RoleCode::Guru)->create(['institution_id' => $homeroom->institution_id]);
+        $subject = Subject::query()->create([
+            'institution_id' => $homeroom->institution_id,
+            'code' => 'COMPLETENESS-OTHER',
+            'name' => 'Mapel Guru Lain',
+            'short_name' => 'MGL',
+        ]);
+        SubjectAssignment::query()->create([
+            'class_id' => $reportCard->enrollment->class_id,
+            'subject_id' => $subject->id,
+            'teacher_id' => $otherGuru->id,
+        ]);
 
         $this->actingAs($otherGuru)
             ->get(route('admin.report-cards.completeness.edit', $reportCard))

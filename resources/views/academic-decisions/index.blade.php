@@ -40,7 +40,7 @@
                             <p class="mt-1 text-xs text-emerald-800">{{ $batch?->finalized_at?->format('d/m/Y H:i') ? 'Ditetapkan '.$batch->finalized_at->format('d/m/Y H:i') : 'Keputusan siap digunakan untuk arsip dan rapor.' }}</p>
                         </div>
                     </div>
-                    @if(auth()->user()->hasRole('ADMIN'))
+                    @if(auth()->user()->hasRole('ADMIN') && $class->academicYear->status->value !== 'CLOSED')
                         <x-button href="#" @click.prevent="$dispatch('open-modal', 'academic-decision-reopen')" variant="danger" icon="unlock">Buka koreksi</x-button>
                     @endif
                 </div>
@@ -105,7 +105,7 @@
     @endif
 </div>
 
-@if($class && $finalized && auth()->user()->hasRole('ADMIN'))
+@if($class && $finalized && auth()->user()->hasRole('ADMIN') && $class->academicYear->status->value !== 'CLOSED')
     <x-modal name="academic-decision-reopen" title="Buka koreksi keputusan" max-width="2xl">
         <form method="POST" action="{{ route('admin.academic-decisions.reopen', $class) }}" class="space-y-5">
             @csrf

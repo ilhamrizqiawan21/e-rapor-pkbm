@@ -1,0 +1,247 @@
+- generic [ref=f16e2]:
+  - complementary "Sidebar utama" [ref=f16e3]:
+    - generic [ref=f16e4]:
+      - link "Logo PKBM Contoh PKBM E-Rapor" [ref=f16e5] [cursor=pointer]:
+        - /url: http://localhost:8000
+        - img "Logo PKBM Contoh" [ref=f16e7]
+        - generic [ref=f16e8]:
+          - generic [ref=f16e9]: PKBM
+          - generic [ref=f16e10]: E-Rapor
+      - button "Ciutkan sidebar" [expanded] [ref=f16e11]
+    - navigation "Navigasi utama" [ref=f16e14]:
+      - link "Dashboard" [ref=f16e15] [cursor=pointer]:
+        - /url: http://localhost:8000
+      - generic [ref=f16e20]:
+        - button "Data inti" [expanded] [ref=f16e21]
+        - generic [ref=f16e28]:
+          - link "Data Guru" [ref=f16e29] [cursor=pointer]:
+            - /url: http://localhost:8000/admin/teachers
+          - link "Peserta didik" [ref=f16e37] [cursor=pointer]:
+            - /url: http://localhost:8000/admin/students
+          - link "Mata pelajaran" [ref=f16e43] [cursor=pointer]:
+            - /url: http://localhost:8000/admin/subjects
+          - link "Bank deskripsi" [ref=f16e49] [cursor=pointer]:
+            - /url: http://localhost:8000/admin/description-snippets
+          - link "Rentang predikat" [ref=f16e54] [cursor=pointer]:
+            - /url: http://localhost:8000/admin/predicate-ranges
+          - link "Tahun pelajaran" [ref=f16e58] [cursor=pointer]:
+            - /url: http://localhost:8000/admin/academic-years
+          - link "Program & tingkat" [ref=f16e63] [cursor=pointer]:
+            - /url: http://localhost:8000/admin/programs
+          - link "Kelas / rombel" [ref=f16e68] [cursor=pointer]:
+            - /url: http://localhost:8000/admin/academic-classes
+          - link "Penugasan guru & mapel" [ref=f16e74] [cursor=pointer]:
+            - /url: http://localhost:8000/admin/academic-classes/subject-assignments/bulk
+      - generic [ref=f16e80]:
+        - button "Penilaian" [expanded] [ref=f16e81]
+        - link "Input nilai" [ref=f16e92] [cursor=pointer]:
+          - /url: http://localhost:8000/admin/grade-entry
+      - generic [ref=f16e100]:
+        - button "Rapor & leger" [expanded] [ref=f16e101]
+        - generic [ref=f16e109]:
+          - link "Kenaikan & Kelulusan" [ref=f16e110] [cursor=pointer]:
+            - /url: http://localhost:8000/academic-decisions
+          - link "Kelengkapan rapor" [ref=f16e115] [cursor=pointer]:
+            - /url: http://localhost:8000/admin/report-cards
+          - link "Generator leger" [ref=f16e121] [cursor=pointer]:
+            - /url: http://localhost:8000/admin/ledger
+          - link "Histori audit" [ref=f16e126] [cursor=pointer]:
+            - /url: http://localhost:8000/admin/audit-logs
+      - generic [ref=f16e133]:
+        - link "Akun" [ref=f16e134] [cursor=pointer]:
+          - /url: http://localhost:8000/account/profile
+        - link "Pengaturan PKBM" [ref=f16e140] [cursor=pointer]:
+          - /url: http://localhost:8000/admin/institutions
+      - generic [ref=f16e146]:
+        - generic [aria-hidden] [ref=f16e147]: AD
+        - generic [ref=f16e148]:
+          - paragraph [ref=f16e149]: Admin Demo
+          - paragraph [ref=f16e150]: Admin
+    - generic [ref=f16e151]: Administrasi akademik PKBM
+  - main [ref=f16e152]:
+    - generic [ref=f16e154]:
+      - generic [ref=f16e161]:
+        - paragraph [ref=f16e162]: Periode aktif
+        - paragraph [ref=f16e164]: 2027/2028 · Semester Genap
+      - generic [ref=f16e165]:
+        - generic [ref=f16e166]: Siap digunakan
+        - generic [ref=f16e169]:
+          - button "Buka menu akun" [expanded] [active] [ref=f16e170]:
+            - generic [aria-hidden] [ref=f16e171]: AD
+            - generic [ref=f16e172]:
+              - generic [ref=f16e173]: Admin Demo
+              - generic [ref=f16e174]: Admin
+          - menu [ref=f16e372]:
+            - generic [ref=f16e373]:
+              - generic [ref=f16e374]: AD
+              - generic [ref=f16e375]:
+                - paragraph [ref=f16e376]: Admin Demo
+                - paragraph [ref=f16e377]: admin
+                - paragraph [ref=f16e378]: "Peran: Admin"
+            - generic [ref=f16e379]:
+              - menuitem "Profil saya" [ref=f16e380] [cursor=pointer]
+              - menuitem "Ubah password" [ref=f16e384] [cursor=pointer]
+            - menuitem "Keluar dari aplikasi" [ref=f16e389]
+    - generic [ref=f16e178]:
+      - generic [ref=f16e179]:
+        - generic [ref=f16e180]:
+          - paragraph [ref=f16e181]: Dashboard Admin
+          - heading "Operasional PKBM dalam satu layar" [level=2] [ref=f16e182]
+          - paragraph [ref=f16e183]: Mulai dari fondasi periode, pantau kesiapan data, lalu pastikan nilai dan rapor bergerak sampai siap diterbitkan.
+        - generic [ref=f16e188]:
+          - paragraph [ref=f16e189]: Periode aktif
+          - paragraph [ref=f16e190]: 2027/2028 · Semester Genap
+      - status [ref=f16e191]:
+        - generic [ref=f16e197]:
+          - paragraph [ref=f16e198]: Fondasi periode sudah lengkap
+          - paragraph [ref=f16e199]: Data siap dipantau. Gunakan ringkasan di bawah untuk menemukan kelas atau rapor yang perlu ditindaklanjuti.
+        - link "Buka input nilai" [ref=f16e200] [cursor=pointer]:
+          - /url: http://localhost:8000/admin/grade-entry
+      - region [ref=f16e201]:
+        - generic [ref=f16e202]:
+          - generic [ref=f16e203]:
+            - paragraph [ref=f16e204]: Urutan kerja Admin
+            - heading "Siapkan periode sampai siap menilai" [level=3] [ref=f16e205]
+            - paragraph [ref=f16e206]: Empat fondasi ini membuat angka dashboard dan status rapor dapat dibaca dengan benar.
+          - generic [ref=f16e207]: 4/4 selesai
+        - list [ref=f16e208]:
+          - listitem [ref=f16e209]:
+            - generic [ref=f16e210]: Selesai
+            - heading "Aktifkan periode" [level=4] [ref=f16e215]
+            - paragraph [ref=f16e216]: 2027/2028 · Semester Genap
+            - generic [ref=f16e217]: Fondasi tersedia
+          - listitem [ref=f16e218]:
+            - generic [ref=f16e219]: Selesai
+            - heading "Siapkan kelas / rombel" [level=4] [ref=f16e224]
+            - paragraph [ref=f16e225]: 4 kelas aktif
+            - generic [ref=f16e226]: Fondasi tersedia
+          - listitem [ref=f16e227]:
+            - generic [ref=f16e228]: Selesai
+            - heading "Masukkan peserta didik" [level=4] [ref=f16e233]
+            - paragraph [ref=f16e234]: 20 peserta didik aktif
+            - generic [ref=f16e235]: Fondasi tersedia
+          - listitem [ref=f16e236]:
+            - generic [ref=f16e237]: Selesai
+            - heading "Petakan mapel dan guru" [level=4] [ref=f16e242]
+            - paragraph [ref=f16e243]: 40 penugasan aktif
+            - generic [ref=f16e244]: Fondasi tersedia
+      - region [ref=f16e245]:
+        - generic [ref=f16e246]:
+          - heading "Ringkasan periode aktif" [level=3] [ref=f16e247]
+          - generic [ref=f16e248]: Diperbarui dari data operasional
+        - generic [ref=f16e249]:
+          - generic [ref=f16e250]:
+            - paragraph [ref=f16e251]: Kelas aktif
+            - paragraph [ref=f16e252]: "4"
+            - paragraph [ref=f16e253]: Pada periode aktif
+          - generic [ref=f16e254]:
+            - paragraph [ref=f16e255]: Peserta didik
+            - paragraph [ref=f16e256]: "20"
+            - paragraph [ref=f16e257]: Penempatan aktif
+          - generic [ref=f16e258]:
+            - paragraph [ref=f16e259]: Guru aktif
+            - paragraph [ref=f16e260]: "6"
+            - paragraph [ref=f16e261]: Dalam institusi
+          - generic [ref=f16e262]:
+            - paragraph [ref=f16e263]: Rapor siap dicetak
+            - paragraph [ref=f16e264]: "0"
+            - paragraph [ref=f16e265]: Data lengkap dan siap diterbitkan
+      - generic [ref=f16e266]:
+        - region [ref=f16e267]:
+          - generic [ref=f16e268]:
+            - generic [ref=f16e269]:
+              - heading "Progres nilai per kelas" [level=3] [ref=f16e270]
+              - paragraph [ref=f16e271]: Nilai terisi dibanding slot nilai yang diharapkan.
+            - generic [ref=f16e272]: 4 kelas
+          - table [ref=f16e274]:
+            - rowgroup [ref=f16e275]:
+              - row [ref=f16e276]:
+                - columnheader "Kelas" [ref=f16e277]
+                - columnheader "Peserta" [ref=f16e278]
+                - columnheader "Nilai terisi" [ref=f16e279]
+                - columnheader "Progress" [ref=f16e280]
+            - rowgroup [ref=f16e281]:
+              - row [ref=f16e282]:
+                - cell [ref=f16e283]:
+                  - paragraph [ref=f16e284]: Paket A Tingkat 1
+                  - paragraph [ref=f16e285]: PA-1
+                - cell "5" [ref=f16e286]
+                - cell "4 / 50" [ref=f16e287]
+                - cell "8% terisi" [ref=f16e288]:
+                  - generic [ref=f16e290]:
+                    - generic [ref=f16e291]: 8%
+                    - generic [ref=f16e292]: terisi
+              - row [ref=f16e295]:
+                - cell [ref=f16e296]:
+                  - paragraph [ref=f16e297]: Paket B Tingkat 7A
+                  - paragraph [ref=f16e298]: PB-7
+                - cell "5" [ref=f16e299]
+                - cell "0 / 50" [ref=f16e300]
+                - cell "0% terisi" [ref=f16e301]:
+                  - generic [ref=f16e303]:
+                    - generic [ref=f16e304]: 0%
+                    - generic [ref=f16e305]: terisi
+              - row [ref=f16e307]:
+                - cell [ref=f16e308]:
+                  - paragraph [ref=f16e309]: Paket B Tingkat 8A
+                  - paragraph [ref=f16e310]: PB-8
+                - cell "5" [ref=f16e311]
+                - cell "0 / 50" [ref=f16e312]
+                - cell "0% terisi" [ref=f16e313]:
+                  - generic [ref=f16e315]:
+                    - generic [ref=f16e316]: 0%
+                    - generic [ref=f16e317]: terisi
+              - row [ref=f16e319]:
+                - cell [ref=f16e320]:
+                  - paragraph [ref=f16e321]: Paket C Tingkat 10A
+                  - paragraph [ref=f16e322]: PC-10
+                - cell "5" [ref=f16e323]
+                - cell "0 / 50" [ref=f16e324]
+                - cell "0% terisi" [ref=f16e325]:
+                  - generic [ref=f16e327]:
+                    - generic [ref=f16e328]: 0%
+                    - generic [ref=f16e329]: terisi
+        - region [ref=f16e331]:
+          - paragraph [ref=f16e332]: Status rapor
+          - paragraph [ref=f16e333]: Ringkasan kesiapan rapor pada periode aktif.
+          - generic [ref=f16e334]:
+            - generic [ref=f16e335]:
+              - generic [ref=f16e336]: Belum siap dicetak
+              - strong [ref=f16e337]: "5"
+            - generic [ref=f16e338]:
+              - generic [ref=f16e339]: Siap dicetak
+              - strong [ref=f16e340]: "0"
+            - generic [ref=f16e341]:
+              - generic [ref=f16e342]: Terkunci
+              - strong [ref=f16e343]: "0"
+            - generic [ref=f16e344]:
+              - generic [ref=f16e345]: Perlu diperbarui
+              - strong [ref=f16e346]: "0"
+      - generic [ref=f16e347]:
+        - region [ref=f16e348]:
+          - heading "Akses cepat" [level=3] [ref=f16e349]
+          - paragraph [ref=f16e350]: Buka pekerjaan yang paling sering dipakai Admin.
+          - generic [ref=f16e351]:
+            - link "Input nilai" [ref=f16e352] [cursor=pointer]:
+              - /url: http://localhost:8000/admin/grade-entry
+            - link "Kelola rapor" [ref=f16e353] [cursor=pointer]:
+              - /url: http://localhost:8000/admin/report-cards
+            - link "Data peserta didik" [ref=f16e354] [cursor=pointer]:
+              - /url: http://localhost:8000/admin/students
+            - link "Tahun pelajaran" [ref=f16e355] [cursor=pointer]:
+              - /url: http://localhost:8000/admin/academic-years
+        - region [ref=f16e356]:
+          - generic [ref=f16e357]:
+            - heading "Perpindahan terbaru" [level=3] [ref=f16e358]
+            - paragraph [ref=f16e359]: Riwayat perpindahan yang sudah disetujui Admin.
+          - table [ref=f16e361]:
+            - rowgroup [ref=f16e362]:
+              - row [ref=f16e363]:
+                - columnheader "Peserta didik" [ref=f16e364]
+                - columnheader "Asal → tujuan" [ref=f16e365]
+                - columnheader "Tanggal" [ref=f16e366]
+            - rowgroup [ref=f16e367]:
+              - row [ref=f16e368]:
+                - cell "Naufal Ardiansyah" [ref=f16e369]
+                - cell "Paket B Tingkat 7A → Paket B Tingkat 8A" [ref=f16e370]
+                - cell "16/09/2026" [ref=f16e371]

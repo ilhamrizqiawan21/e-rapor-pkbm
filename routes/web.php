@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\DescriptionSnippetPickerController;
 use App\Http\Controllers\Admin\EnrollmentController;
 use App\Http\Controllers\Admin\GradeEntryController;
 use App\Http\Controllers\Admin\GradeImportController;
+use App\Http\Controllers\Admin\GradeMonitoringController;
 use App\Http\Controllers\Admin\InstitutionController;
 use App\Http\Controllers\Admin\InstitutionFormatSettingsController;
 use App\Http\Controllers\Admin\InstitutionPreviewController;
@@ -103,6 +104,7 @@ Route::middleware('auth')->group(function (): void {
         Route::post('grade-entry', [GradeEntryController::class, 'store'])->name('grade-entry.store');
         Route::post('grade-entry/context', [GradeEntryController::class, 'storeContext'])->name('grade-entry.store-context');
         Route::post('grade-entry/all', [GradeEntryController::class, 'storeAll'])->name('grade-entry.store-all');
+        Route::get('grade-monitoring', [GradeMonitoringController::class, 'index'])->name('grade-monitoring.index');
         Route::get('report-cards', [ReportCardCompletenessController::class, 'index'])->name('report-cards.index');
         Route::get('ledger', [LedgerController::class, 'index'])->name('ledger.index');
         Route::get('ledger/semesters/{semester}/xlsx', [LedgerController::class, 'allExcel'])->name('ledger.all.excel');
@@ -124,10 +126,9 @@ Route::middleware('auth')->group(function (): void {
         Route::get('report-cards/{report_card}/completeness', [ReportCardCompletenessController::class, 'edit'])->name('report-cards.completeness.edit');
         Route::put('report-cards/{report_card}/extracurriculars', [ReportCardCompletenessController::class, 'updateExtracurriculars'])->name('report-cards.completeness.extracurriculars.update');
         Route::put('report-cards/{report_card}/homeroom-note', [ReportCardCompletenessController::class, 'updateHomeroomNote'])->name('report-cards.completeness.homeroom-note.update');
-        Route::post('report-cards/{report_card}/submit', [ReportCardWorkflowController::class, 'submit'])->name('report-cards.submit');
-        Route::post('report-cards/{report_card}/review', [ReportCardWorkflowController::class, 'review'])->name('report-cards.review');
-        Route::post('report-cards/{report_card}/reject', [ReportCardWorkflowController::class, 'reject'])->name('report-cards.reject');
-        Route::post('report-cards/{report_card}/approve', [ReportCardWorkflowController::class, 'approve'])->name('report-cards.approve');
+        // Report cards are published directly by the homeroom teacher after
+        // completeness is met. The former submit/review/approve workflow is
+        // intentionally not exposed as an endpoint anymore.
         Route::post('report-cards/{report_card}/lock', [ReportCardWorkflowController::class, 'lock'])->name('report-cards.lock');
         Route::post('report-cards/{report_card}/unlock', [ReportCardWorkflowController::class, 'unlock'])->name('report-cards.unlock');
     });

@@ -30,7 +30,7 @@ class AcademicDecisionTest extends TestCase
     public function test_homeroom_can_save_and_revise_without_approval_and_changes_are_audited(): void
     {
         $f = $this->fixture();
-        $this->actingAs($f['teacher'])->get(route('academic-decisions.index'))->assertOk()->assertSee('Simpan keputusan');
+        $this->actingAs($f['teacher'])->get(route('academic-decisions.index'))->assertOk()->assertSee('Simpan draf');
         $this->save($f, 'PROMOTE', 0)->assertRedirect();
         $decision = AcademicDecision::query()->firstOrFail();
         $this->assertSame('Naik ke tingkat 2', $decision->label_snapshot);
@@ -112,6 +112,7 @@ class AcademicDecisionTest extends TestCase
         $new = Enrollment::query()->where('student_id', $f['student']->id)->where('enrollment_status', 'ACTIVE')->firstOrFail();
         $this->assertNull(app(AcademicDecisionService::class)->forReport($f['report']->fresh()));
         $this->actingAs($newTeacher)->put(route('academic-decisions.update', $target), ['rows' => [$new->id => ['decision' => 'REPEAT', 'revision' => 1]]])->assertRedirect();
+        $this->actingAs($newTeacher)->post(route('academic-decisions.finalize', $target))->assertRedirect();
         $this->assertSame('REPEAT', app(AcademicDecisionService::class)->forReport($f['report']->fresh())?->decision);
         $this->assertDatabaseCount('academic_decisions', 1);
         $this->assertSame(2, AuditLog::query()->where('action', 'academic_decision.saved')->count());
@@ -123,6 +124,7 @@ class AcademicDecisionTest extends TestCase
         $summary = app(ReportCardCompletenessService::class)->summary($f['report']);
         $this->assertContains('academic_decision', array_column($summary['missing'], 'key'));
         $this->save($f, 'PROMOTE', 0)->assertRedirect();
+        $this->actingAs($f['teacher'])->post(route('academic-decisions.finalize', $f['class']))->assertRedirect();
         $data = app(ReportCardPdfDataService::class)->data($f['report']->fresh(), false);
         $this->assertStringContainsString('Naik ke tingkat 2', view('reports.report-card.pdf', $data)->render());
         $this->assertStringNotContainsString('Keputusan Wali Kelas', view('reports.report-card.identity', $data)->render());
@@ -132,6 +134,21 @@ class AcademicDecisionTest extends TestCase
         AcademicDecision::query()->delete();
         $summary = app(ReportCardCompletenessService::class)->summary($f['report']->fresh());
         $this->assertNotContains('academic_decision', array_column($summary['missing'], 'key'));
+    }
+
+    public function test_final_decision_locks_class_and_admin_reopen_requires_reason(): void
+    {
+        $f = $this->fixture();
+        $this->save($f, 'PROMOTE', 0)->assertRedirect();
+        $this->actingAs($f['teacher'])->post(route('academic-decisions.finalize', $f['class']))->assertRedirect();
+        $this->assertDatabaseHas('academic_decision_batches', ['class_id' => $f['class']->id, 'status' => 'FINALIZED']);
+        $this->save($f, 'REPEAT', 1)->assertSessionHasErrors('decision');
+        $this->actingAs($f['admin'])->post(route('admin.academic-decisions.reopen', $f['class']), ['reason' => 'Perbaikan keputusan wali kelas'])->assertRedirect();
+        $this->assertDatabaseHas('academic_decision_batches', ['class_id' => $f['class']->id, 'status' => 'DRAFT', 'reopen_reason' => 'Perbaikan keputusan wali kelas']);
+        $this->save($f, 'REPEAT', 1)->assertRedirect();
+        $this->assertDatabaseHas('academic_decisions', ['student_id' => $f['student']->id, 'decision' => 'REPEAT']);
+        $this->assertDatabaseHas('audit_logs', ['action' => 'academic_decision.finalized']);
+        $this->assertDatabaseHas('audit_logs', ['action' => 'academic_decision.reopened']);
     }
 
     public function test_repair_restores_sole_draft_parent_and_does_not_touch_reports(): void

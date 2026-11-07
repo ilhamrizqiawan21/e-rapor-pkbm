@@ -118,8 +118,8 @@ final class ReportCardCompletenessService
 
     public function assertComplete(ReportCard $reportCard): void
     {
-        // Workflow transitions call this gate before submission/approval so an
-        // incomplete card cannot become printable output.
+        // The archive transition calls this gate so an incomplete card cannot
+        // become a locked printable output.
         $summary = $this->summary($reportCard);
 
         if ($summary['complete']) {

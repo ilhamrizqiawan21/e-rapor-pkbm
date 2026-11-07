@@ -51,7 +51,7 @@ class AuthorizationPolicyTest extends TestCase
         $this->assertFalse(Gate::forUser($guru)->allows('update', $structure['class']));
     }
 
-    public function test_kepsek_can_approve_but_cannot_review_lock_or_unlock_report_cards(): void
+    public function test_kepsek_cannot_approve_or_lock_report_cards(): void
     {
         $institution = Institution::query()->create(['name' => 'PKBM Kepsek']);
         $guru = $this->userWithRole($institution, RoleCode::Guru);
@@ -62,7 +62,7 @@ class AuthorizationPolicyTest extends TestCase
 
         $this->assertTrue(Gate::forUser($kepsek)->allows('view', $reportCard));
         $this->assertFalse(Gate::forUser($kepsek)->allows('review', $reportCard));
-        $this->assertTrue(Gate::forUser($kepsek)->allows('approve', $reportCard));
+        $this->assertFalse(Gate::forUser($kepsek)->allows('approve', $reportCard));
         $this->assertFalse(Gate::forUser($kepsek)->allows('lock', $reportCard));
         $this->assertFalse(Gate::forUser($kepsek)->allows('unlock', $reportCard));
 

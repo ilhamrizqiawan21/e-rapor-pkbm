@@ -1,0 +1,542 @@
+- generic [ref=f8e2]:
+  - complementary "Sidebar utama" [ref=f8e3]:
+    - generic [ref=f8e4]:
+      - link "PC PKBM E-Rapor" [ref=f8e5] [cursor=pointer]:
+        - /url: http://127.0.0.1:8002
+        - generic [ref=f8e6]: PC
+        - generic [ref=f8e7]:
+          - generic [ref=f8e8]: PKBM
+          - generic [ref=f8e9]: E-Rapor
+      - button "Ciutkan sidebar" [expanded] [ref=f8e10]
+    - navigation "Navigasi utama" [ref=f8e13]:
+      - link "Dashboard" [ref=f8e14] [cursor=pointer]:
+        - /url: http://127.0.0.1:8002
+      - generic [ref=f8e19]:
+        - button "Data inti" [expanded] [ref=f8e20]
+        - generic [ref=f8e27]:
+          - link "Data Guru" [ref=f8e28] [cursor=pointer]:
+            - /url: http://127.0.0.1:8002/admin/teachers
+          - link "Peserta didik" [ref=f8e36] [cursor=pointer]:
+            - /url: http://127.0.0.1:8002/admin/students
+          - link "Mata pelajaran" [ref=f8e42] [cursor=pointer]:
+            - /url: http://127.0.0.1:8002/admin/subjects
+          - link "Bank deskripsi" [ref=f8e48] [cursor=pointer]:
+            - /url: http://127.0.0.1:8002/admin/description-snippets
+          - link "Rentang predikat" [ref=f8e53] [cursor=pointer]:
+            - /url: http://127.0.0.1:8002/admin/predicate-ranges
+          - link "Tahun pelajaran" [ref=f8e57] [cursor=pointer]:
+            - /url: http://127.0.0.1:8002/admin/academic-years
+          - link "Program & tingkat" [ref=f8e62] [cursor=pointer]:
+            - /url: http://127.0.0.1:8002/admin/programs
+          - link "Kelas / rombel" [ref=f8e67] [cursor=pointer]:
+            - /url: http://127.0.0.1:8002/admin/academic-classes
+          - link "Penugasan guru & mapel" [ref=f8e73] [cursor=pointer]:
+            - /url: http://127.0.0.1:8002/admin/academic-classes/subject-assignments/bulk
+      - generic [ref=f8e79]:
+        - button "Penilaian" [expanded] [ref=f8e80]
+        - link "Input nilai" [ref=f8e91] [cursor=pointer]:
+          - /url: http://127.0.0.1:8002/admin/grade-entry
+      - generic [ref=f8e99]:
+        - button "Rapor & leger" [expanded] [ref=f8e100]
+        - generic [ref=f8e108]:
+          - link "Kenaikan & Kelulusan" [ref=f8e109] [cursor=pointer]:
+            - /url: http://127.0.0.1:8002/academic-decisions
+          - link "Kelengkapan rapor" [ref=f8e114] [cursor=pointer]:
+            - /url: http://127.0.0.1:8002/admin/report-cards
+          - link "Generator leger" [ref=f8e120] [cursor=pointer]:
+            - /url: http://127.0.0.1:8002/admin/ledger
+          - link "Histori audit" [ref=f8e125] [cursor=pointer]:
+            - /url: http://127.0.0.1:8002/admin/audit-logs
+      - generic [ref=f8e132]:
+        - link "Akun" [ref=f8e133] [cursor=pointer]:
+          - /url: http://127.0.0.1:8002/account/profile
+        - link "Pengaturan PKBM" [ref=f8e139] [cursor=pointer]:
+          - /url: http://127.0.0.1:8002/admin/institutions
+      - generic [ref=f8e145]:
+        - generic [aria-hidden] [ref=f8e146]: AD
+        - generic [ref=f8e147]:
+          - paragraph [ref=f8e148]: Admin Demo
+          - paragraph [ref=f8e149]: Admin
+    - generic [ref=f8e150]: Administrasi akademik PKBM
+  - main [ref=f8e151]:
+    - generic [ref=f8e153]:
+      - generic [ref=f8e160]:
+        - paragraph [ref=f8e161]: Periode aktif
+        - paragraph [ref=f8e163]: 2026/2027 · Semester Ganjil
+      - generic [ref=f8e164]:
+        - generic [ref=f8e165]: Siap digunakan
+        - button "Buka menu akun" [ref=f8e169]:
+          - generic [aria-hidden] [ref=f8e170]: AD
+          - generic [ref=f8e171]:
+            - generic [ref=f8e172]: Admin Demo
+            - generic [ref=f8e173]: Admin
+    - generic [ref=f8e177]:
+      - generic [ref=f8e179]:
+        - navigation "Breadcrumb" [ref=f8e181]:
+          - link "Dashboard" [ref=f8e182] [cursor=pointer]:
+            - /url: http://127.0.0.1:8002
+          - generic [ref=f8e185]: Kelengkapan & cetak rapor
+        - paragraph [ref=f8e186]: Rapor
+        - heading "Kelengkapan & cetak rapor" [level=1] [ref=f8e187]
+        - paragraph [ref=f8e188]: Tinjau komponen yang belum lengkap, selesaikan pekerjaan berikutnya, lalu cetak rapor yang sudah siap.
+      - region "Ringkasan kelengkapan rapor" [ref=f8e189]:
+        - generic [ref=f8e190]:
+          - paragraph [ref=f8e191]: Total hasil
+          - paragraph [ref=f8e192]: "20"
+          - paragraph [ref=f8e193]: Sesuai filter aktif
+        - generic [ref=f8e194]:
+          - paragraph [ref=f8e195]: Perlu dilengkapi
+          - paragraph [ref=f8e196]: "0"
+          - paragraph [ref=f8e197]: Pada halaman ini
+        - generic [ref=f8e198]:
+          - paragraph [ref=f8e199]: Siap dicetak
+          - paragraph [ref=f8e200]: "20"
+          - paragraph [ref=f8e201]: Pada halaman ini
+        - generic [ref=f8e202]:
+          - paragraph [ref=f8e203]: Diarsipkan
+          - paragraph [ref=f8e204]: "3"
+          - paragraph [ref=f8e205]: Pada halaman ini
+      - region "Filter rapor" [ref=f8e206]:
+        - generic [ref=f8e207]:
+          - generic [ref=f8e208]:
+            - generic [ref=f8e209]: Nama peserta didik
+            - textbox "Nama peserta didik" [ref=f8e211]:
+              - /placeholder: "Contoh: Ahmad Fauzan"
+          - generic [ref=f8e212]:
+            - generic [ref=f8e213]: Tahun pelajaran
+            - combobox "Tahun pelajaran" [ref=f8e215]:
+              - option "Semua tahun" [disabled] [selected]
+              - option "2026/2027"
+              - option "2025/2026"
+          - generic [ref=f8e216]:
+            - generic [ref=f8e217]: Semester
+            - combobox "Semester" [ref=f8e219]:
+              - option "Semua semester" [disabled] [selected]
+              - option "2026/2027 · Semester Ganjil"
+              - option "2026/2027 · Semester Genap"
+              - option "2025/2026 · Semester Ganjil"
+              - option "2025/2026 · Semester Genap"
+          - generic [ref=f8e220]:
+            - generic [ref=f8e221]: Kelas
+            - combobox "Kelas" [ref=f8e223]:
+              - option "Semua kelas" [disabled] [selected]
+              - option "Paket A Tingkat 1"
+              - option "Paket B Tingkat 7A"
+              - option "Paket B Tingkat 8A"
+              - option "Paket C Tingkat 10A"
+          - button "Terapkan" [ref=f8e224]
+      - region [ref=f8e227]:
+        - generic [ref=f8e228]:
+          - generic [ref=f8e229]:
+            - heading "Antrean kelengkapan rapor" [level=2] [ref=f8e230]
+            - paragraph [ref=f8e231]: Aksi utama menyesuaikan kondisi setiap rapor.
+          - generic [ref=f8e232]: 20 rapor
+        - table [ref=f8e234]:
+          - rowgroup [ref=f8e235]:
+            - row [ref=f8e236]:
+              - columnheader "Peserta didik" [ref=f8e237]
+              - columnheader "Kelas & periode" [ref=f8e238]
+              - columnheader "Kelengkapan" [ref=f8e239]
+              - columnheader "Status" [ref=f8e240]
+              - columnheader "Aksi berikutnya" [ref=f8e241]
+          - rowgroup [ref=f8e242]:
+            - row [ref=f8e243]:
+              - cell [ref=f8e244]:
+                - paragraph [ref=f8e245]: Salsa Nirmala
+                - paragraph [ref=f8e246]: PD-26020
+              - cell [ref=f8e247]:
+                - paragraph [ref=f8e248]: Paket C Tingkat 10A
+                - paragraph [ref=f8e249]: 2026/2027 · Semester Ganjil
+              - cell "5/5 komponen 100% Seluruh komponen wajib lengkap." [ref=f8e250]:
+                - generic [ref=f8e251]:
+                  - generic [ref=f8e252]:
+                    - generic [ref=f8e253]: 5/5 komponen
+                    - generic [ref=f8e254]: 100%
+                  - paragraph [ref=f8e257]: Seluruh komponen wajib lengkap.
+              - cell "Siap dicetak" [ref=f8e258]
+              - cell [ref=f8e261]:
+                - generic [ref=f8e262]:
+                  - link "Cetak rapor" [ref=f8e263] [cursor=pointer]:
+                    - /url: http://127.0.0.1:8002/admin/report-cards/20/pdf/print
+                  - link "Rincian" [ref=f8e266] [cursor=pointer]:
+                    - /url: http://127.0.0.1:8002/admin/report-cards/20/completeness
+            - row [ref=f8e270]:
+              - cell [ref=f8e271]:
+                - paragraph [ref=f8e272]: Raka Aditya
+                - paragraph [ref=f8e273]: PD-26019
+              - cell [ref=f8e274]:
+                - paragraph [ref=f8e275]: Paket C Tingkat 10A
+                - paragraph [ref=f8e276]: 2026/2027 · Semester Ganjil
+              - cell "5/5 komponen 100% Seluruh komponen wajib lengkap." [ref=f8e277]:
+                - generic [ref=f8e278]:
+                  - generic [ref=f8e279]:
+                    - generic [ref=f8e280]: 5/5 komponen
+                    - generic [ref=f8e281]: 100%
+                  - paragraph [ref=f8e284]: Seluruh komponen wajib lengkap.
+              - cell "Siap dicetak" [ref=f8e285]
+              - cell [ref=f8e288]:
+                - generic [ref=f8e289]:
+                  - link "Cetak rapor" [ref=f8e290] [cursor=pointer]:
+                    - /url: http://127.0.0.1:8002/admin/report-cards/19/pdf/print
+                  - link "Rincian" [ref=f8e293] [cursor=pointer]:
+                    - /url: http://127.0.0.1:8002/admin/report-cards/19/completeness
+            - row [ref=f8e297]:
+              - cell [ref=f8e298]:
+                - paragraph [ref=f8e299]: Qori Azzahra
+                - paragraph [ref=f8e300]: PD-26018
+              - cell [ref=f8e301]:
+                - paragraph [ref=f8e302]: Paket C Tingkat 10A
+                - paragraph [ref=f8e303]: 2026/2027 · Semester Ganjil
+              - cell "5/5 komponen 100% Seluruh komponen wajib lengkap." [ref=f8e304]:
+                - generic [ref=f8e305]:
+                  - generic [ref=f8e306]:
+                    - generic [ref=f8e307]: 5/5 komponen
+                    - generic [ref=f8e308]: 100%
+                  - paragraph [ref=f8e311]: Seluruh komponen wajib lengkap.
+              - cell "Diarsipkan" [ref=f8e312]
+              - cell [ref=f8e315]:
+                - generic [ref=f8e316]:
+                  - link "Cetak rapor" [ref=f8e317] [cursor=pointer]:
+                    - /url: http://127.0.0.1:8002/admin/report-cards/18/pdf/print
+                  - link "Rincian" [ref=f8e320] [cursor=pointer]:
+                    - /url: http://127.0.0.1:8002/admin/report-cards/18/completeness
+            - row [ref=f8e324]:
+              - cell [ref=f8e325]:
+                - paragraph [ref=f8e326]: Putri Amelia
+                - paragraph [ref=f8e327]: PD-26017
+              - cell [ref=f8e328]:
+                - paragraph [ref=f8e329]: Paket C Tingkat 10A
+                - paragraph [ref=f8e330]: 2026/2027 · Semester Ganjil
+              - cell "5/5 komponen 100% Seluruh komponen wajib lengkap." [ref=f8e331]:
+                - generic [ref=f8e332]:
+                  - generic [ref=f8e333]:
+                    - generic [ref=f8e334]: 5/5 komponen
+                    - generic [ref=f8e335]: 100%
+                  - paragraph [ref=f8e338]: Seluruh komponen wajib lengkap.
+              - cell "Siap dicetak" [ref=f8e339]
+              - cell [ref=f8e342]:
+                - generic [ref=f8e343]:
+                  - link "Cetak rapor" [ref=f8e344] [cursor=pointer]:
+                    - /url: http://127.0.0.1:8002/admin/report-cards/17/pdf/print
+                  - link "Rincian" [ref=f8e347] [cursor=pointer]:
+                    - /url: http://127.0.0.1:8002/admin/report-cards/17/completeness
+            - row [ref=f8e351]:
+              - cell [ref=f8e352]:
+                - paragraph [ref=f8e353]: Oki Setiawan
+                - paragraph [ref=f8e354]: PD-26016
+              - cell [ref=f8e355]:
+                - paragraph [ref=f8e356]: Paket C Tingkat 10A
+                - paragraph [ref=f8e357]: 2026/2027 · Semester Ganjil
+              - cell "5/5 komponen 100% Seluruh komponen wajib lengkap." [ref=f8e358]:
+                - generic [ref=f8e359]:
+                  - generic [ref=f8e360]:
+                    - generic [ref=f8e361]: 5/5 komponen
+                    - generic [ref=f8e362]: 100%
+                  - paragraph [ref=f8e365]: Seluruh komponen wajib lengkap.
+              - cell "Siap dicetak" [ref=f8e366]
+              - cell [ref=f8e369]:
+                - generic [ref=f8e370]:
+                  - link "Cetak rapor" [ref=f8e371] [cursor=pointer]:
+                    - /url: http://127.0.0.1:8002/admin/report-cards/16/pdf/print
+                  - link "Rincian" [ref=f8e374] [cursor=pointer]:
+                    - /url: http://127.0.0.1:8002/admin/report-cards/16/completeness
+            - row [ref=f8e378]:
+              - cell [ref=f8e379]:
+                - paragraph [ref=f8e380]: Naufal Ardiansyah
+                - paragraph [ref=f8e381]: PD-26015
+              - cell [ref=f8e382]:
+                - paragraph [ref=f8e383]: Paket B Tingkat 8A
+                - paragraph [ref=f8e384]: 2026/2027 · Semester Ganjil
+              - cell "5/5 komponen 100% Seluruh komponen wajib lengkap." [ref=f8e385]:
+                - generic [ref=f8e386]:
+                  - generic [ref=f8e387]:
+                    - generic [ref=f8e388]: 5/5 komponen
+                    - generic [ref=f8e389]: 100%
+                  - paragraph [ref=f8e392]: Seluruh komponen wajib lengkap.
+              - cell "Siap dicetak" [ref=f8e393]
+              - cell [ref=f8e396]:
+                - generic [ref=f8e397]:
+                  - link "Cetak rapor" [ref=f8e398] [cursor=pointer]:
+                    - /url: http://127.0.0.1:8002/admin/report-cards/15/pdf/print
+                  - link "Rincian" [ref=f8e401] [cursor=pointer]:
+                    - /url: http://127.0.0.1:8002/admin/report-cards/15/completeness
+            - row [ref=f8e405]:
+              - cell [ref=f8e406]:
+                - paragraph [ref=f8e407]: Mila Anggraini
+                - paragraph [ref=f8e408]: PD-26014
+              - cell [ref=f8e409]:
+                - paragraph [ref=f8e410]: Paket B Tingkat 8A
+                - paragraph [ref=f8e411]: 2026/2027 · Semester Ganjil
+              - cell "5/5 komponen 100% Seluruh komponen wajib lengkap." [ref=f8e412]:
+                - generic [ref=f8e413]:
+                  - generic [ref=f8e414]:
+                    - generic [ref=f8e415]: 5/5 komponen
+                    - generic [ref=f8e416]: 100%
+                  - paragraph [ref=f8e419]: Seluruh komponen wajib lengkap.
+              - cell "Siap dicetak" [ref=f8e420]
+              - cell [ref=f8e423]:
+                - generic [ref=f8e424]:
+                  - link "Cetak rapor" [ref=f8e425] [cursor=pointer]:
+                    - /url: http://127.0.0.1:8002/admin/report-cards/14/pdf/print
+                  - link "Rincian" [ref=f8e428] [cursor=pointer]:
+                    - /url: http://127.0.0.1:8002/admin/report-cards/14/completeness
+            - row [ref=f8e432]:
+              - cell [ref=f8e433]:
+                - paragraph [ref=f8e434]: Lukman Hakim
+                - paragraph [ref=f8e435]: PD-26013
+              - cell [ref=f8e436]:
+                - paragraph [ref=f8e437]: Paket B Tingkat 8A
+                - paragraph [ref=f8e438]: 2026/2027 · Semester Ganjil
+              - cell "5/5 komponen 100% Seluruh komponen wajib lengkap." [ref=f8e439]:
+                - generic [ref=f8e440]:
+                  - generic [ref=f8e441]:
+                    - generic [ref=f8e442]: 5/5 komponen
+                    - generic [ref=f8e443]: 100%
+                  - paragraph [ref=f8e446]: Seluruh komponen wajib lengkap.
+              - cell "Siap dicetak" [ref=f8e447]
+              - cell [ref=f8e450]:
+                - generic [ref=f8e451]:
+                  - link "Cetak rapor" [ref=f8e452] [cursor=pointer]:
+                    - /url: http://127.0.0.1:8002/admin/report-cards/13/pdf/print
+                  - link "Rincian" [ref=f8e455] [cursor=pointer]:
+                    - /url: http://127.0.0.1:8002/admin/report-cards/13/completeness
+            - row [ref=f8e459]:
+              - cell [ref=f8e460]:
+                - paragraph [ref=f8e461]: Kartika Sari
+                - paragraph [ref=f8e462]: PD-26012
+              - cell [ref=f8e463]:
+                - paragraph [ref=f8e464]: Paket B Tingkat 8A
+                - paragraph [ref=f8e465]: 2026/2027 · Semester Ganjil
+              - cell "5/5 komponen 100% Seluruh komponen wajib lengkap." [ref=f8e466]:
+                - generic [ref=f8e467]:
+                  - generic [ref=f8e468]:
+                    - generic [ref=f8e469]: 5/5 komponen
+                    - generic [ref=f8e470]: 100%
+                  - paragraph [ref=f8e473]: Seluruh komponen wajib lengkap.
+              - cell "Diarsipkan" [ref=f8e474]
+              - cell [ref=f8e477]:
+                - generic [ref=f8e478]:
+                  - link "Cetak rapor" [ref=f8e479] [cursor=pointer]:
+                    - /url: http://127.0.0.1:8002/admin/report-cards/12/pdf/print
+                  - link "Rincian" [ref=f8e482] [cursor=pointer]:
+                    - /url: http://127.0.0.1:8002/admin/report-cards/12/completeness
+            - row [ref=f8e486]:
+              - cell [ref=f8e487]:
+                - paragraph [ref=f8e488]: Joko Susilo
+                - paragraph [ref=f8e489]: PD-26011
+              - cell [ref=f8e490]:
+                - paragraph [ref=f8e491]: Paket B Tingkat 8A
+                - paragraph [ref=f8e492]: 2026/2027 · Semester Ganjil
+              - cell "5/5 komponen 100% Seluruh komponen wajib lengkap." [ref=f8e493]:
+                - generic [ref=f8e494]:
+                  - generic [ref=f8e495]:
+                    - generic [ref=f8e496]: 5/5 komponen
+                    - generic [ref=f8e497]: 100%
+                  - paragraph [ref=f8e500]: Seluruh komponen wajib lengkap.
+              - cell "Siap dicetak" [ref=f8e501]
+              - cell [ref=f8e504]:
+                - generic [ref=f8e505]:
+                  - link "Cetak rapor" [ref=f8e506] [cursor=pointer]:
+                    - /url: http://127.0.0.1:8002/admin/report-cards/11/pdf/print
+                  - link "Rincian" [ref=f8e509] [cursor=pointer]:
+                    - /url: http://127.0.0.1:8002/admin/report-cards/11/completeness
+            - row [ref=f8e513]:
+              - cell [ref=f8e514]:
+                - paragraph [ref=f8e515]: Intan Safitri
+                - paragraph [ref=f8e516]: PD-26010
+              - cell [ref=f8e517]:
+                - paragraph [ref=f8e518]: Paket B Tingkat 7A
+                - paragraph [ref=f8e519]: 2026/2027 · Semester Ganjil
+              - cell "5/5 komponen 100% Seluruh komponen wajib lengkap." [ref=f8e520]:
+                - generic [ref=f8e521]:
+                  - generic [ref=f8e522]:
+                    - generic [ref=f8e523]: 5/5 komponen
+                    - generic [ref=f8e524]: 100%
+                  - paragraph [ref=f8e527]: Seluruh komponen wajib lengkap.
+              - cell "Siap dicetak" [ref=f8e528]
+              - cell [ref=f8e531]:
+                - generic [ref=f8e532]:
+                  - link "Cetak rapor" [ref=f8e533] [cursor=pointer]:
+                    - /url: http://127.0.0.1:8002/admin/report-cards/10/pdf/print
+                  - link "Rincian" [ref=f8e536] [cursor=pointer]:
+                    - /url: http://127.0.0.1:8002/admin/report-cards/10/completeness
+            - row [ref=f8e540]:
+              - cell [ref=f8e541]:
+                - paragraph [ref=f8e542]: Hendra Wijaya
+                - paragraph [ref=f8e543]: PD-26009
+              - cell [ref=f8e544]:
+                - paragraph [ref=f8e545]: Paket B Tingkat 7A
+                - paragraph [ref=f8e546]: 2026/2027 · Semester Ganjil
+              - cell "5/5 komponen 100% Seluruh komponen wajib lengkap." [ref=f8e547]:
+                - generic [ref=f8e548]:
+                  - generic [ref=f8e549]:
+                    - generic [ref=f8e550]: 5/5 komponen
+                    - generic [ref=f8e551]: 100%
+                  - paragraph [ref=f8e554]: Seluruh komponen wajib lengkap.
+              - cell "Siap dicetak" [ref=f8e555]
+              - cell [ref=f8e558]:
+                - generic [ref=f8e559]:
+                  - link "Cetak rapor" [ref=f8e560] [cursor=pointer]:
+                    - /url: http://127.0.0.1:8002/admin/report-cards/9/pdf/print
+                  - link "Rincian" [ref=f8e563] [cursor=pointer]:
+                    - /url: http://127.0.0.1:8002/admin/report-cards/9/completeness
+            - row [ref=f8e567]:
+              - cell [ref=f8e568]:
+                - paragraph [ref=f8e569]: Galuh Permata
+                - paragraph [ref=f8e570]: PD-26008
+              - cell [ref=f8e571]:
+                - paragraph [ref=f8e572]: Paket B Tingkat 7A
+                - paragraph [ref=f8e573]: 2026/2027 · Semester Ganjil
+              - cell "5/5 komponen 100% Seluruh komponen wajib lengkap." [ref=f8e574]:
+                - generic [ref=f8e575]:
+                  - generic [ref=f8e576]:
+                    - generic [ref=f8e577]: 5/5 komponen
+                    - generic [ref=f8e578]: 100%
+                  - paragraph [ref=f8e581]: Seluruh komponen wajib lengkap.
+              - cell "Siap dicetak" [ref=f8e582]
+              - cell [ref=f8e585]:
+                - generic [ref=f8e586]:
+                  - link "Cetak rapor" [ref=f8e587] [cursor=pointer]:
+                    - /url: http://127.0.0.1:8002/admin/report-cards/8/pdf/print
+                  - link "Rincian" [ref=f8e590] [cursor=pointer]:
+                    - /url: http://127.0.0.1:8002/admin/report-cards/8/completeness
+            - row [ref=f8e594]:
+              - cell [ref=f8e595]:
+                - paragraph [ref=f8e596]: Fajar Nugraha
+                - paragraph [ref=f8e597]: PD-26007
+              - cell [ref=f8e598]:
+                - paragraph [ref=f8e599]: Paket B Tingkat 7A
+                - paragraph [ref=f8e600]: 2026/2027 · Semester Ganjil
+              - cell "5/5 komponen 100% Seluruh komponen wajib lengkap." [ref=f8e601]:
+                - generic [ref=f8e602]:
+                  - generic [ref=f8e603]:
+                    - generic [ref=f8e604]: 5/5 komponen
+                    - generic [ref=f8e605]: 100%
+                  - paragraph [ref=f8e608]: Seluruh komponen wajib lengkap.
+              - cell "Siap dicetak" [ref=f8e609]
+              - cell [ref=f8e612]:
+                - generic [ref=f8e613]:
+                  - link "Cetak rapor" [ref=f8e614] [cursor=pointer]:
+                    - /url: http://127.0.0.1:8002/admin/report-cards/7/pdf/print
+                  - link "Rincian" [ref=f8e617] [cursor=pointer]:
+                    - /url: http://127.0.0.1:8002/admin/report-cards/7/completeness
+            - row [ref=f8e621]:
+              - cell [ref=f8e622]:
+                - paragraph [ref=f8e623]: Eka Maharani
+                - paragraph [ref=f8e624]: PD-26006
+              - cell [ref=f8e625]:
+                - paragraph [ref=f8e626]: Paket B Tingkat 7A
+                - paragraph [ref=f8e627]: 2026/2027 · Semester Ganjil
+              - cell "5/5 komponen 100% Seluruh komponen wajib lengkap." [ref=f8e628]:
+                - generic [ref=f8e629]:
+                  - generic [ref=f8e630]:
+                    - generic [ref=f8e631]: 5/5 komponen
+                    - generic [ref=f8e632]: 100%
+                  - paragraph [ref=f8e635]: Seluruh komponen wajib lengkap.
+              - cell "Diarsipkan" [ref=f8e636]
+              - cell [ref=f8e639]:
+                - generic [ref=f8e640]:
+                  - link "Cetak rapor" [ref=f8e641] [cursor=pointer]:
+                    - /url: http://127.0.0.1:8002/admin/report-cards/6/pdf/print
+                  - link "Rincian" [ref=f8e644] [cursor=pointer]:
+                    - /url: http://127.0.0.1:8002/admin/report-cards/6/completeness
+            - row [ref=f8e648]:
+              - cell [ref=f8e649]:
+                - paragraph [ref=f8e650]: Deni Kurniawan
+                - paragraph [ref=f8e651]: PD-26005
+              - cell [ref=f8e652]:
+                - paragraph [ref=f8e653]: Paket A Tingkat 1
+                - paragraph [ref=f8e654]: 2026/2027 · Semester Ganjil
+              - cell "5/5 komponen 100% Seluruh komponen wajib lengkap." [ref=f8e655]:
+                - generic [ref=f8e656]:
+                  - generic [ref=f8e657]:
+                    - generic [ref=f8e658]: 5/5 komponen
+                    - generic [ref=f8e659]: 100%
+                  - paragraph [ref=f8e662]: Seluruh komponen wajib lengkap.
+              - cell "Siap dicetak" [ref=f8e663]
+              - cell [ref=f8e666]:
+                - generic [ref=f8e667]:
+                  - link "Cetak rapor" [ref=f8e668] [cursor=pointer]:
+                    - /url: http://127.0.0.1:8002/admin/report-cards/5/pdf/print
+                  - link "Rincian" [ref=f8e671] [cursor=pointer]:
+                    - /url: http://127.0.0.1:8002/admin/report-cards/5/completeness
+            - row [ref=f8e675]:
+              - cell [ref=f8e676]:
+                - paragraph [ref=f8e677]: Citra Lestari
+                - paragraph [ref=f8e678]: PD-26004
+              - cell [ref=f8e679]:
+                - paragraph [ref=f8e680]: Paket A Tingkat 1
+                - paragraph [ref=f8e681]: 2026/2027 · Semester Ganjil
+              - cell "5/5 komponen 100% Seluruh komponen wajib lengkap." [ref=f8e682]:
+                - generic [ref=f8e683]:
+                  - generic [ref=f8e684]:
+                    - generic [ref=f8e685]: 5/5 komponen
+                    - generic [ref=f8e686]: 100%
+                  - paragraph [ref=f8e689]: Seluruh komponen wajib lengkap.
+              - cell "Siap dicetak" [ref=f8e690]
+              - cell [ref=f8e693]:
+                - generic [ref=f8e694]:
+                  - link "Cetak rapor" [ref=f8e695] [cursor=pointer]:
+                    - /url: http://127.0.0.1:8002/admin/report-cards/4/pdf/print
+                  - link "Rincian" [ref=f8e698] [cursor=pointer]:
+                    - /url: http://127.0.0.1:8002/admin/report-cards/4/completeness
+            - row [ref=f8e702]:
+              - cell [ref=f8e703]:
+                - paragraph [ref=f8e704]: Bagas Ramadhan
+                - paragraph [ref=f8e705]: PD-26003
+              - cell [ref=f8e706]:
+                - paragraph [ref=f8e707]: Paket A Tingkat 1
+                - paragraph [ref=f8e708]: 2026/2027 · Semester Ganjil
+              - cell "5/5 komponen 100% Seluruh komponen wajib lengkap." [ref=f8e709]:
+                - generic [ref=f8e710]:
+                  - generic [ref=f8e711]:
+                    - generic [ref=f8e712]: 5/5 komponen
+                    - generic [ref=f8e713]: 100%
+                  - paragraph [ref=f8e716]: Seluruh komponen wajib lengkap.
+              - cell "Siap dicetak" [ref=f8e717]
+              - cell [ref=f8e720]:
+                - generic [ref=f8e721]:
+                  - link "Cetak rapor" [ref=f8e722] [cursor=pointer]:
+                    - /url: http://127.0.0.1:8002/admin/report-cards/3/pdf/print
+                  - link "Rincian" [ref=f8e725] [cursor=pointer]:
+                    - /url: http://127.0.0.1:8002/admin/report-cards/3/completeness
+            - row [ref=f8e729]:
+              - cell [ref=f8e730]:
+                - paragraph [ref=f8e731]: Aisyah Putri
+                - paragraph [ref=f8e732]: PD-26002
+              - cell [ref=f8e733]:
+                - paragraph [ref=f8e734]: Paket A Tingkat 1
+                - paragraph [ref=f8e735]: 2026/2027 · Semester Ganjil
+              - cell "5/5 komponen 100% Seluruh komponen wajib lengkap." [ref=f8e736]:
+                - generic [ref=f8e737]:
+                  - generic [ref=f8e738]:
+                    - generic [ref=f8e739]: 5/5 komponen
+                    - generic [ref=f8e740]: 100%
+                  - paragraph [ref=f8e743]: Seluruh komponen wajib lengkap.
+              - cell "Siap dicetak" [ref=f8e744]
+              - cell [ref=f8e747]:
+                - generic [ref=f8e748]:
+                  - link "Cetak rapor" [ref=f8e749] [cursor=pointer]:
+                    - /url: http://127.0.0.1:8002/admin/report-cards/2/pdf/print
+                  - link "Rincian" [ref=f8e752] [cursor=pointer]:
+                    - /url: http://127.0.0.1:8002/admin/report-cards/2/completeness
+            - row [ref=f8e756]:
+              - cell [ref=f8e757]:
+                - paragraph [ref=f8e758]: Ahmad Fauzan
+                - paragraph [ref=f8e759]: PD-26001
+              - cell [ref=f8e760]:
+                - paragraph [ref=f8e761]: Paket A Tingkat 1
+                - paragraph [ref=f8e762]: 2026/2027 · Semester Ganjil
+              - cell "5/5 komponen 100% Seluruh komponen wajib lengkap." [ref=f8e763]:
+                - generic [ref=f8e764]:
+                  - generic [ref=f8e765]:
+                    - generic [ref=f8e766]: 5/5 komponen
+                    - generic [ref=f8e767]: 100%
+                  - paragraph [ref=f8e770]: Seluruh komponen wajib lengkap.
+              - cell "Siap dicetak" [ref=f8e771]
+              - cell [ref=f8e774]:
+                - generic [ref=f8e775]:
+                  - link "Cetak rapor" [ref=f8e776] [cursor=pointer]:
+                    - /url: http://127.0.0.1:8002/admin/report-cards/1/pdf/print
+                  - link "Rincian" [ref=f8e779] [cursor=pointer]:
+                    - /url: http://127.0.0.1:8002/admin/report-cards/1/completeness

@@ -1,0 +1,235 @@
+- generic [ref=f13e2]:
+  - complementary "Sidebar utama" [ref=f13e3]:
+    - generic [ref=f13e4]:
+      - link "PC PKBM E-Rapor" [ref=f13e5] [cursor=pointer]:
+        - /url: http://127.0.0.1:8001
+        - generic [ref=f13e6]: PC
+        - generic [ref=f13e7]:
+          - generic [ref=f13e8]: PKBM
+          - generic [ref=f13e9]: E-Rapor
+      - button "Ciutkan sidebar" [expanded] [ref=f13e10]
+    - navigation "Navigasi utama" [ref=f13e13]:
+      - link "Dashboard" [ref=f13e14] [cursor=pointer]:
+        - /url: http://127.0.0.1:8001
+      - generic [ref=f13e19]:
+        - button "Data inti" [expanded] [ref=f13e20]
+        - generic [ref=f13e27]:
+          - link "Data Guru" [ref=f13e28] [cursor=pointer]:
+            - /url: http://127.0.0.1:8001/admin/teachers
+          - link "Peserta didik" [ref=f13e36] [cursor=pointer]:
+            - /url: http://127.0.0.1:8001/admin/students
+          - link "Mata pelajaran" [ref=f13e42] [cursor=pointer]:
+            - /url: http://127.0.0.1:8001/admin/subjects
+          - link "Bank deskripsi" [ref=f13e48] [cursor=pointer]:
+            - /url: http://127.0.0.1:8001/admin/description-snippets
+          - link "Rentang predikat" [ref=f13e53] [cursor=pointer]:
+            - /url: http://127.0.0.1:8001/admin/predicate-ranges
+          - link "Tahun pelajaran" [ref=f13e57] [cursor=pointer]:
+            - /url: http://127.0.0.1:8001/admin/academic-years
+          - link "Program & tingkat" [ref=f13e62] [cursor=pointer]:
+            - /url: http://127.0.0.1:8001/admin/programs
+          - link "Kelas / rombel" [ref=f13e67] [cursor=pointer]:
+            - /url: http://127.0.0.1:8001/admin/academic-classes
+          - link "Penugasan guru & mapel" [ref=f13e73] [cursor=pointer]:
+            - /url: http://127.0.0.1:8001/admin/academic-classes/subject-assignments/bulk
+      - generic [ref=f13e79]:
+        - button "Penilaian" [expanded] [ref=f13e80]
+        - link "Input nilai" [ref=f13e91] [cursor=pointer]:
+          - /url: http://127.0.0.1:8001/admin/grade-entry
+      - generic [ref=f13e99]:
+        - button "Rapor & leger" [expanded] [ref=f13e100]
+        - generic [ref=f13e108]:
+          - link "Kenaikan & Kelulusan" [ref=f13e109] [cursor=pointer]:
+            - /url: http://127.0.0.1:8001/academic-decisions
+          - link "Kelengkapan rapor" [ref=f13e114] [cursor=pointer]:
+            - /url: http://127.0.0.1:8001/admin/report-cards
+          - link "Generator leger" [ref=f13e120] [cursor=pointer]:
+            - /url: http://127.0.0.1:8001/admin/ledger
+          - link "Histori audit" [ref=f13e125] [cursor=pointer]:
+            - /url: http://127.0.0.1:8001/admin/audit-logs
+      - generic [ref=f13e132]:
+        - link "Akun" [ref=f13e133] [cursor=pointer]:
+          - /url: http://127.0.0.1:8001/account/profile
+        - link "Pengaturan PKBM" [ref=f13e139] [cursor=pointer]:
+          - /url: http://127.0.0.1:8001/admin/institutions
+      - generic [ref=f13e145]:
+        - generic [aria-hidden] [ref=f13e146]: AD
+        - generic [ref=f13e147]:
+          - paragraph [ref=f13e148]: Admin Demo
+          - paragraph [ref=f13e149]: Admin
+    - generic [ref=f13e150]: Administrasi akademik PKBM
+  - main [ref=f13e151]:
+    - generic [ref=f13e153]:
+      - generic [ref=f13e160]:
+        - paragraph [ref=f13e161]: Periode aktif
+        - paragraph [ref=f13e163]: 2026/2027 · Semester Ganjil
+      - generic [ref=f13e164]:
+        - generic [ref=f13e165]: Siap digunakan
+        - button "Buka menu akun" [ref=f13e169]:
+          - generic [aria-hidden] [ref=f13e170]: AD
+          - generic [ref=f13e171]:
+            - generic [ref=f13e172]: Admin Demo
+            - generic [ref=f13e173]: Admin
+    - generic [ref=f13e177]:
+      - generic [ref=f13e178]:
+        - generic [ref=f13e179]:
+          - paragraph [ref=f13e180]: Dashboard Admin
+          - heading "Operasional PKBM dalam satu layar" [level=2] [ref=f13e181]
+          - paragraph [ref=f13e182]: Mulai dari fondasi periode, pantau kesiapan data, lalu pastikan nilai dan rapor bergerak sampai siap diterbitkan.
+        - generic [ref=f13e187]:
+          - paragraph [ref=f13e188]: Periode aktif
+          - paragraph [ref=f13e189]: 2026/2027 · Semester Ganjil
+      - status [ref=f13e190]:
+        - generic [ref=f13e196]:
+          - paragraph [ref=f13e197]: Fondasi periode sudah lengkap
+          - paragraph [ref=f13e198]: Data siap dipantau. Gunakan ringkasan di bawah untuk menemukan kelas atau rapor yang perlu ditindaklanjuti.
+        - link "Buka input nilai" [ref=f13e199] [cursor=pointer]:
+          - /url: http://127.0.0.1:8001/admin/grade-entry
+      - region [ref=f13e200]:
+        - generic [ref=f13e201]:
+          - generic [ref=f13e202]:
+            - paragraph [ref=f13e203]: Urutan kerja Admin
+            - heading "Siapkan periode sampai siap menilai" [level=3] [ref=f13e204]
+            - paragraph [ref=f13e205]: Empat fondasi ini membuat angka dashboard dan status rapor dapat dibaca dengan benar.
+          - generic [ref=f13e206]: 4/4 selesai
+        - list [ref=f13e207]:
+          - listitem [ref=f13e208]:
+            - generic [ref=f13e209]: Selesai
+            - heading "Aktifkan periode" [level=4] [ref=f13e214]
+            - paragraph [ref=f13e215]: 2026/2027 · Semester Ganjil
+            - generic [ref=f13e216]: Fondasi tersedia
+          - listitem [ref=f13e217]:
+            - generic [ref=f13e218]: Selesai
+            - heading "Siapkan kelas / rombel" [level=4] [ref=f13e223]
+            - paragraph [ref=f13e224]: 4 kelas aktif
+            - generic [ref=f13e225]: Fondasi tersedia
+          - listitem [ref=f13e226]:
+            - generic [ref=f13e227]: Selesai
+            - heading "Masukkan peserta didik" [level=4] [ref=f13e232]
+            - paragraph [ref=f13e233]: 20 peserta didik aktif
+            - generic [ref=f13e234]: Fondasi tersedia
+          - listitem [ref=f13e235]:
+            - generic [ref=f13e236]: Selesai
+            - heading "Petakan mapel dan guru" [level=4] [ref=f13e241]
+            - paragraph [ref=f13e242]: 40 penugasan aktif
+            - generic [ref=f13e243]: Fondasi tersedia
+      - region [ref=f13e244]:
+        - generic [ref=f13e245]:
+          - heading "Ringkasan periode aktif" [level=3] [ref=f13e246]
+          - generic [ref=f13e247]: Diperbarui dari data operasional
+        - generic [ref=f13e248]:
+          - generic [ref=f13e249]:
+            - paragraph [ref=f13e250]: Kelas aktif
+            - paragraph [ref=f13e251]: "4"
+            - paragraph [ref=f13e252]: Pada periode aktif
+          - generic [ref=f13e253]:
+            - paragraph [ref=f13e254]: Peserta didik
+            - paragraph [ref=f13e255]: "20"
+            - paragraph [ref=f13e256]: Penempatan aktif
+          - generic [ref=f13e257]:
+            - paragraph [ref=f13e258]: Guru aktif
+            - paragraph [ref=f13e259]: "1"
+            - paragraph [ref=f13e260]: Dalam institusi
+          - generic [ref=f13e261]:
+            - paragraph [ref=f13e262]: Rapor siap dicetak
+            - paragraph [ref=f13e263]: "16"
+            - paragraph [ref=f13e264]: Data lengkap dan siap diterbitkan
+      - generic [ref=f13e265]:
+        - region [ref=f13e266]:
+          - generic [ref=f13e267]:
+            - generic [ref=f13e268]:
+              - heading "Progres nilai per kelas" [level=3] [ref=f13e269]
+              - paragraph [ref=f13e270]: Nilai terisi dibanding slot nilai yang diharapkan.
+            - generic [ref=f13e271]: 4 kelas
+          - table [ref=f13e273]:
+            - rowgroup [ref=f13e274]:
+              - row [ref=f13e275]:
+                - columnheader "Kelas" [ref=f13e276]
+                - columnheader "Peserta" [ref=f13e277]
+                - columnheader "Nilai terisi" [ref=f13e278]
+                - columnheader "Progress" [ref=f13e279]
+            - rowgroup [ref=f13e280]:
+              - row [ref=f13e281]:
+                - cell [ref=f13e282]:
+                  - paragraph [ref=f13e283]: Paket A Tingkat 1
+                  - paragraph [ref=f13e284]: PA-1
+                - cell "5" [ref=f13e285]
+                - cell "49 / 50" [ref=f13e286]
+                - cell "98% terisi" [ref=f13e287]:
+                  - generic [ref=f13e289]:
+                    - generic [ref=f13e290]: 98%
+                    - generic [ref=f13e291]: terisi
+              - row [ref=f13e294]:
+                - cell [ref=f13e295]:
+                  - paragraph [ref=f13e296]: Paket B Tingkat 7A
+                  - paragraph [ref=f13e297]: PB-7
+                - cell "5" [ref=f13e298]
+                - cell "50 / 50" [ref=f13e299]
+                - cell "100% terisi" [ref=f13e300]:
+                  - generic [ref=f13e302]:
+                    - generic [ref=f13e303]: 100%
+                    - generic [ref=f13e304]: terisi
+              - row [ref=f13e307]:
+                - cell [ref=f13e308]:
+                  - paragraph [ref=f13e309]: Paket B Tingkat 8A
+                  - paragraph [ref=f13e310]: PB-8
+                - cell "5" [ref=f13e311]
+                - cell "50 / 50" [ref=f13e312]
+                - cell "100% terisi" [ref=f13e313]:
+                  - generic [ref=f13e315]:
+                    - generic [ref=f13e316]: 100%
+                    - generic [ref=f13e317]: terisi
+              - row [ref=f13e320]:
+                - cell [ref=f13e321]:
+                  - paragraph [ref=f13e322]: Paket C Tingkat 10A
+                  - paragraph [ref=f13e323]: PC-10
+                - cell "5" [ref=f13e324]
+                - cell "50 / 50" [ref=f13e325]
+                - cell "100% terisi" [ref=f13e326]:
+                  - generic [ref=f13e328]:
+                    - generic [ref=f13e329]: 100%
+                    - generic [ref=f13e330]: terisi
+        - region [ref=f13e333]:
+          - paragraph [ref=f13e334]: Status rapor
+          - paragraph [ref=f13e335]: Ringkasan kesiapan rapor pada periode aktif.
+          - generic [ref=f13e336]:
+            - generic [ref=f13e337]:
+              - generic [ref=f13e338]: Belum siap dicetak
+              - strong [ref=f13e339]: "1"
+            - generic [ref=f13e340]:
+              - generic [ref=f13e341]: Siap dicetak
+              - strong [ref=f13e342]: "16"
+            - generic [ref=f13e343]:
+              - generic [ref=f13e344]: Terkunci
+              - strong [ref=f13e345]: "3"
+            - generic [ref=f13e346]:
+              - generic [ref=f13e347]: Perlu diperbarui
+              - strong [ref=f13e348]: "0"
+      - generic [ref=f13e349]:
+        - region [ref=f13e350]:
+          - heading "Akses cepat" [level=3] [ref=f13e351]
+          - paragraph [ref=f13e352]: Buka pekerjaan yang paling sering dipakai Admin.
+          - generic [ref=f13e353]:
+            - link "Input nilai" [ref=f13e354] [cursor=pointer]:
+              - /url: http://127.0.0.1:8001/admin/grade-entry
+            - link "Kelola rapor" [ref=f13e355] [cursor=pointer]:
+              - /url: http://127.0.0.1:8001/admin/report-cards
+            - link "Data peserta didik" [ref=f13e356] [cursor=pointer]:
+              - /url: http://127.0.0.1:8001/admin/students
+            - link "Tahun pelajaran" [ref=f13e357] [cursor=pointer]:
+              - /url: http://127.0.0.1:8001/admin/academic-years
+        - region [ref=f13e358]:
+          - generic [ref=f13e359]:
+            - heading "Perpindahan terbaru" [level=3] [ref=f13e360]
+            - paragraph [ref=f13e361]: Riwayat perpindahan yang sudah disetujui Admin.
+          - table [ref=f13e363]:
+            - rowgroup [ref=f13e364]:
+              - row [ref=f13e365]:
+                - columnheader "Peserta didik" [ref=f13e366]
+                - columnheader "Asal → tujuan" [ref=f13e367]
+                - columnheader "Tanggal" [ref=f13e368]
+            - rowgroup [ref=f13e369]:
+              - row [ref=f13e370]:
+                - cell "Naufal Ardiansyah" [ref=f13e371]
+                - cell "Paket B Tingkat 7A → Paket B Tingkat 8A" [ref=f13e372]
+                - cell "16/09/2026" [ref=f13e373]

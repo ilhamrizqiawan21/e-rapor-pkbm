@@ -1,0 +1,103 @@
+- main [ref=f69e3]:
+  - generic [ref=f69e5]:
+    - generic [ref=f69e6]:
+      - button "Buka menu navigasi" [ref=f69e7]
+      - generic [ref=f69e11]:
+        - paragraph [ref=f69e12]: Periode aktif
+        - paragraph [ref=f69e14]: 2027/2028 · Semester Genap
+    - button "Buka menu akun" [ref=f69e17]:
+      - generic [aria-hidden] [ref=f69e18]: KP
+  - generic [ref=f69e22]:
+    - generic [ref=f69e23]:
+      - generic [ref=f69e24]:
+        - paragraph [ref=f69e25]: Dashboard Kepala PKBM
+        - heading "Pantau rapor peserta didik" [level=2] [ref=f69e26]
+        - paragraph [ref=f69e27]: Lihat kesiapan data dan hasil rapor tanpa tahap pengajuan atau persetujuan.
+      - generic [ref=f69e28]:
+        - paragraph [ref=f69e29]: Periode aktif
+        - paragraph [ref=f69e30]: 2027/2028 · Semester Genap
+    - region "Ringkasan rapor" [ref=f69e31]:
+      - generic [ref=f69e32]:
+        - paragraph [ref=f69e33]: Rapor belum siap dicetak
+        - paragraph [ref=f69e34]: "5"
+        - paragraph [ref=f69e35]: Masih perlu dilengkapi
+      - generic [ref=f69e36]:
+        - paragraph [ref=f69e37]: Rapor siap dicetak
+        - paragraph [ref=f69e38]: "0"
+        - paragraph [ref=f69e39]: Dapat diterbitkan wali kelas
+      - generic [ref=f69e40]:
+        - paragraph [ref=f69e41]: Rapor belum lengkap
+        - paragraph [ref=f69e42]: "0"
+        - paragraph [ref=f69e43]: Perlu diperbarui
+      - generic [ref=f69e44]:
+        - paragraph [ref=f69e45]: Terkunci
+        - paragraph [ref=f69e46]: "0"
+        - paragraph [ref=f69e47]: Arsip final
+    - generic [ref=f69e48]:
+      - region [ref=f69e49]:
+        - generic [ref=f69e50]:
+          - heading "Rapor yang perlu dipantau" [level=3] [ref=f69e51]
+          - paragraph [ref=f69e52]: Buka detail kelengkapan atau langsung lihat dokumen yang tersedia.
+        - generic [ref=f69e53]:
+          - generic [ref=f69e54]:
+            - generic [ref=f69e55]:
+              - paragraph [ref=f69e56]: Aisyah Putri
+              - paragraph [ref=f69e57]: Paket A Tingkat 1 · Diperbarui 07/11/2026 16:01
+            - link "Buka rapor" [ref=f69e58] [cursor=pointer]:
+              - /url: http://localhost:8000/admin/report-cards/22/completeness
+          - generic [ref=f69e59]:
+            - generic [ref=f69e60]:
+              - paragraph [ref=f69e61]: Bagas Ramadhan
+              - paragraph [ref=f69e62]: Paket A Tingkat 1 · Diperbarui 07/11/2026 16:01
+            - link "Buka rapor" [ref=f69e63] [cursor=pointer]:
+              - /url: http://localhost:8000/admin/report-cards/23/completeness
+          - generic [ref=f69e64]:
+            - generic [ref=f69e65]:
+              - paragraph [ref=f69e66]: Citra Lestari
+              - paragraph [ref=f69e67]: Paket A Tingkat 1 · Diperbarui 07/11/2026 16:01
+            - link "Buka rapor" [ref=f69e68] [cursor=pointer]:
+              - /url: http://localhost:8000/admin/report-cards/24/completeness
+          - generic [ref=f69e69]:
+            - generic [ref=f69e70]:
+              - paragraph [ref=f69e71]: Deni Kurniawan
+              - paragraph [ref=f69e72]: Paket A Tingkat 1 · Diperbarui 07/11/2026 16:01
+            - link "Buka rapor" [ref=f69e73] [cursor=pointer]:
+              - /url: http://localhost:8000/admin/report-cards/25/completeness
+          - generic [ref=f69e74]:
+            - generic [ref=f69e75]:
+              - paragraph [ref=f69e76]: Ahmad Fauzan
+              - paragraph [ref=f69e77]: Paket A Tingkat 1 · Diperbarui 07/11/2026 16:00
+            - link "Buka rapor" [ref=f69e78] [cursor=pointer]:
+              - /url: http://localhost:8000/admin/report-cards/21/completeness
+      - region [ref=f69e79]:
+        - paragraph [ref=f69e80]: Status penerbitan
+        - paragraph [ref=f69e81]: Ringkasan rapor pada periode aktif.
+        - generic [ref=f69e82]:
+          - generic [ref=f69e83]:
+            - generic [ref=f69e84]: Belum siap dicetak
+            - strong [ref=f69e85]: "5"
+          - generic [ref=f69e86]:
+            - generic [ref=f69e87]: Siap dicetak
+            - strong [ref=f69e88]: "0"
+          - generic [ref=f69e89]:
+            - generic [ref=f69e90]: Terkunci
+            - strong [ref=f69e91]: "0"
+        - link "Buka cetak rapor" [ref=f69e92] [cursor=pointer]:
+          - /url: http://localhost:8000/admin/report-cards
+    - region [ref=f69e93]:
+      - generic [ref=f69e94]:
+        - heading "Kesiapan per kelas" [level=3] [ref=f69e95]
+        - paragraph [ref=f69e96]: Gunakan ringkasan ini untuk melihat kelas yang masih perlu dilengkapi.
+      - generic [ref=f69e97]:
+        - article [ref=f69e98]:
+          - paragraph [ref=f69e99]: Paket A Tingkat 1
+          - paragraph [ref=f69e100]: 5 rapor · 0 siap cetak · 0 terkunci
+        - article [ref=f69e101]:
+          - paragraph [ref=f69e102]: Paket B Tingkat 7A
+          - paragraph [ref=f69e103]: 0 rapor · 0 siap cetak · 0 terkunci
+        - article [ref=f69e104]:
+          - paragraph [ref=f69e105]: Paket B Tingkat 8A
+          - paragraph [ref=f69e106]: 0 rapor · 0 siap cetak · 0 terkunci
+        - article [ref=f69e107]:
+          - paragraph [ref=f69e108]: Paket C Tingkat 10A
+          - paragraph [ref=f69e109]: 0 rapor · 0 siap cetak · 0 terkunci

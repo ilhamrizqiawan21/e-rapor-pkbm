@@ -25,7 +25,7 @@ final class ReportCardAssessmentService
     /** @return array{reportCard: ReportCard, attitudes: Collection<int|string, AttitudeAssessment>, attendance: AttendanceSummary} */
     public function surface(ReportCard $reportCard, User $actor): array
     {
-        Gate::forUser($actor)->authorize('view', $reportCard);
+        Gate::forUser($actor)->authorize('viewCompleteness', $reportCard);
 
         $reportCard->load([
             'enrollment.student',

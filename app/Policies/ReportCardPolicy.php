@@ -66,6 +66,24 @@ class ReportCardPolicy
             && $this->hasHomeroomSurfaceAccess($user, $reportCard);
     }
 
+    /**
+     * Allow operational read access to the full completeness workspace while
+     * keeping its write actions behind manageCompleteness.
+     */
+    public function viewCompleteness(User $user, ReportCard $reportCard): bool
+    {
+        if (! $this->belongsToInstitution($user, $reportCard)) {
+            return false;
+        }
+
+        if ($user->hasAnyRole(['ADMIN', 'KEPSEK'])) {
+            return true;
+        }
+
+        return $user->hasRole('GURU')
+            && $reportCard->enrollment?->academicClass?->homeroom_teacher_id === $user->getKey();
+    }
+
     public function manageCompleteness(User $user, ReportCard $reportCard): bool
     {
         if (! $this->belongsToInstitution($user, $reportCard) || $reportCard->status === 'LOCKED' || $this->periodClosed($reportCard)) {
@@ -126,34 +144,6 @@ class ReportCardPolicy
     public function forceDelete(User $user, ReportCard $reportCard): bool
     {
         return false;
-    }
-
-    public function review(User $user, ReportCard $reportCard): bool
-    {
-        return $reportCard->status === 'SUBMITTED'
-            && $user->hasRole('GURU')
-            && $this->hasHomeroomSurfaceAccess($user, $reportCard);
-    }
-
-    public function submit(User $user, ReportCard $reportCard): bool
-    {
-        return in_array($reportCard->status, ['DRAFT', 'NEEDS_REVISION'], true)
-            && $this->hasClassAccess($user, $reportCard)
-            && $user->hasRole('GURU');
-    }
-
-    public function reject(User $user, ReportCard $reportCard): bool
-    {
-        return $reportCard->status === 'IN_REVIEW'
-            && $this->hasClassAccess($user, $reportCard)
-            && $user->hasRole('KEPSEK');
-    }
-
-    public function approve(User $user, ReportCard $reportCard): bool
-    {
-        return $reportCard->status === 'IN_REVIEW'
-            && $this->hasClassAccess($user, $reportCard)
-            && $user->hasRole('KEPSEK');
     }
 
     public function lock(User $user, ReportCard $reportCard): bool
