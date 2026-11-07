@@ -44,7 +44,7 @@ class GradeEntryControllerTest extends TestCase
             'semester_id' => $semester->id,
             'class_id' => $assignment->class_id,
             'subject_id' => $assignment->subject_id,
-        ]))->assertOk()->assertSee('Input nilai')->assertSee('Siswa Uji')->assertSee('KKM 70')->assertSee('Materi / capaian')->assertSee('Pilih materi dari bank deskripsi');
+        ]))->assertOk()->assertSee('Input nilai')->assertSee('Siswa Uji')->assertSee('KKM 70')->assertSee('Materi / capaian pembelajaran')->assertSee('Deskripsi otomatis')->assertSee('readonly', false)->assertSee('Pilih dari bank deskripsi')->assertDontSee('>Ajukan<', false);
     }
 
     public function test_single_row_validation_keeps_invalid_score_out_of_database(): void

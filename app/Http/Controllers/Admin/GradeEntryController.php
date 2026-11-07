@@ -43,6 +43,7 @@ class GradeEntryController extends Controller
             'class_id' => $data['class_id'],
             'subject_id' => $data['subject_id'] ?? null,
             'subject_assignment_id' => $data['subject_assignment_id'],
+            'material' => $data['material'] ?? null,
         ], $data['rows']);
 
         if ($request->expectsJson()) {

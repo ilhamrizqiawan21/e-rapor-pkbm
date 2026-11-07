@@ -21,6 +21,7 @@ class StoreReportGradesRequest extends FormRequest
             'class_id' => ['required', 'integer'],
             'subject_id' => ['nullable', 'integer'],
             'subject_assignment_id' => ['required', 'integer'],
+            'material' => ['nullable', 'string', 'max:10000'],
             'rows' => ['required', 'array', 'max:100'],
             'rows.*.enrollment_id' => ['required', 'integer'],
             'rows.*.score' => ['nullable'],

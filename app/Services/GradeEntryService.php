@@ -23,6 +23,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use InvalidArgumentException;
 use LogicException;
@@ -109,8 +110,9 @@ final class GradeEntryService
         $score = $this->normaliseScore($data['score'] ?? null);
         $description = array_key_exists('description', $data) ? $data['description'] : null;
         $snippetId = $data['description_snippet_id'] ?? null;
+        $material = trim((string) ($data['material'] ?? ''));
 
-        return DB::transaction(function () use ($actor, $context, $data, $score, $description, $snippetId): ReportGrade {
+        return DB::transaction(function () use ($actor, $context, $data, $score, $description, $snippetId, $material): ReportGrade {
             /** @var Enrollment $enrollment */
             $enrollment = $context['enrollment'];
             /** @var Semester $semester */
@@ -141,6 +143,8 @@ final class GradeEntryService
                 $snippet = $actor->ownedDescriptionSnippets()->whereKey($snippetId)->first()
                     ?? DescriptionSnippet::query()->whereKey($snippetId)->firstOrFail();
                 $grade = $this->snippets->applySnippet($actor, $grade, $snippet);
+            } elseif ($material !== '' && $score !== null) {
+                $grade = $this->snippets->updateFinalDescription($actor, $grade, $this->descriptionFromMaterial($actor, $grade, $material));
             } elseif (array_key_exists('description', $data)) {
                 $grade = $this->snippets->updateFinalDescription($actor, $grade, $description);
             }
@@ -198,6 +202,16 @@ final class GradeEntryService
         if (! $actor->hasAnyRole(['ADMIN', 'GURU'])) {
             throw new AuthorizationException('Hanya Admin atau Guru yang dapat menyimpan nilai.');
         }
+    }
+
+    private function descriptionFromMaterial(User $actor, ReportGrade $grade, string $material): string
+    {
+        $range = $this->predicateRanges->ensureDefaults($actor->institution)
+            ->first(fn ($item): bool => strtoupper((string) $item->code) === strtoupper((string) $grade->predicate));
+
+        return $range === null
+            ? $material
+            : sprintf('Siswa %s dalam %s.', Str::lower($range->label), $material);
     }
 
     /** @return Builder<AcademicYear> */

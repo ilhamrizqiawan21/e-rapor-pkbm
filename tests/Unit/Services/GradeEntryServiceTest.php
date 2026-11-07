@@ -81,6 +81,18 @@ class GradeEntryServiceTest extends TestCase
         $this->assertSame('Siswa sangat baik dalam memahami pengertian sifat terpuji.', $grade->description);
     }
 
+    public function test_it_uses_one_shared_material_for_a_grade_without_a_bank_snippet(): void
+    {
+        [$guru, $assignment, $semester, $enrollment] = $this->academicSetup();
+
+        $grade = app(GradeEntryService::class)->saveRow($guru, $this->row($assignment, $semester, $enrollment, [
+            'score' => 90,
+            'material' => 'memahami pengertian sifat terpuji',
+        ]));
+
+        $this->assertSame('Siswa sangat baik dalam memahami pengertian sifat terpuji.', $grade->description);
+    }
+
     public function test_it_rejects_invalid_scores_without_creating_a_grade(): void
     {
         [$guru, $assignment, $semester, $enrollment] = $this->academicSetup();
