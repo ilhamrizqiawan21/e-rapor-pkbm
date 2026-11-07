@@ -38,7 +38,7 @@ class StudentImportServiceTest extends TestCase
     public function test_invalid_header_is_rejected(): void
     {
         $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage('Header file tidak valid');
+        $this->expectExceptionMessage('Kolom file tidak sesuai template');
 
         app(StudentImportService::class)->preview(
             $this->csv("Salah,Nama Lengkap\n1,Ani\n"),

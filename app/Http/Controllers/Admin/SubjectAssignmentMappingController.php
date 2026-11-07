@@ -55,7 +55,7 @@ class SubjectAssignmentMappingController extends Controller
         return redirect()
             ->back()
             ->with('status', sprintf(
-                'Mapping bulk selesai: %d penugasan ditambahkan, %d mapping yang sudah ada dilewati.',
+                'Penugasan selesai: %d penugasan ditambahkan, %d penugasan yang sudah ada dilewati.',
                 $result['created'],
                 $result['skipped'],
             ));

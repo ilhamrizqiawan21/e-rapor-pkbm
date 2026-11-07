@@ -20,7 +20,7 @@ final class ReportCardPdfController extends Controller
 {
     public function preview(Request $request, ReportCard $reportCard, ReportCardPdfDataService $pdf, AuditLogger $audit): View|Response
     {
-        Gate::authorize('view', $reportCard);
+        Gate::authorize('export', $reportCard);
         $audit->record($request->user(), 'report_card.viewed', ReportCard::class, $reportCard->getKey());
 
         try {
@@ -42,6 +42,16 @@ final class ReportCardPdfController extends Controller
         return $this->single($request, $reportCard, $pdf, 'inline', $audit);
     }
 
+    public function identity(Request $request, ReportCard $reportCard, ReportCardPdfDataService $pdf, AuditLogger $audit): Response
+    {
+        return $this->extract($request, $reportCard, $pdf, 'identitas', $audit);
+    }
+
+    public function grades(Request $request, ReportCard $reportCard, ReportCardPdfDataService $pdf, AuditLogger $audit): Response
+    {
+        return $this->extract($request, $reportCard, $pdf, 'nilai', $audit);
+    }
+
     public function batch(
         Request $request,
         AcademicClass $academicClass,
@@ -54,10 +64,7 @@ final class ReportCardPdfController extends Controller
         $semester->loadMissing('academicYear');
 
         if ($request->user()->hasRole('GURU')) {
-            $hasClassAccess = $academicClass->homeroom_teacher_id === $request->user()->getKey()
-                || $academicClass->subjectAssignments()->where('teacher_id', $request->user()->getKey())->exists();
-
-            abort_unless($hasClassAccess, 403);
+            abort_unless($academicClass->homeroom_teacher_id === $request->user()->getKey(), 403);
         }
 
         abort_unless(
@@ -87,7 +94,7 @@ final class ReportCardPdfController extends Controller
 
     private function single(Request $request, ReportCard $reportCard, ReportCardPdfDataService $pdf, string $disposition, AuditLogger $audit): Response
     {
-        Gate::authorize('view', $reportCard);
+        Gate::authorize('export', $reportCard);
 
         try {
             $filename = $pdf->filename($reportCard);
@@ -102,6 +109,32 @@ final class ReportCardPdfController extends Controller
             return response($contents, 200, [
                 'Content-Type' => 'application/pdf',
                 'Content-Disposition' => $disposition.'; filename="'.$filename.'"',
+                'Content-Length' => (string) strlen($contents),
+            ]);
+        } catch (PdfEngineUnavailable $exception) {
+            return $this->failure($exception, 503);
+        } catch (ReportCardPdfException $exception) {
+            return $this->failure($exception, 422);
+        }
+    }
+
+    private function extract(Request $request, ReportCard $reportCard, ReportCardPdfDataService $pdf, string $suffix, AuditLogger $audit): Response
+    {
+        Gate::authorize('export', $reportCard);
+
+        try {
+            $contents = $suffix === 'identitas'
+                ? $pdf->identityPdf($reportCard)
+                : $pdf->gradesPdf($reportCard);
+            $filename = str_replace('.pdf', '-'.$suffix.'.pdf', $pdf->filename($reportCard));
+            $audit->record($request->user(), 'report_card.exported', ReportCard::class, $reportCard->getKey(), null, [
+                'format' => $suffix.'-pdf',
+                'filename' => $filename,
+            ]);
+
+            return response($contents, 200, [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'attachment; filename="'.$filename.'"',
                 'Content-Length' => (string) strlen($contents),
             ]);
         } catch (PdfEngineUnavailable $exception) {

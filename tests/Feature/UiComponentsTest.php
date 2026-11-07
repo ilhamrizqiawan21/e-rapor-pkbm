@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Enums\RoleCode;
 use App\Models\User;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -23,7 +24,8 @@ class UiComponentsTest extends TestCase
 
     public function test_components_showcase_page_loads_successfully(): void
     {
-        $response = $this->get(route('components.showcase'));
+        $response = $this->actingAs(User::factory()->withRole(RoleCode::Admin)->create())
+            ->get(route('components.showcase'));
 
         $response->assertStatus(200);
         $response->assertSee('Showcase Komponen UI');
@@ -40,6 +42,17 @@ class UiComponentsTest extends TestCase
         $link = $this->blade('<x-button href="https://example.com" variant="secondary">Batal</x-button>');
         $link->assertSee('Batal');
         $link->assertSee('href="https://example.com"', false);
+    }
+
+    public function test_card_component_renders_a_consistent_surface(): void
+    {
+        $card = $this->blade('<x-card class="h-full" padding="lg">Ringkasan data</x-card>');
+
+        $card->assertSee('Ringkasan data');
+        $card->assertSee('rounded-2xl', false);
+        $card->assertSee('shadow-xs', false);
+        $card->assertSee('h-full', false);
+        $card->assertSee('sm:p-8', false);
     }
 
     public function test_input_component_renders_label_hint_and_error(): void
@@ -60,6 +73,19 @@ class UiComponentsTest extends TestCase
         $select->assertSee('Kelas');
         $select->assertSee('value="1"', false);
         $select->assertSee('Paket A');
+        $select->assertSee('appearance-none', false);
+        $select->assertSee('focus:ring-2', false);
+        $select->assertSee('pointer-events-none absolute inset-y-0 right-0', false);
+    }
+
+    public function test_select_component_supports_styled_multiple_controls(): void
+    {
+        $select = $this->blade('<x-select label="Mata pelajaran" name="subject_ids[]" multiple><option value="1" selected>Matematika</option></x-select>');
+
+        $select->assertSee('multiple', false);
+        $select->assertSee('min-h-40', false);
+        $select->assertSee('Matematika');
+        $select->assertDontSee('pointer-events-none absolute inset-y-0 right-0', false);
     }
 
     public function test_textarea_component_renders_rows_and_value(): void

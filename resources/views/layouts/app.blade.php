@@ -121,7 +121,7 @@
                                         <div class="min-w-0">
                                             <p class="truncate text-sm font-semibold text-slate-950">{{ $currentUser->name }}</p>
                                             <p class="truncate text-xs text-slate-500">{{ $currentUser->username }}</p>
-                                            <p class="mt-1 text-xs font-semibold text-accent-700">Role: {{ $currentRoleLabel }}</p>
+                                            <p class="mt-1 text-xs font-semibold text-accent-700">Peran: {{ $currentRoleLabel }}</p>
                                         </div>
                                     </div>
                                     <div class="p-2">

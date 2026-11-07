@@ -90,7 +90,7 @@ class ReportCardPdfControllerTest extends TestCase
         $response->assertOk();
         $html = (string) $response->getContent();
         $this->assertStringContainsString('Pencapaian Kompetensi Peserta Didik', $html);
-        $this->assertStringContainsString('size: 215.9mm 330.2mm', $html);
+        $this->assertStringContainsString('size: A4 portrait', $html);
         $this->assertStringContainsString('NIPD-001 / Siti Master', $html);
         $this->assertStringContainsString('RAPOR/2025/2026/Semester Ganjil/NIPD-001/RAPOR-001', $html);
         $this->assertStringContainsString('Footer rapor PKBM', $html);

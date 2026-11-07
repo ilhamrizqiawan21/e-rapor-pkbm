@@ -63,7 +63,7 @@ class AuthUiTest extends TestCase
             ->assertSee('Profil saya')
             ->assertSee('Ubah password')
             ->assertSee('Keluar')
-            ->assertSee('Role: Admin');
+            ->assertSee('Peran: Admin');
     }
 
     public function test_role_dashboard_routes_are_restricted_to_the_matching_role(): void

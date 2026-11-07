@@ -13,7 +13,7 @@ test.describe('13-14 leger and dashboard browser flows', () => {
         await login(page, 'admin', '/dashboard/admin');
         await page.goto('/admin/ledger');
 
-        await expect(page.getByRole('heading', { name: 'Generator leger nilai', exact: true })).toBeVisible();
+        await expect(page.getByRole('heading', { name: 'Leger nilai', exact: true })).toBeVisible();
         await expect(page.getByRole('heading', { name: 'Belum ada periode leger', exact: true })).toBeVisible();
     });
 
@@ -31,7 +31,7 @@ test.describe('13-14 leger and dashboard browser flows', () => {
         await page.locator('header').getByRole('button', { name: /Akun|Admin Demo|Guru Demo|Kepala PKBM/ }).click();
         await page.getByRole('menuitem', { name: 'Keluar' }).click();
         await login(page, 'kepsek', '/dashboard/kepsek');
-        await expect(page.getByRole('heading', { name: 'Pusat review dan persetujuan rapor', exact: true })).toBeVisible();
-        await expect(page.getByText('Antrean review', { exact: true })).toBeVisible();
+        await expect(page.getByRole('heading', { name: 'Pusat tinjauan dan persetujuan rapor', exact: true })).toBeVisible();
+        await expect(page.getByText('Antrean tinjauan', { exact: true })).toBeVisible();
     });
 });

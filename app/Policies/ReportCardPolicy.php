@@ -50,7 +50,7 @@ class ReportCardPolicy
         }
 
         return $user->hasRole('GURU')
-            && in_array($reportCard->status, ['DRAFT', 'NEEDS_REVISION'], true)
+            && $reportCard->status !== 'LOCKED'
             && $this->hasClassAccess($user, $reportCard);
     }
 
@@ -77,7 +77,27 @@ class ReportCardPolicy
         }
 
         return $user->hasRole('GURU')
-            && in_array($reportCard->status, ['DRAFT', 'NEEDS_REVISION'], true)
+            && $reportCard->status !== 'LOCKED'
+            && $reportCard->enrollment?->academicClass?->homeroom_teacher_id === $user->getKey();
+    }
+
+    /**
+     * Determine whether the user can export or print the report card.
+     *
+     * Report output belongs to the homeroom workflow. Subject teachers may
+     * still enter grades, but they do not publish a class report.
+     */
+    public function export(User $user, ReportCard $reportCard): bool
+    {
+        if (! $this->belongsToInstitution($user, $reportCard)) {
+            return false;
+        }
+
+        if ($user->hasAnyRole(['ADMIN', 'KEPSEK'])) {
+            return true;
+        }
+
+        return $user->hasRole('GURU')
             && $reportCard->enrollment?->academicClass?->homeroom_teacher_id === $user->getKey();
     }
 
@@ -137,8 +157,8 @@ class ReportCardPolicy
 
     public function lock(User $user, ReportCard $reportCard): bool
     {
-        // Locking is an explicit Admin action and is valid only after approval.
-        return $reportCard->status === 'APPROVED'
+        // Locking is an optional archival action; it is not an approval step.
+        return $reportCard->status !== 'LOCKED'
             && $this->belongsToInstitution($user, $reportCard)
             && $user->hasRole('ADMIN');
     }
@@ -193,7 +213,7 @@ class ReportCardPolicy
         }
 
         return $user->hasRole('ADMIN')
-            || ($user->hasRole('GURU') && in_array($reportCard->status, ['DRAFT', 'NEEDS_REVISION'], true));
+            || ($user->hasRole('GURU') && $reportCard->status !== 'LOCKED');
     }
 
     private function belongsToInstitution(User $user, ReportCard $reportCard): bool

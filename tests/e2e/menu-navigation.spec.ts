@@ -34,7 +34,7 @@ async function assertNavigationPresentation(page: Page, role: Role): Promise<voi
         : page.locator('#desktop-sidebar-navigation');
 
     const groups = role === 'kepsek'
-        ? ['Data inti', 'Review & persetujuan rapor', 'Akun']
+        ? ['Data inti', 'Tinjauan & persetujuan rapor', 'Akun']
         : ['Data inti', 'Penilaian', role === 'guru' ? 'Rapor & leger' : 'Rapor & leger', 'Akun'];
 
     for (const group of groups) {

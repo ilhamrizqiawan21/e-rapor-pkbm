@@ -33,7 +33,7 @@
     </script>
 
     <div class="mx-auto max-w-6xl space-y-6">
-        <x-page-header eyebrow="Kelengkapan rapor" title="Ekstrakurikuler & catatan wali kelas" description="Lengkapi bagian rapor untuk peserta didik sebelum rapor diajukan." back-href="{{ route('admin.report-cards.index') }}" back-text="Kembali ke daftar rapor">
+        <x-page-header eyebrow="Kelengkapan rapor" title="Ekstrakurikuler & catatan wali kelas" description="Lengkapi bagian rapor untuk peserta didik sebelum rapor diekspor atau dicetak." back-href="{{ route('admin.report-cards.index') }}" back-text="Kembali ke daftar rapor">
             <div class="rounded-xl border border-slate-200 bg-white px-4 py-3 text-right shadow-sm">
                 <p class="text-xs font-medium uppercase tracking-wide text-slate-500">Peserta didik</p>
                 <p class="mt-1 font-semibold text-slate-950">{{ $reportCard->enrollment?->student?->full_name }}</p>
@@ -48,7 +48,7 @@
                     @if ($progress['missing'] !== [])
                         <p class="mt-1 text-sm {{ $progress['complete'] ? 'text-emerald-700' : 'text-amber-800' }}">Belum lengkap: {{ collect($progress['missing'])->pluck('label')->implode(', ') }}</p>
                     @else
-                        <p class="mt-1 text-sm text-emerald-700">Rapor siap diajukan untuk pemeriksaan.</p>
+                        <p class="mt-1 text-sm text-emerald-700">Rapor siap diekspor dan dicetak oleh wali kelas.</p>
                     @endif
                 </div>
                 @if (! $editable)

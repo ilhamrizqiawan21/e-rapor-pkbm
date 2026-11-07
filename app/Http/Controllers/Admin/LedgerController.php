@@ -31,11 +31,7 @@ final class LedgerController extends Controller
             ->with(['program', 'level', 'academicYear'])
             ->whereHas('program', fn (Builder $query): Builder => $query->where('institution_id', $user->institution_id))
             ->when($user->hasRole('GURU'), function (Builder $query) use ($user): void {
-                $query->where(function (Builder $class) use ($user): void {
-                    $class
-                        ->where('homeroom_teacher_id', $user->getKey())
-                        ->orWhereHas('subjectAssignments', fn (Builder $assignment): Builder => $assignment->where('teacher_id', $user->getKey()));
-                });
+                $query->where('homeroom_teacher_id', $user->getKey());
             })
             ->orderBy('academic_year_id')
             ->orderBy('code')

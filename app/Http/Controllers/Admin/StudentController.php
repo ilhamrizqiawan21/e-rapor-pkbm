@@ -159,11 +159,11 @@ class StudentController extends Controller
 
         if ($student->enrollments()->exists()) {
             $student->update(['status' => 'INACTIVE']);
-            $audit->record($request->user(), 'student.updated', Student::class, $student->getKey(), $oldValues, ['status' => 'INACTIVE'], 'Akun dinonaktifkan karena memiliki histori enrollment.');
+            $audit->record($request->user(), 'student.updated', Student::class, $student->getKey(), $oldValues, ['status' => 'INACTIVE'], 'Akun dinonaktifkan karena memiliki riwayat penempatan.');
 
             return redirect()
                 ->route('admin.students.index')
-                ->with('status', 'Peserta didik memiliki histori enrollment sehingga dinonaktifkan, bukan dihapus.');
+                ->with('status', 'Peserta didik memiliki riwayat penempatan sehingga dinonaktifkan, bukan dihapus.');
         }
 
         $audit->record($request->user(), 'student.deleted', Student::class, $student->getKey(), $oldValues);

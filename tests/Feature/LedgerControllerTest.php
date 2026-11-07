@@ -52,7 +52,7 @@ class LedgerControllerTest extends TestCase
         $this->actingAs($fixture['admin'])
             ->get(route('admin.ledger.index'))
             ->assertOk()
-            ->assertSee('Generator leger nilai')
+            ->assertSee('Leger nilai')
             ->assertSee('Unduh semua Excel')
             ->assertSee('Kelas 1');
     }

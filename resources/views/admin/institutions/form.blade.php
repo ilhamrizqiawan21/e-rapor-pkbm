@@ -48,7 +48,7 @@
         <div class="flex flex-col gap-5 sm:flex-row sm:items-start">
             <div class="flex h-36 w-36 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-brand-50 ring-1 ring-brand-100">
                 <template x-if="previewUrl">
-                    <img :src="previewUrl" alt="Preview logo PKBM" class="h-full w-full object-contain p-3">
+                    <img :src="previewUrl" alt="Pratinjau logo PKBM" class="h-full w-full object-contain p-3">
                 </template>
                 <template x-if="!previewUrl">
                     <span class="text-center text-xs font-medium text-slate-500">Belum ada logo</span>

@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="mx-auto max-w-4xl">
-        <x-page-header eyebrow="Konfigurasi rapor" title="Preview konversi nilai" description="Uji nilai terhadap rentang predikat aktif institusi." back-href="{{ route('admin.predicate-ranges.index') }}" back-text="Kembali ke rentang predikat" />
+        <x-page-header eyebrow="Konfigurasi rapor" title="Pratinjau konversi nilai" description="Uji nilai terhadap rentang predikat aktif institusi." back-href="{{ route('admin.predicate-ranges.index') }}" back-text="Kembali ke rentang predikat" />
         <form method="GET" action="{{ route('admin.predicate-ranges.preview') }}" class="mb-5 flex flex-col gap-3 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:flex-row sm:items-end">
             <x-input name="score" type="number" min="0" max="100" label="Nilai" :value="old('score', $score ?? '')" required />
             <x-button type="submit">Konversi</x-button>

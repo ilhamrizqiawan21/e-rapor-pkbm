@@ -35,7 +35,7 @@
 
             @yield('content')
 
-            <p class="mt-6 text-center text-xs text-slate-500">{{ config('app.name') }} · Laravel {{ app()->version() }}</p>
+            <p class="mt-6 text-center text-xs text-slate-500">{{ config('app.name') }}</p>
         </div>
     </main>
 </body>

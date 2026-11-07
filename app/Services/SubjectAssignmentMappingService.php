@@ -110,7 +110,7 @@ final class SubjectAssignmentMappingService
 
             $academicYearIds = $classes->pluck('academic_year_id')->unique();
             if ($academicYearIds->count() !== 1) {
-                throw ValidationException::withMessages(['class_ids' => 'Bulk mapping hanya dapat dilakukan pada kelas dalam satu tahun pelajaran.']);
+                throw ValidationException::withMessages(['class_ids' => 'Penugasan beberapa kelas hanya dapat dilakukan pada kelas dalam satu tahun pelajaran.']);
             }
 
             foreach ($classes as $class) {
@@ -298,7 +298,7 @@ final class SubjectAssignmentMappingService
     private function assertAdmin(User $actor, AcademicClass $academicClass): void
     {
         if (! $actor->isActive() || ! $actor->hasRole('ADMIN')) {
-            throw ValidationException::withMessages(['mapping' => 'Hanya Admin aktif yang dapat mengubah mapping mata pelajaran.']);
+            throw ValidationException::withMessages(['mapping' => 'Hanya Admin aktif yang dapat mengubah penugasan mata pelajaran.']);
         }
 
         $this->assertClassInstitution($academicClass, $actor);
@@ -320,7 +320,7 @@ final class SubjectAssignmentMappingService
     private function assertOpenPeriod(AcademicClass $academicClass): void
     {
         if ($academicClass->academicYear?->status === AcademicYearStatus::Closed) {
-            throw ValidationException::withMessages(['mapping' => 'Periode akademik sudah ditutup dan tidak menerima perubahan mapping.']);
+            throw ValidationException::withMessages(['mapping' => 'Periode akademik sudah ditutup dan tidak menerima perubahan penugasan.']);
         }
     }
 

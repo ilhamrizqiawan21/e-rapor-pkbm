@@ -14,7 +14,7 @@ test.describe('06 student and placement browser flows', () => {
 
         await page.goto('/admin/students');
         await expect(page.getByRole('heading', { name: 'Peserta didik', exact: true })).toBeVisible();
-        await expect(page.getByRole('link', { name: 'Import data' })).toBeVisible();
+        await expect(page.getByRole('link', { name: 'Impor data' })).toBeVisible();
         await expect(page.getByRole('heading', { name: 'Direktori peserta didik', exact: true })).toBeVisible();
         await expect(page.getByLabel('Cari peserta didik')).toBeVisible();
 

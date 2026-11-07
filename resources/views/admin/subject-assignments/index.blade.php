@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="mx-auto max-w-7xl">
-        <x-page-header eyebrow="Master akademik" title="Penugasan mata pelajaran" description="{{ $academicClass->name }} · {{ $academicClass->program->name }} · {{ $academicClass->level->name }} · {{ $academicClass->academicYear->name }}" back-href="{{ route('admin.academic-classes.show', $academicClass) }}" back-text="Kembali ke detail kelas">
+        <x-page-header eyebrow="Pengaturan akademik" title="Penugasan mata pelajaran" description="{{ $academicClass->name }} · {{ $academicClass->program->name }} · {{ $academicClass->level->name }} · {{ $academicClass->academicYear->name }}" back-href="{{ route('admin.academic-classes.show', $academicClass) }}" back-text="Kembali ke detail kelas">
                 @can('create', App\Models\SubjectAssignment::class)
                     <x-button href="{{ route('admin.academic-classes.subject-assignments.copy-create', $academicClass) }}" variant="secondary" icon="copy">Salin konfigurasi</x-button>
                     <x-button href="{{ route('admin.academic-classes.subject-assignments.reorder-create', $academicClass) }}" variant="secondary" icon="audit">Atur urutan</x-button>

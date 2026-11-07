@@ -77,7 +77,7 @@ class StudentImportService
 
         $rawRows = $this->readRows($file);
         if ($rawRows === []) {
-            throw new RuntimeException('File import tidak memiliki data.');
+            throw new RuntimeException('File impor tidak memiliki data.');
         }
 
         $headers = $this->mapHeaders(array_shift($rawRows));
@@ -366,7 +366,7 @@ class StudentImportService
                 $details[] = 'kolom duplikat: '.implode(', ', $duplicates);
             }
 
-            throw new RuntimeException('Header file tidak valid ('.implode('; ', $details).').');
+            throw new RuntimeException('Kolom file tidak sesuai template ('.implode('; ', $details).').');
         }
 
         return $mapped;
@@ -437,7 +437,7 @@ class StudentImportService
         if ($values['status'] === '') {
             $values['status'] = 'ACTIVE';
         } elseif (! in_array(strtoupper($values['status']), ['ACTIVE', 'INACTIVE', 'GRADUATED', 'TRANSFERRED'], true)) {
-            $errors[] = 'Status harus ACTIVE, INACTIVE, GRADUATED, atau TRANSFERRED.';
+            $errors[] = 'Status harus Aktif, Nonaktif, Lulus, atau Pindah.';
         } else {
             $values['status'] = strtoupper($values['status']);
         }
@@ -695,7 +695,7 @@ class StudentImportService
     private function assertSafeFile(UploadedFile $file): void
     {
         if (! $file->isValid() || $file->getSize() === false || $file->getSize() > 10 * 1024 * 1024) {
-            throw new RuntimeException('File import tidak valid atau melebihi batas 10 MB.');
+            throw new RuntimeException('File impor tidak valid atau melebihi batas 10 MB.');
         }
 
         $extension = strtolower((string) $file->extension());

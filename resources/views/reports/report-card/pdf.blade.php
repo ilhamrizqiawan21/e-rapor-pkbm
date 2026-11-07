@@ -5,7 +5,7 @@
     <title>Rapor {{ $identity['student']['name'] ?? 'Peserta Didik' }}</title>
     <style>
         @page {
-            size: 215.9mm 330.2mm;
+            size: A4 portrait;
             margin: {{ max(5, (int) $settings->margin_top_mm) }}mm {{ max(5, (int) $settings->margin_right_mm) }}mm {{ max(5, (int) $settings->margin_bottom_mm) }}mm {{ max(5, (int) $settings->margin_left_mm) }}mm;
         }
 

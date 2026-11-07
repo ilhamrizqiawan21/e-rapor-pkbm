@@ -5,7 +5,7 @@
         <div>
             <p class="text-sm font-semibold uppercase tracking-[0.18em] text-accent-700">Input nilai</p>
             <h2 class="mt-2 text-3xl font-semibold tracking-tight text-slate-950">Pilih deskripsi capaian</h2>
-            <p class="mt-2 max-w-3xl text-sm text-slate-600">Pilih materi. Sistem sudah menyiapkan kalimat sesuai nilai dan predikat yang sedang diinput; Anda tetap dapat menyunting hasil akhirnya.</p>
+            <p class="mt-2 max-w-3xl text-sm text-slate-600">Pilih materi untuk menampilkan kalimat sesuai nilai dan predikat. Anda tetap dapat menyunting hasilnya.</p>
         </div>
 
         <section class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5">

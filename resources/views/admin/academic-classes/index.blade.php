@@ -3,7 +3,7 @@
 @section('content')
     <div class="mx-auto max-w-7xl space-y-6">
         <x-page-header eyebrow="Data inti / kelas & rombel" title="Kelas / Rombel" description="Atur kelas, wali kelas, peserta didik, dan penugasan mapel sesuai periode akademik.">
-            @can('create', App\Models\SubjectAssignment::class)<x-button href="{{ route('admin.academic-classes.subject-assignments.bulk-create') }}" variant="secondary">Mapping beberapa kelas</x-button><x-button href="{{ route('admin.academic-classes.subject-assignments.bulk-assign-teacher.create') }}" variant="secondary">Bulk assign guru</x-button>@endcan
+            @can('create', App\Models\SubjectAssignment::class)<x-button href="{{ route('admin.academic-classes.subject-assignments.bulk-create') }}" variant="secondary">Penugasan beberapa kelas</x-button><x-button href="{{ route('admin.academic-classes.subject-assignments.bulk-assign-teacher.create') }}" variant="secondary">Tetapkan guru sekaligus</x-button>@endcan
             @can('create', App\Models\AcademicClass::class)<x-button href="#" icon="add" @click.prevent="$dispatch('open-modal', 'academic-class-create')">Tambah kelas</x-button>@endcan
         </x-page-header>
 

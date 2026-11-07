@@ -23,7 +23,7 @@ class ReportCardCompletenessController extends Controller
         Gate::authorize('viewAny', ReportCard::class);
 
         $user = $request->user();
-        $filters = $request->only(['semester_id', 'status', 'class_id', 'search']);
+        $filters = $request->only(['academic_year_id', 'semester_id', 'class_id', 'search']);
         $reportCards = ReportCard::query()
             ->with([
                 'enrollment.student',
@@ -31,21 +31,16 @@ class ReportCardCompletenessController extends Controller
                 'semester.academicYear',
             ])
             ->whereHas('enrollment.academicClass.program', fn (Builder $query) => $query->where('institution_id', $user->institution_id))
+            ->when($request->filled('academic_year_id'), fn (Builder $query) => $query->whereHas('semester.academicYear', fn (Builder $yearQuery) => $yearQuery->whereKey($request->integer('academic_year_id'))))
             ->when($request->filled('semester_id'), fn (Builder $query) => $query->where('semester_id', $request->integer('semester_id')))
-            ->when($request->filled('status'), fn (Builder $query) => $query->where('status', $request->string('status')->toString()))
             ->when($request->filled('class_id'), fn (Builder $query) => $query->whereHas('enrollment', fn (Builder $enrollmentQuery) => $enrollmentQuery->where('class_id', $request->integer('class_id'))))
             ->when($request->filled('search'), function (Builder $query) use ($request): void {
                 $search = $request->string('search')->trim()->toString();
-                $query->whereHas('enrollment.student', fn (Builder $studentQuery) => $studentQuery
-                    ->where('full_name', 'like', "%{$search}%")
-                    ->orWhere('student_number', 'like', "%{$search}%")
-                    ->orWhere('national_student_number', 'like', "%{$search}%"));
+                $query->whereHas('enrollment.student', fn (Builder $studentQuery) => $studentQuery->where('full_name', 'like', "%{$search}%"));
             })
             ->when($user->hasRole('GURU'), function (Builder $query) use ($user): void {
                 $query->whereHas('enrollment.academicClass', function (Builder $classQuery) use ($user): void {
-                    $classQuery
-                        ->where('homeroom_teacher_id', $user->getKey())
-                        ->orWhereHas('subjectAssignments', fn (Builder $assignmentQuery) => $assignmentQuery->where('teacher_id', $user->getKey()));
+                    $classQuery->where('homeroom_teacher_id', $user->getKey());
                 });
             })
             ->latest('id')
@@ -63,13 +58,17 @@ class ReportCardCompletenessController extends Controller
             ->orderBy('sequence')
             ->get();
 
+        $academicYears = $semesters->pluck('academicYear')->filter()->unique('id')->values();
+
         $classes = AcademicClass::query()
             ->with('program')
             ->whereHas('academicYear', fn (Builder $query) => $query->where('institution_id', $user->institution_id))
+            ->when($request->filled('academic_year_id'), fn (Builder $query) => $query->where('academic_year_id', $request->integer('academic_year_id')))
+            ->when($user->hasRole('GURU'), fn (Builder $query) => $query->where('homeroom_teacher_id', $user->getKey()))
             ->orderBy('name')
             ->get();
 
-        return view('admin.report-cards.index', compact('reportCards', 'progress', 'semesters', 'classes', 'filters'));
+        return view('admin.report-cards.index', compact('reportCards', 'progress', 'semesters', 'academicYears', 'classes', 'filters'));
     }
 
     public function edit(ReportCard $reportCard, ReportCardExtrasService $service, ReportCardCompletenessService $completeness): View

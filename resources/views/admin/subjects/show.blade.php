@@ -31,7 +31,7 @@
             </section>
 
             <section class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-                <div class="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between"><div><p class="text-xs font-semibold uppercase tracking-[0.16em] text-accent-700">Preview format</p><h3 class="mt-1 text-lg font-semibold text-slate-900">Header leger</h3></div><span class="text-xs text-slate-500">{{ $subject->short_name }} · urutan {{ $subject->display_order }}</span></div>
+                <div class="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between"><div><p class="text-xs font-semibold uppercase tracking-[0.16em] text-accent-700">Pratinjau format</p><h3 class="mt-1 text-lg font-semibold text-slate-900">Header leger</h3></div><span class="text-xs text-slate-500">{{ $subject->short_name }} · urutan {{ $subject->display_order }}</span></div>
                 <div class="mt-5 overflow-x-auto rounded-xl border border-slate-200">
                     <table class="min-w-full text-left text-xs">
                         <thead class="bg-slate-100 text-[10px] font-semibold uppercase tracking-wide text-slate-600"><tr><th class="whitespace-nowrap border-r border-slate-200 px-3 py-3">No.</th><th class="whitespace-nowrap border-r border-slate-200 px-3 py-3">NIPD</th><th class="whitespace-nowrap border-r border-slate-200 px-3 py-3">Nama peserta didik</th><th class="whitespace-nowrap border-r border-slate-200 px-3 py-3">{{ $subject->short_name }}</th><th class="whitespace-nowrap border-r border-slate-200 px-3 py-3">Predikat</th><th class="whitespace-nowrap px-3 py-3">Deskripsi</th></tr></thead>

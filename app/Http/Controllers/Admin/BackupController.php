@@ -40,11 +40,11 @@ final class BackupController extends Controller
                 'checksum' => $result['checksum'],
             ]);
 
-            return back()->with('status', 'Backup berhasil dibuat: '.$result['name']);
+            return back()->with('status', 'Cadangan data berhasil dibuat: '.$result['name']);
         } catch (Throwable $exception) {
             report($exception);
 
-            return back()->withErrors(['backup' => $this->errorMessage($exception, 'Backup database gagal. Periksa log aplikasi atau hubungi Admin sistem.')]);
+            return back()->withErrors(['backup' => $this->errorMessage($exception, 'Pembuatan cadangan data gagal. Periksa log aplikasi atau hubungi Admin sistem.')]);
         }
     }
 
@@ -59,13 +59,13 @@ final class BackupController extends Controller
                 'name' => $result['name'],
                 'driver' => $result['driver'],
                 'safety_backup' => $result['safety_backup']['name'],
-            ], 'Restore dikonfirmasi dengan token RESTORE.');
+            ], 'Pemulihan data dikonfirmasi.');
 
-            return back()->with('status', 'Database berhasil dipulihkan. Safety backup tersimpan sebagai '.$result['safety_backup']['name'].'.');
+            return back()->with('status', 'Data berhasil dipulihkan. Cadangan pengaman tersimpan sebagai '.$result['safety_backup']['name'].'.');
         } catch (Throwable $exception) {
             report($exception);
 
-            return back()->withErrors(['backup' => $this->errorMessage($exception, 'Restore database gagal. Safety backup mungkin sudah dibuat; periksa log aplikasi.')]);
+            return back()->withErrors(['backup' => $this->errorMessage($exception, 'Pemulihan data gagal. Cadangan pengaman mungkin sudah dibuat; periksa log aplikasi.')]);
         }
     }
 
@@ -81,6 +81,6 @@ final class BackupController extends Controller
 
     private function errorMessage(Throwable $exception, string $fallback): string
     {
-        return config('app.debug') ? $exception->getMessage() : $fallback;
+        return $fallback;
     }
 }

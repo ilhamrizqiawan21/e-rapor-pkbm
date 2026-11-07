@@ -29,10 +29,10 @@ test.describe('03 institution administration browser flows', () => {
         await loginAsAdmin(page);
         await page.goto('/admin/institutions');
         await page.getByRole('link', { name: 'Lihat detail' }).click();
-        await page.getByRole('link', { name: 'Preview rapor' }).click();
+        await page.getByRole('link', { name: 'Pratinjau rapor' }).click();
 
         await expect(page).toHaveURL(/\/admin\/institutions\/\d+\/preview$/);
-        await expect(page.getByRole('heading', { name: 'Preview identitas rapor' })).toBeVisible();
+        await expect(page.getByRole('heading', { name: 'Pratinjau identitas rapor' })).toBeVisible();
         await expect(page.getByText('PKBM Contoh')).toBeVisible();
         await expect(page.getByText('Area isi nilai, KKM, predikat, deskripsi, sikap, dan absensi')).toBeVisible();
     });

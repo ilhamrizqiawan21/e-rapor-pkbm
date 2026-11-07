@@ -7,6 +7,7 @@
     'selected' => null,
     'required' => false,
     'disabled' => false,
+    'multiple' => false,
     'error' => null,
     'hint' => null,
 ])
@@ -19,7 +20,13 @@
     $errorId = $selectId . '-error';
     $describedBy = $attributes->get('aria-describedby') ?: ($hasError ? $errorId : ($hint ? $hintId : null));
 
-    $selectClasses = 'block w-full appearance-none rounded-lg border bg-white px-3 py-2 pr-10 text-sm text-slate-900 transition focus:outline-hidden disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-500';
+    $selectClasses = 'block w-full rounded-lg border bg-white px-3 py-2 text-sm text-slate-900 transition focus:outline-hidden disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-500';
+
+    if ($multiple) {
+        $selectClasses .= ' min-h-40';
+    } else {
+        $selectClasses .= ' appearance-none pr-10';
+    }
 
     if ($hasError) {
         $selectClasses .= ' border-rose-300 focus:border-rose-500 focus:ring-2 focus:ring-rose-500/20 text-rose-900';
@@ -46,6 +53,7 @@
             @if ($describedBy) aria-describedby="{{ $describedBy }}" @endif
             @if ($required) required @endif
             @if ($disabled) disabled @endif
+            @if ($multiple) multiple @endif
             {{ $attributes->merge(['class' => $selectClasses]) }}
         >
             @if ($placeholder)
@@ -70,11 +78,13 @@
             @endif
         </select>
 
-        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3 text-slate-500">
-            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-            </svg>
-        </div>
+        @unless ($multiple)
+            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3 text-slate-500">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+            </div>
+        @endunless
     </div>
 
     @if ($hasError)

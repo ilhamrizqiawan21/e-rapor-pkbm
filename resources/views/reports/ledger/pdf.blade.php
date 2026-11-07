@@ -68,7 +68,7 @@
                     <td class="average">{{ $row['average'] ?? '—' }}</td><td class="attendance">{{ $row['sick'] ?? '—' }}</td><td class="attendance">{{ $row['leave'] ?? '—' }}</td><td class="attendance">{{ $row['unexcused'] ?? '—' }}</td><td>{{ $row['note'] }}</td>
                 </tr>
             @empty
-                <tr><td colspan="{{ 8 + count($data['subjects']) }}">Belum ada rapor APPROVED/LOCKED untuk kelas ini.</td></tr>
+                <tr><td colspan="{{ 8 + count($data['subjects']) }}">Belum ada rapor lengkap untuk kelas ini.</td></tr>
             @endforelse
             </tbody>
         </table>
@@ -89,7 +89,7 @@
             <div class="signature"><div>Wali Kelas</div><div class="signature-space"></div><div class="signature-name">{{ $data['homeroom'] }}</div><div>{{ $data['homeroom_employee_number'] }}</div></div>
             <div class="signature"><div>Kepala PKBM</div><div class="signature-space"></div><div class="signature-name">{{ $data['headmaster'] }}</div></div>
         </div>
-        <div class="footer"><span>Leger Nilai PKBM · Sumber: rapor APPROVED/LOCKED</span><span>Dicetak pada {{ $data['exported_at'] }}</span></div>
+        <div class="footer"><span>Leger Nilai PKBM · Sumber: rapor lengkap</span><span>Dicetak pada {{ $data['exported_at'] }}</span></div>
     </section>
 @endforeach
 </body>

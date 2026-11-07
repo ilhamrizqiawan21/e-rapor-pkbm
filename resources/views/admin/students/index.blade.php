@@ -13,7 +13,7 @@
             </div>
             @can('create', App\Models\Student::class)
                 <div class="flex flex-wrap gap-2">
-                    <x-button href="{{ route('admin.students.import.create') }}" variant="secondary" icon="upload">Import data</x-button>
+                    <x-button href="{{ route('admin.students.import.create') }}" variant="secondary" icon="upload">Impor data</x-button>
                     <x-button href="#" icon="add" @click.prevent="$dispatch('open-modal', 'student-create')">Tambah peserta didik</x-button>
                 </div>
             @endcan
@@ -33,14 +33,14 @@
                 ['label' => 'Belum ditempatkan', 'value' => $summary['unplaced'], 'detail' => $summary['unplaced'] === null ? 'Aktifkan tahun pelajaran dahulu' : 'Pada '.$activePeriodLabel, 'tone' => 'warning'],
                 ['label' => 'Status lain', 'value' => $summary['otherStatuses'], 'detail' => 'Nonaktif, lulus, atau pindah', 'tone' => 'neutral'],
             ] as $stat)
-                <article class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+                <x-card>
                     <div class="flex items-start justify-between gap-3">
                         <p class="text-sm font-medium text-slate-600">{{ $stat['label'] }}</p>
                         <span class="h-2.5 w-2.5 rounded-full {{ ['brand' => 'bg-brand-500', 'success' => 'bg-emerald-500', 'warning' => 'bg-amber-500', 'neutral' => 'bg-slate-400'][$stat['tone']] }}"></span>
                     </div>
                     <p class="mt-3 text-3xl font-semibold tracking-tight text-slate-950 tabular-nums">{{ $stat['value'] ?? '—' }}</p>
                     <p class="mt-1 text-xs leading-5 text-slate-500">{{ $stat['detail'] }}</p>
-                </article>
+                </x-card>
             @endforeach
         </section>
 
@@ -89,7 +89,7 @@
                                 <x-table.td align="right"><div class="flex flex-wrap justify-end gap-2"><x-button href="{{ route('admin.students.show', $student) }}" variant="detail" size="sm" icon="eye">Detail</x-button>@can('update', $student)<x-button href="#" @click.prevent="$dispatch('open-modal', 'student-edit-{{ $student->id }}')" variant="edit" size="sm" icon="edit">Edit</x-button>@endcan</div></x-table.td>
                             </tr>
                         @empty
-                            <tr><td colspan="6" class="px-6 py-16"><div class="mx-auto max-w-md text-center"><span class="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-50 text-brand-700"><x-nav-icon name="students" /></span><h3 class="mt-4 font-semibold text-slate-900">{{ $hasFilters ? 'Tidak ada data yang cocok' : 'Belum ada peserta didik' }}</h3><p class="mt-2 text-sm leading-6 text-slate-500">{{ $hasFilters ? 'Coba ubah kata kunci atau reset filter untuk melihat data lain.' : 'Tambahkan satu peserta didik secara manual atau gunakan import template untuk memulai.' }}</p>@if ($hasFilters)<x-button class="mt-5" href="{{ route('admin.students.index') }}" variant="secondary" size="sm" icon="x">Reset filter</x-button>@endif @can('create', App\Models\Student::class)<x-button class="mt-5" href="#" @click.prevent="$dispatch('open-modal', 'student-create')" size="sm" icon="add">Tambah manual</x-button>@endcan</div></td></tr>
+                            <tr><td colspan="6" class="px-6 py-16"><div class="mx-auto max-w-md text-center"><span class="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-50 text-brand-700"><x-nav-icon name="students" /></span><h3 class="mt-4 font-semibold text-slate-900">{{ $hasFilters ? 'Tidak ada data yang cocok' : 'Belum ada peserta didik' }}</h3><p class="mt-2 text-sm leading-6 text-slate-500">{{ $hasFilters ? 'Coba ubah kata kunci atau reset filter untuk melihat data lain.' : 'Tambahkan satu peserta didik secara manual atau gunakan template impor untuk memulai.' }}</p>@if ($hasFilters)<x-button class="mt-5" href="{{ route('admin.students.index') }}" variant="secondary" size="sm" icon="x">Reset filter</x-button>@endif @can('create', App\Models\Student::class)<x-button class="mt-5" href="#" @click.prevent="$dispatch('open-modal', 'student-create')" size="sm" icon="add">Tambah manual</x-button>@endcan</div></td></tr>
                         @endforelse
                     </tbody>
                 </table>

@@ -102,6 +102,8 @@ final class ReportCardWorkflowService
 
     public function lock(ReportCard $reportCard, User $actor): ReportCard
     {
+        $this->completeness->assertComplete($reportCard);
+
         return $this->transition(
             $reportCard,
             $actor,

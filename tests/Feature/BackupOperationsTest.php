@@ -91,8 +91,8 @@ class BackupOperationsTest extends TestCase
         $this->actingAs($admin)
             ->get(route('admin.backups.index'))
             ->assertOk()
-            ->assertSee('Backup dan restore')
-            ->assertSee('Belum ada backup database.');
+            ->assertSee('Cadangan dan pemulihan data')
+            ->assertSee('Belum ada cadangan data.');
 
         $this->actingAs($guru)
             ->get(route('admin.backups.index'))

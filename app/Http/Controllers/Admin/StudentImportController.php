@@ -46,7 +46,7 @@ class StudentImportController extends Controller
         $institution = $this->institution($request);
         $preview = $service->loadPreview($request->string('preview_token')->toString(), $request->user(), $institution);
         if ($preview === null) {
-            throw new RuntimeException('Preview import sudah kedaluwarsa atau tidak dapat digunakan.');
+            throw new RuntimeException('Pratinjau sudah kedaluwarsa atau tidak dapat digunakan. Silakan unggah file kembali.');
         }
 
         $result = $service->import($preview, $institution);
@@ -54,10 +54,10 @@ class StudentImportController extends Controller
         $request->session()->forget('student_import_preview_token');
 
         $conflictMessage = $result['conflicted'] > 0
-            ? " {$result['conflicted']} baris berubah menjadi konflik setelah preview dan dilewati."
+            ? " {$result['conflicted']} baris berubah setelah pratinjau dan dilewati."
             : '';
 
-        return back()->with('status', "Import selesai: {$result['imported']} peserta didik ditambahkan, {$result['skipped']} baris dilewati.".$conflictMessage);
+        return back()->with('status', "Impor selesai: {$result['imported']} peserta didik ditambahkan, {$result['skipped']} baris dilewati.".$conflictMessage);
     }
 
     public function errorReport(Request $request, StudentImportService $service)
@@ -65,12 +65,12 @@ class StudentImportController extends Controller
         Gate::authorize('create', Student::class);
         $token = $request->session()->get('student_import_preview_token');
         if (! is_string($token)) {
-            throw new RuntimeException('Preview import tidak ditemukan.');
+            throw new RuntimeException('Pratinjau impor tidak ditemukan.');
         }
 
         $preview = $service->loadPreview($token, $request->user(), $this->institution($request));
         if ($preview === null) {
-            throw new RuntimeException('Preview import sudah kedaluwarsa.');
+            throw new RuntimeException('Pratinjau impor sudah kedaluwarsa.');
         }
 
         return $service->errorReportResponse($preview);

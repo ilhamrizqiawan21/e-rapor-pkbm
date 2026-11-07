@@ -18,6 +18,8 @@
         'LOCKED' => 'warning',
         'ACTIVE' => 'success',
         'INACTIVE' => 'neutral',
+        'WITHDRAWN' => 'danger',
+        'TRANSFERRED' => 'warning',
     ];
 
     $resolvedVariant = $statusMap[$normalized] ?? strtolower($variant);
@@ -55,7 +57,7 @@
 
     // Default label if slot is empty and status was given
     $defaultLabels = [
-        'DRAFT' => 'Draft',
+        'DRAFT' => 'Draf',
         'SUBMITTED' => 'Diajukan',
         'IN_REVIEW' => 'Sedang ditinjau',
         'NEEDS_REVISION' => 'Perlu revisi',
@@ -64,6 +66,8 @@
         'LOCKED' => 'Terkunci',
         'ACTIVE' => 'Aktif',
         'INACTIVE' => 'Nonaktif',
+        'WITHDRAWN' => 'Dikeluarkan',
+        'TRANSFERRED' => 'Dipindahkan',
     ];
 @endphp
 

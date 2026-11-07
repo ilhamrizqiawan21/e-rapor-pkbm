@@ -2,10 +2,10 @@
 
 @section('content')
     <div class="mx-auto max-w-7xl space-y-6">
-        <x-page-header eyebrow="Rapor / leger" title="Generator leger nilai" description="Pilih periode untuk mengunduh leger Excel sebagai output utama atau PDF landscape. Hanya rapor APPROVED dan LOCKED yang masuk ke leger resmi." />
+        <x-page-header eyebrow="Rapor / leger" title="Leger nilai" description="Pilih periode untuk mengunduh leger Excel atau PDF landscape. Hanya rapor yang sudah lengkap yang masuk ke leger resmi." />
 
         <div class="rounded-xl border border-blue-200 bg-blue-50 px-4 py-3 text-sm text-blue-900" role="status">
-            Nilai, KKM, predikat, deskripsi, dan status pada leger bersumber dari snapshot nilai rapor pada periode yang dipilih.
+            Nilai, KKM, predikat, deskripsi, dan status pada leger bersumber dari salinan nilai rapor pada periode yang dipilih.
         </div>
 
         <div class="space-y-5">

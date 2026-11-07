@@ -107,5 +107,6 @@ class DatabaseSeeder extends Seeder
 
         app(InstitutionFormatSettingsService::class)->forInstitution($institution);
         $this->call(ProgramLevelSeeder::class);
+        $this->call(DemoDataSeeder::class);
     }
 }

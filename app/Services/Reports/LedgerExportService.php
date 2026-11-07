@@ -17,12 +17,12 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
 /**
- * Builds ledger exports from printable report cards visible to the actor's
+ * Builds ledger exports from complete report cards visible to the actor's
  * institution and teaching scope.
  */
 final class LedgerExportService
 {
-    public const PRINTABLE_STATUSES = ['APPROVED', 'LOCKED'];
+    public const PRINTABLE_STATUSES = ['DRAFT', 'SUBMITTED', 'IN_REVIEW', 'NEEDS_REVISION', 'APPROVED', 'LOCKED'];
 
     public function __construct(
         private readonly PdfEngine $engine,
@@ -33,7 +33,7 @@ final class LedgerExportService
     /** @return array<string, mixed> */
     public function classData(User $actor, AcademicClass $academicClass, Semester $semester): array
     {
-        Gate::forUser($actor)->authorize('view', $academicClass);
+        $this->assertExportClass($actor, $academicClass);
         $this->assertPeriod($actor, $academicClass, $semester);
 
         return $this->buildClass($academicClass, $semester);
@@ -117,9 +117,7 @@ final class LedgerExportService
 
         if ($actor->hasRole('GURU')) {
             $query->where(function (Builder $class) use ($actor): void {
-                $class
-                    ->where('homeroom_teacher_id', $actor->getKey())
-                    ->orWhereHas('subjectAssignments', fn (Builder $assignment): Builder => $assignment->where('teacher_id', $actor->getKey()));
+                $class->where('homeroom_teacher_id', $actor->getKey());
             });
         }
 
@@ -138,6 +136,21 @@ final class LedgerExportService
         if ($academicClass->program?->institution_id !== $actor->institution_id
             || $semester->academicYear?->institution_id !== $actor->institution_id) {
             abort(403);
+        }
+    }
+
+    private function assertExportClass(User $actor, AcademicClass $academicClass): void
+    {
+        $academicClass->loadMissing('program');
+
+        abort_unless(
+            $academicClass->program?->institution_id === $actor->institution_id
+                && $actor->hasAnyRole(['ADMIN', 'KEPSEK', 'GURU']),
+            403,
+        );
+
+        if ($actor->hasRole('GURU')) {
+            abort_unless($academicClass->homeroom_teacher_id === $actor->getKey(), 403);
         }
     }
 

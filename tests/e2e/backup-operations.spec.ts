@@ -13,11 +13,11 @@ test.describe('15 backup and operational audit browser flows', () => {
         await login(page, 'admin', '/dashboard/admin');
         await page.goto('/admin/backups');
 
-        await expect(page.getByRole('heading', { name: 'Backup dan restore', exact: true })).toBeVisible();
-        await expect(page.getByRole('button', { name: 'Buat backup database', exact: true })).toBeVisible();
-        await expect(page.getByLabel('File backup')).toBeVisible();
+        await expect(page.getByRole('heading', { name: 'Cadangan dan pemulihan data', exact: true })).toBeVisible();
+        await expect(page.getByRole('button', { name: 'Buat cadangan data', exact: true })).toBeVisible();
+        await expect(page.getByLabel('File cadangan')).toBeVisible();
         await expect(page.getByLabel('Konfirmasi')).toBeVisible();
-        await expect(page.getByRole('heading', { name: 'Arsip backup', exact: true })).toBeVisible();
+        await expect(page.getByRole('heading', { name: 'Arsip cadangan', exact: true })).toBeVisible();
     });
 
     test('guru cannot open backup operations', async ({ page }) => {

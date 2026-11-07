@@ -111,6 +111,8 @@ Route::middleware('auth')->group(function (): void {
         Route::get('report-cards/{report_card}/pdf/preview', [ReportCardPdfController::class, 'preview'])->name('report-cards.pdf.preview');
         Route::get('report-cards/{report_card}/pdf/download', [ReportCardPdfController::class, 'download'])->name('report-cards.pdf.download');
         Route::get('report-cards/{report_card}/pdf/print', [ReportCardPdfController::class, 'print'])->name('report-cards.pdf.print');
+        Route::get('report-cards/{report_card}/pdf/identity', [ReportCardPdfController::class, 'identity'])->name('report-cards.pdf.identity');
+        Route::get('report-cards/{report_card}/pdf/grades', [ReportCardPdfController::class, 'grades'])->name('report-cards.pdf.grades');
         Route::get('report-cards/classes/{academicClass}/semesters/{semester}/pdf', [ReportCardPdfController::class, 'batch'])->name('report-cards.pdf.batch');
         Route::get('report-cards/{report_card}/assessments', [ReportCardAssessmentController::class, 'show'])->name('report-cards.assessments.show');
         Route::post('report-cards/{report_card}/assessments/attitude', [ReportCardAssessmentController::class, 'updateAttitude'])->name('report-cards.assessments.attitude');
@@ -155,4 +157,6 @@ Route::middleware('auth')->group(function (): void {
     });
 });
 
-Route::view('/components-showcase', 'components-showcase')->name('components.showcase');
+Route::view('/components-showcase', 'components-showcase')
+    ->middleware(['auth', 'role:ADMIN'])
+    ->name('components.showcase');

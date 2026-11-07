@@ -11,7 +11,7 @@
     <div class="mx-auto max-w-6xl space-y-6" x-data="{ dirty: false }" @input="dirty = true" @beforeunload.window="if (dirty) $event.returnValue = 'Perubahan sikap atau absensi belum disimpan.'">
         <x-page-header eyebrow="Rapor peserta didik" title="Sikap dan absensi" description="Lengkapi catatan wali kelas untuk {{ $reportCard->enrollment->student->full_name }} pada semester {{ $reportCard->semester->name }}." back-href="{{ route('admin.report-cards.index') }}" back-text="Kembali ke daftar rapor">
             <div class="flex items-center gap-2">
-                <x-badge :variant="$reportCard->status" dot>{{ str_replace('_', ' ', $reportCard->status) }}</x-badge>
+                <x-badge :variant="$reportCard->status" dot />
                 @if ($reportCard->enrollment->academicClass->homeroom_teacher_id === auth()->id())
                     <span class="rounded-full bg-accent-50 px-3 py-1 text-xs font-semibold text-accent-800">Wali kelas</span>
                 @endif

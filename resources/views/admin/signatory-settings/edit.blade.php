@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="mx-auto max-w-3xl space-y-6">
-        <x-page-header eyebrow="Pengaturan PKBM / rapor" title="Penandatangan rapor" description="Atur sumber data Kepala PKBM yang akan disalin ke snapshot rapor saat rapor dikunci." back-href="{{ route('dashboard') }}" back-text="Kembali ke dashboard" />
+        <x-page-header eyebrow="Pengaturan PKBM / rapor" title="Penandatangan rapor" description="Atur data Kepala PKBM yang akan disimpan pada rapor saat rapor dikunci." back-href="{{ route('dashboard') }}" back-text="Kembali ke dashboard" />
 
         @if (session('success'))
             <div class="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800" role="status">

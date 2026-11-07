@@ -16,12 +16,12 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
 /**
- * Prepares printable report-card data only for approved/locked cards and keeps
+ * Prepares printable report-card data for complete cards and keeps
  * institution-specific identity/signatory snapshots in the output context.
  */
 final class ReportCardPdfDataService
 {
-    public const PRINTABLE_STATUSES = ['APPROVED', 'LOCKED'];
+    public const PRINTABLE_STATUSES = ['DRAFT', 'SUBMITTED', 'IN_REVIEW', 'NEEDS_REVISION', 'APPROVED', 'LOCKED'];
 
     public function __construct(
         private readonly PdfEngine $engine,
@@ -31,12 +31,14 @@ final class ReportCardPdfDataService
     ) {}
 
     /** @return array<string, mixed> */
-    public function data(ReportCard $reportCard): array
+    public function data(ReportCard $reportCard, bool $requireComplete = true): array
     {
-        // Completeness is checked at export time because data may have changed
-        // since workflow approval and a PDF must never hide missing sections.
+        // Completeness is checked for the complete report only. Identity and grade
+        // extracts remain useful while a wali kelas is still finishing the report.
         $this->assertPrintable($reportCard);
-        $this->completeness->assertComplete($reportCard);
+        if ($requireComplete) {
+            $this->completeness->assertComplete($reportCard);
+        }
 
         $reportCard->load([
             'enrollment.student',
@@ -104,6 +106,16 @@ final class ReportCardPdfDataService
     public function pdf(ReportCard $reportCard): string
     {
         return $this->engine->render($this->html($reportCard));
+    }
+
+    public function identityPdf(ReportCard $reportCard): string
+    {
+        return $this->engine->render(view('reports.report-card.identity', $this->data($reportCard, false))->render());
+    }
+
+    public function gradesPdf(ReportCard $reportCard): string
+    {
+        return $this->engine->render(view('reports.report-card.grades', $this->data($reportCard, false))->render());
     }
 
     /** @param array<string, mixed> $data */
@@ -202,7 +214,7 @@ final class ReportCardPdfDataService
     private function assertPrintable(ReportCard $reportCard): void
     {
         if (! in_array($reportCard->status, self::PRINTABLE_STATUSES, true)) {
-            throw new ReportCardPdfException('PDF hanya dapat dibuat untuk rapor yang sudah disetujui atau dikunci.');
+            throw new ReportCardPdfException('Status rapor tidak mendukung pembuatan PDF.');
         }
 
         if ($reportCard->status !== 'LOCKED') {

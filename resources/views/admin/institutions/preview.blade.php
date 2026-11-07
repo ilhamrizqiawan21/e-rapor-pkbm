@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="mx-auto max-w-5xl">
-        <x-page-header eyebrow="Preview dokumen" title="Preview identitas rapor" description="Pratinjau kop, identitas PKBM, dan area penandatangan sebelum modul rapor digunakan." back-href="{{ route('admin.institutions.show', $institution) }}" back-text="Kembali ke detail identitas" />
+        <x-page-header eyebrow="Pratinjau dokumen" title="Pratinjau identitas rapor" description="Pratinjau kop, identitas PKBM, dan area penandatangan sebelum rapor digunakan." back-href="{{ route('admin.institutions.show', $institution) }}" back-text="Kembali ke detail identitas" />
 
         <section class="overflow-hidden rounded-2xl border border-slate-300 bg-white shadow-sm" style="padding: {{ $settings->margin_top_mm }}mm {{ $settings->margin_right_mm }}mm {{ $settings->margin_bottom_mm }}mm {{ $settings->margin_left_mm }}mm">
             <header class="border-b-2 border-brand-900 pb-5 text-center">

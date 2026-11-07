@@ -94,11 +94,11 @@ class DashboardRoleTest extends TestCase
             ->assertOk()
             ->assertSee('Dashboard Kepala PKBM')
             ->assertSee('Siswa Review')
-            ->assertSee('Preview')
+            ->assertSee('Pratinjau')
             ->assertSee('Setujui')
             ->assertSee('Kembalikan')
             ->assertSee('Ringkasan per kelas')
-            ->assertSee('Review & persetujuan rapor')
+            ->assertSee('Tinjauan & persetujuan rapor')
             ->assertDontSee('Input nilai')
             ->assertDontSee('Bank deskripsi')
             ->assertDontSee('Pengaturan PKBM');

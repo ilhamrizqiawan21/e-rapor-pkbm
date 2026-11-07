@@ -99,9 +99,9 @@ final class DashboardService
             'hasPeriod' => $hasPeriod,
             'stats' => [
                 ['label' => 'Kelas aktif', 'value' => $classCount, 'detail' => 'Pada periode aktif', 'periodScoped' => true],
-                ['label' => 'Peserta didik', 'value' => $studentCount, 'detail' => 'Enrollment aktif', 'periodScoped' => true],
+                ['label' => 'Peserta didik', 'value' => $studentCount, 'detail' => 'Penempatan aktif', 'periodScoped' => true],
                 ['label' => 'Guru aktif', 'value' => $teacherCount, 'detail' => 'Dalam institusi', 'periodScoped' => false],
-                ['label' => 'Menunggu review', 'value' => $statusCounts['waiting_review'], 'detail' => 'SUBMITTED + IN_REVIEW', 'periodScoped' => true],
+                ['label' => 'Rapor siap dicetak', 'value' => $statusCounts['approved'], 'detail' => 'Data lengkap dan siap diterbitkan', 'periodScoped' => true],
             ],
             'setupSteps' => $setupSteps,
             'setupCompleted' => collect($setupSteps)->where('done', true)->count(),
@@ -132,7 +132,7 @@ final class DashboardService
             'hasPeriod' => $hasPeriod,
             'stats' => [
                 ['label' => 'Penugasan mapel', 'value' => $assignments->count(), 'detail' => 'Kelas dan mapel aktif'],
-                ['label' => 'Belum diajukan', 'value' => $reportStatus['drafts'], 'detail' => 'Rapor masih DRAFT'],
+                ['label' => 'Belum diajukan', 'value' => $reportStatus['drafts'], 'detail' => 'Rapor masih berupa draf'],
                 ['label' => 'Perlu revisi', 'value' => $reportStatus['revisions'], 'detail' => 'Dikembalikan Kepsek'],
                 ['label' => 'Wali kelas', 'value' => $homeroomClasses->count(), 'detail' => 'Kelas aktif'],
             ],
@@ -154,9 +154,9 @@ final class DashboardService
             'period' => $period,
             'hasPeriod' => $hasPeriod,
             'stats' => [
-                ['label' => 'Menunggu review', 'value' => $statusCounts['waiting_review'], 'detail' => 'Submitted atau sedang ditinjau'],
-                ['label' => 'Disetujui', 'value' => $statusCounts['approved'], 'detail' => 'Siap dikunci Admin'],
-                ['label' => 'Dikembalikan', 'value' => $statusCounts['revisions'], 'detail' => 'Menunggu revisi Guru'],
+                ['label' => 'Rapor belum siap dicetak', 'value' => $statusCounts['draft'] + $statusCounts['submitted'] + $statusCounts['in_review'] + $statusCounts['revisions'], 'detail' => 'Masih perlu dilengkapi'],
+                ['label' => 'Rapor siap dicetak', 'value' => $statusCounts['approved'], 'detail' => 'Dapat diterbitkan wali kelas'],
+                ['label' => 'Rapor belum lengkap', 'value' => $statusCounts['revisions'], 'detail' => 'Perlu diperbarui'],
                 ['label' => 'Terkunci', 'value' => $statusCounts['locked'], 'detail' => 'Arsip final'],
             ],
             'statusCounts' => $statusCounts,
@@ -269,7 +269,7 @@ final class DashboardService
     /** @param array{academicYear: ?AcademicYear, semester: ?Semester, label: string} $period */
     private function reviewQueue(User $user, array $period): Collection
     {
-        return ReportCard::query()->with(['enrollment.student', 'enrollment.academicClass'])->whereHas('enrollment.academicClass.program', fn (Builder $query) => $query->where('institution_id', $user->institution_id))->whereHas('enrollment.academicClass', fn (Builder $query) => $query->where('academic_year_id', $period['academicYear']->getKey()))->where('semester_id', $period['semester']->getKey())->whereIn('status', ['SUBMITTED', 'IN_REVIEW'])->latest('updated_at')->limit(12)->get();
+        return ReportCard::query()->with(['enrollment.student', 'enrollment.academicClass'])->whereHas('enrollment.academicClass.program', fn (Builder $query) => $query->where('institution_id', $user->institution_id))->whereHas('enrollment.academicClass', fn (Builder $query) => $query->where('academic_year_id', $period['academicYear']->getKey()))->where('semester_id', $period['semester']->getKey())->where('status', '!=', 'LOCKED')->latest('updated_at')->limit(12)->get();
     }
 
     /** @param array{academicYear: ?AcademicYear, semester: ?Semester, label: string} $period */

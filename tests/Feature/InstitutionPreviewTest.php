@@ -27,7 +27,7 @@ class InstitutionPreviewTest extends TestCase
         $this->actingAs($admin)
             ->get(route('admin.institutions.preview', $institution))
             ->assertOk()
-            ->assertSee('Preview identitas rapor')
+            ->assertSee('Pratinjau identitas rapor')
             ->assertSee('PKBM Preview')
             ->assertSee('Jl. Preview No. 1')
             ->assertSee('12345678')
