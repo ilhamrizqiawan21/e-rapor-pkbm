@@ -190,7 +190,7 @@ final class GradeEntryService
 
     public function assertCanView(User $actor): void
     {
-        if (! $actor->isActive() || $actor->institution_id === null || ! $actor->hasAnyRole(['ADMIN', 'GURU', 'KEPSEK'])) {
+        if (! $actor->isActive() || $actor->institution_id === null || ! $actor->hasAnyRole(['ADMIN', 'GURU'])) {
             throw new AuthorizationException('Pengguna tidak memiliki akses ke input nilai.');
         }
     }

@@ -63,6 +63,25 @@ class DashboardRoleTest extends TestCase
             ->assertSee('Buka bank deskripsi');
     }
 
+    public function test_guru_sidebar_focuses_on_teaching_workflow(): void
+    {
+        $guru = User::factory()->withRole(RoleCode::Guru)->create([
+            'institution_id' => Institution::query()->create(['name' => 'PKBM Menu Guru'])->id,
+        ]);
+
+        $this->actingAs($guru)->get(route('dashboard.guru'))
+            ->assertOk()
+            ->assertSee('Fokus pada penilaian, kelas, dan rapor yang menjadi tanggung jawab Anda.')
+            ->assertSee('Input nilai')
+            ->assertSee('Bank deskripsi')
+            ->assertSee('Rapor kelas saya')
+            ->assertSee('Generator leger')
+            ->assertDontSee('Data Guru')
+            ->assertDontSee('Program & tingkat')
+            ->assertDontSee('Pengaturan PKBM')
+            ->assertDontSee('Backup database');
+    }
+
     public function test_kepsek_dashboard_shows_review_queue_class_summary_and_actions(): void
     {
         [$institution, $year, $semester, $class, $assignment] = $this->academicSetup();
@@ -78,7 +97,11 @@ class DashboardRoleTest extends TestCase
             ->assertSee('Preview')
             ->assertSee('Setujui')
             ->assertSee('Kembalikan')
-            ->assertSee('Ringkasan per kelas');
+            ->assertSee('Ringkasan per kelas')
+            ->assertSee('Review & persetujuan rapor')
+            ->assertDontSee('Input nilai')
+            ->assertDontSee('Bank deskripsi')
+            ->assertDontSee('Pengaturan PKBM');
     }
 
     public function test_dashboard_tolerates_missing_active_period(): void

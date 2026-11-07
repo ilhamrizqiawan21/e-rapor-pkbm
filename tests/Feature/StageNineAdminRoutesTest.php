@@ -17,9 +17,9 @@ class StageNineAdminRoutesTest extends TestCase
         $this->get(route('admin.grade-entry.index'))->assertRedirect(route('login'));
     }
 
-    public function test_admin_guru_and_kepsek_can_open_grade_entry_context(): void
+    public function test_admin_and_guru_can_open_grade_entry_context(): void
     {
-        foreach ([RoleCode::Admin, RoleCode::Guru, RoleCode::Kepsek] as $role) {
+        foreach ([RoleCode::Admin, RoleCode::Guru] as $role) {
             $user = $this->user($role);
 
             $this->actingAs($user)
@@ -27,6 +27,15 @@ class StageNineAdminRoutesTest extends TestCase
                 ->assertOk()
                 ->assertSee('Input nilai');
         }
+    }
+
+    public function test_kepsek_cannot_open_grade_entry(): void
+    {
+        $kepsek = $this->user(RoleCode::Kepsek);
+
+        $this->actingAs($kepsek)
+            ->get(route('admin.grade-entry.index'))
+            ->assertForbidden();
     }
 
     private function user(RoleCode $role): User

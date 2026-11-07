@@ -33,7 +33,11 @@ async function assertNavigationPresentation(page: Page, role: Role): Promise<voi
         ? page.locator('[role="dialog"] nav')
         : page.locator('#desktop-sidebar-navigation');
 
-    for (const group of ['Data inti', 'Penilaian', 'Rapor & leger', 'Akun']) {
+    const groups = role === 'kepsek'
+        ? ['Data inti', 'Review & persetujuan rapor', 'Akun']
+        : ['Data inti', 'Penilaian', role === 'guru' ? 'Rapor & leger' : 'Rapor & leger', 'Akun'];
+
+    for (const group of groups) {
         await expect(navigation).toContainText(group);
     }
 
@@ -41,8 +45,19 @@ async function assertNavigationPresentation(page: Page, role: Role): Promise<voi
         await expect(navigation).toContainText('Pengaturan PKBM');
     }
 
-    for (const label of ['Dashboard', 'Input nilai', 'Kelengkapan rapor', 'Generator leger']) {
+    for (const label of ['Dashboard', 'Generator leger']) {
         await expect(navigation.getByText(label, { exact: true })).toBeAttached();
+    }
+
+    if (role === 'admin') {
+        for (const label of ['Input nilai', 'Kelengkapan rapor']) {
+            await expect(navigation.getByText(label, { exact: true })).toBeAttached();
+        }
+    }
+
+    if (role === 'guru') {
+        await expect(navigation.getByText('Input nilai', { exact: true })).toBeAttached();
+        await expect(navigation.getByText('Rapor kelas saya', { exact: true })).toBeAttached();
     }
 
     if (role === 'admin') {
@@ -59,6 +74,8 @@ async function assertNavigationPresentation(page: Page, role: Role): Promise<voi
     if (role === 'kepsek') {
         await expect(navigation.getByText('Histori audit', { exact: true })).toBeAttached();
         await expect(navigation.getByText('Backup database', { exact: true })).toHaveCount(0);
+        await expect(navigation.getByText('Input nilai', { exact: true })).toHaveCount(0);
+        await expect(navigation.getByText('Bank deskripsi', { exact: true })).toHaveCount(0);
     }
 }
 
@@ -85,7 +102,7 @@ async function assertAccountMenu(page: Page): Promise<void> {
         await page.getByRole('button', { name: 'Tutup menu' }).click();
     }
 
-    await page.locator('header').getByRole('button', { name: /Akun|Admin Demo|Guru Demo|Kepala PKBM/ }).click();
+    await page.locator('header').getByRole('button', { name: 'Buka menu akun' }).click();
     const accountMenu = page.locator('[role="menu"]');
 
     await expect(accountMenu).toBeVisible();
@@ -100,7 +117,7 @@ for (const role of Object.keys(accounts) as Role[]) {
 
         if (test.info().project.name === 'mobile-chrome') {
             await page.getByRole('button', { name: 'Buka menu navigasi' }).click();
-            await expect(page.locator('[role="dialog"]')).toBeAttached();
+            await expect(page.getByRole('dialog', { name: 'Menu navigasi aplikasi' })).toBeAttached();
             await expect(page.getByRole('button', { name: 'Tutup menu' })).toBeVisible();
         }
 
