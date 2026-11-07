@@ -131,7 +131,7 @@ class StudentImportService
 
     /**
      * @param  array{rows: array<int, array<string, mixed>>}  $preview
-     * @return array{imported: int, skipped: int}
+     * @return array{imported: int, skipped: int, conflicted: int}
      */
     public function import(array $preview, Institution $institution): array
     {
@@ -162,7 +162,19 @@ class StudentImportService
             ];
         }, $validRows);
 
-        DB::transaction(function () use ($payload): void {
+        $conflicted = 0;
+        DB::transaction(function () use (&$payload, &$conflicted, $institution): void {
+            // The preview can be older than the final submit. Re-check inside
+            // the same transaction so a second import cannot create a duplicate
+            // after the operator has reviewed the file.
+            $conflicts = $this->findImportConflicts($payload, $institution);
+            $conflicted = count($conflicts);
+            $payload = array_values(array_filter(
+                $payload,
+                static fn (array $row, int $index): bool => ! isset($conflicts[$index]),
+                ARRAY_FILTER_USE_BOTH,
+            ));
+
             foreach (array_chunk($payload, 500) as $chunk) {
                 Student::query()->insert($chunk);
             }
@@ -171,7 +183,44 @@ class StudentImportService
         return [
             'imported' => count($payload),
             'skipped' => count($preview['rows']) - count($payload),
+            'conflicted' => $conflicted,
         ];
+    }
+
+    /**
+     * @param  array<int, array<string, mixed>>  $payload
+     * @return array<int, true>
+     */
+    private function findImportConflicts(array $payload, Institution $institution): array
+    {
+        $numbers = array_values(array_filter(array_column($payload, 'student_number')));
+        $nisns = array_values(array_filter(array_column($payload, 'national_student_number')));
+        $existingNumbers = Student::query()
+            ->where('institution_id', $institution->getKey())
+            ->whereIn('student_number', array_values(array_unique($numbers)))
+            ->pluck('student_number')
+            ->all();
+        $existingNisns = Student::query()
+            ->where('institution_id', $institution->getKey())
+            ->whereIn('national_student_number', array_values(array_unique($nisns)))
+            ->pluck('national_student_number')
+            ->all();
+        $numberCounts = array_count_values($numbers);
+        $nisnCounts = array_count_values($nisns);
+        $conflicts = [];
+
+        foreach ($payload as $index => $row) {
+            $number = (string) ($row['student_number'] ?? '');
+            $nisn = (string) ($row['national_student_number'] ?? '');
+            if ($number !== '' && (($numberCounts[$number] ?? 0) > 1 || in_array($number, $existingNumbers, true))) {
+                $conflicts[$index] = true;
+            }
+            if ($nisn !== '' && (($nisnCounts[$nisn] ?? 0) > 1 || in_array($nisn, $existingNisns, true))) {
+                $conflicts[$index] = true;
+            }
+        }
+
+        return $conflicts;
     }
 
     /**
@@ -259,6 +308,7 @@ class StudentImportService
     {
         return response()->streamDownload(function () use ($preview): void {
             $output = fopen('php://output', 'wb');
+            fwrite($output, "\xEF\xBB\xBF");
             fputcsv($output, ['Baris', ...self::TEMPLATE_HEADERS, 'Kesalahan']);
 
             foreach ($preview['errors'] as $error) {
@@ -386,8 +436,8 @@ class StudentImportService
 
         if ($values['status'] === '') {
             $values['status'] = 'ACTIVE';
-        } elseif (! in_array(strtoupper($values['status']), ['ACTIVE', 'INACTIVE'], true)) {
-            $errors[] = 'Status harus ACTIVE atau INACTIVE.';
+        } elseif (! in_array(strtoupper($values['status']), ['ACTIVE', 'INACTIVE', 'GRADUATED', 'TRANSFERRED'], true)) {
+            $errors[] = 'Status harus ACTIVE, INACTIVE, GRADUATED, atau TRANSFERRED.';
         } else {
             $values['status'] = strtoupper($values['status']);
         }
@@ -578,8 +628,12 @@ class StudentImportService
 
         ksort($row);
         $lastColumn = max(array_keys($row));
+        $values = array_fill(0, $lastColumn + 1, '');
+        foreach ($row as $column => $value) {
+            $values[$column] = $value;
+        }
 
-        return array_pad(array_values($row), $lastColumn + 1, '');
+        return $values;
     }
 
     /**
@@ -660,16 +714,33 @@ class StudentImportService
         if ($zip->open($path, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
             throw new RuntimeException('Template tidak dapat dibuat.');
         }
-        $zip->addFromString('[Content_Types].xml', '<?xml version="1.0" encoding="UTF-8"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/></Types>');
+        $zip->addFromString('[Content_Types].xml', '<?xml version="1.0" encoding="UTF-8"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/worksheets/sheet2.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/></Types>');
         $zip->addFromString('_rels/.rels', '<?xml version="1.0" encoding="UTF-8"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>');
-        $zip->addFromString('xl/workbook.xml', '<?xml version="1.0" encoding="UTF-8"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets><sheet name="Peserta Didik" sheetId="1" r:id="rId1"/></sheets></workbook>');
-        $zip->addFromString('xl/_rels/workbook.xml.rels', '<?xml version="1.0" encoding="UTF-8"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/></Relationships>');
+        $zip->addFromString('xl/workbook.xml', '<?xml version="1.0" encoding="UTF-8"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets><sheet name="Peserta Didik" sheetId="1" r:id="rId1"/><sheet name="Petunjuk" sheetId="2" r:id="rId2"/></sheets></workbook>');
+        $zip->addFromString('xl/_rels/workbook.xml.rels', '<?xml version="1.0" encoding="UTF-8"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet2.xml"/><Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>');
+        $zip->addFromString('xl/styles.xml', '<?xml version="1.0" encoding="UTF-8"?><styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><fonts count="2"><font><sz val="10"/><name val="Arial"/></font><font><b/><sz val="10"/><name val="Arial"/></font></fonts><fills count="3"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill><fill><patternFill patternType="solid"><fgColor rgb="FFDDEBF7"/><bgColor indexed="64"/></patternFill></fill></fills><borders count="2"><border><left/><right/><top/><bottom/><diagonal/></border><border><left style="thin"/><right style="thin"/><top style="thin"/><bottom style="thin"/><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="4"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/><xf numFmtId="0" fontId="1" fillId="2" borderId="1" applyAlignment="1"><alignment horizontal="center" vertical="center" wrapText="1"/></xf><xf numFmtId="49" fontId="0" fillId="0" borderId="1" applyAlignment="1"><alignment vertical="top"/></xf><xf numFmtId="0" fontId="0" fillId="0" borderId="0" applyAlignment="1"><alignment vertical="top" wrapText="1"/></xf></cellXfs><cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles></styleSheet>');
         $cells = [];
         foreach (self::TEMPLATE_HEADERS as $index => $header) {
             $column = $this->columnName($index);
-            $cells[] = '<c r="'.$column.'1" t="inlineStr"><is><t>'.htmlspecialchars($header, ENT_XML1 | ENT_COMPAT, 'UTF-8').'</t></is></c>';
+            $cells[] = '<c r="'.$column.'1" s="1" t="inlineStr"><is><t>'.htmlspecialchars($header, ENT_XML1 | ENT_COMPAT, 'UTF-8').'</t></is></c>';
         }
-        $zip->addFromString('xl/worksheets/sheet1.xml', '<?xml version="1.0" encoding="UTF-8"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetData><row r="1">'.implode('', $cells).'</row></sheetData></worksheet>');
+        $dataSheet = '<?xml version="1.0" encoding="UTF-8"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetViews><sheetView workbookViewId="0"><pane ySplit="1" topLeftCell="A2" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews><cols><col min="1" max="2" width="20" style="2" customWidth="1"/><col min="3" max="9" width="22" customWidth="1"/></cols><sheetData><row r="1">'.implode('', $cells).'</row></sheetData><autoFilter ref="A1:I1"/><dataValidations count="2"><dataValidation type="list" allowBlank="1" sqref="D2:D50001"><formula1>"L,P"</formula1></dataValidation><dataValidation type="list" allowBlank="1" sqref="I2:I50001"><formula1>"ACTIVE,INACTIVE,GRADUATED,TRANSFERRED"</formula1></dataValidation></dataValidations><pageMargins left="0.25" right="0.25" top="0.5" bottom="0.5" header="0.3" footer="0.3"/></worksheet>';
+        $zip->addFromString('xl/worksheets/sheet1.xml', $dataSheet);
+        $instructionRows = [
+            ['PETUNJUK IMPORT PESERTA DIDIK', ''],
+            ['1', 'Isi data hanya pada sheet Peserta Didik dan jangan mengubah nama header.'],
+            ['2', 'NIPD dan NISN disimpan sebagai teks agar angka nol di depan tidak hilang.'],
+            ['3', 'Jenis Kelamin menggunakan L atau P.'],
+            ['4', 'Tanggal lahir menggunakan format YYYY-MM-DD atau DD/MM/YYYY.'],
+            ['5', 'Status menggunakan ACTIVE, INACTIVE, GRADUATED, atau TRANSFERRED.'],
+            ['6', 'Hapus baris contoh bila ada sebelum mengunggah file. Template ini sengaja tidak menyediakan data contoh.'],
+        ];
+        $instructionXml = '';
+        foreach ($instructionRows as $rowIndex => $row) {
+            $number = $rowIndex + 1;
+            $instructionXml .= '<row r="'.$number.'"><c r="A'.$number.'" s="'.($rowIndex === 0 ? 1 : 3).'" t="inlineStr"><is><t>'.htmlspecialchars($row[0], ENT_XML1 | ENT_COMPAT, 'UTF-8').'</t></is></c><c r="B'.$number.'" s="3" t="inlineStr"><is><t xml:space="preserve">'.htmlspecialchars($row[1], ENT_XML1 | ENT_COMPAT, 'UTF-8').'</t></is></c></row>';
+        }
+        $zip->addFromString('xl/worksheets/sheet2.xml', '<?xml version="1.0" encoding="UTF-8"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><cols><col min="1" max="1" width="8" customWidth="1"/><col min="2" max="2" width="100" customWidth="1"/></cols><sheetData>'.$instructionXml.'</sheetData><pageMargins left="0.25" right="0.25" top="0.5" bottom="0.5" header="0.3" footer="0.3"/></worksheet>');
         $zip->close();
     }
 

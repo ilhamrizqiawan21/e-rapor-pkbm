@@ -53,7 +53,11 @@ class StudentImportController extends Controller
         $service->forgetPreview($request->string('preview_token')->toString());
         $request->session()->forget('student_import_preview_token');
 
-        return back()->with('status', "Import selesai: {$result['imported']} peserta didik ditambahkan, {$result['skipped']} baris dilewati.");
+        $conflictMessage = $result['conflicted'] > 0
+            ? " {$result['conflicted']} baris berubah menjadi konflik setelah preview dan dilewati."
+            : '';
+
+        return back()->with('status', "Import selesai: {$result['imported']} peserta didik ditambahkan, {$result['skipped']} baris dilewati.".$conflictMessage);
     }
 
     public function errorReport(Request $request, StudentImportService $service)

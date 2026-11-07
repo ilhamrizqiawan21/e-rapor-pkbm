@@ -149,6 +149,7 @@ final class LedgerExportService
             'program.institution.signatorySetting.headmasterUser',
             'level',
             'homeroomTeacher.staffProfile',
+            'subjectAssignments.subject',
         ]);
 
         $enrollments = $academicClass->enrollments()
@@ -213,26 +214,46 @@ final class LedgerExportService
             ];
         }
 
-        $subjectColumns = collect($rows)
+        $subjectColumns = [];
+        $subjectLabels = [];
+        $appendSubject = function (string $key, string $base, string $name) use (&$subjectColumns, &$subjectLabels): void {
+            if (isset($subjectColumns[$key])) {
+                return;
+            }
+
+            $base = $base !== '' ? mb_substr($base, 0, 25) : 'MAPEL';
+            $label = $base;
+            $suffix = 2;
+            while (in_array($label, $subjectLabels, true)) {
+                $label = mb_substr($base, 0, 21).' '.($suffix++);
+            }
+            $subjectLabels[] = $label;
+            $subjectColumns[$key] = ['key' => $key, 'label' => $label, 'name' => $name !== '' ? $name : $base];
+        };
+
+        // Start with the class curriculum so a configured subject remains in
+        // the ledger even when every report card is still missing its grade.
+        $academicClass->subjectAssignments
+            ->filter(fn ($assignment): bool => (bool) $assignment->active)
+            ->sortBy(fn ($assignment): array => [(int) $assignment->display_order, (int) $assignment->getKey()])
+            ->each(function ($assignment) use ($appendSubject): void {
+                $name = trim((string) ($assignment->subject?->name ?? ''));
+                $shortName = trim((string) ($assignment->subject?->short_name ?: $name));
+                $appendSubject('assignment:'.$assignment->getKey(), $shortName, $name);
+            });
+
+        // A transferred report may contain an assignment from its reporting
+        // class. Preserve those columns after the target class curriculum.
+        collect($rows)
             ->flatMap(fn (array $row): Collection => $row['grades'])
             ->sortBy(fn (ReportGrade $grade): array => [(int) $grade->display_order_snapshot, (int) $grade->getKey()])
-            ->reduce(function (array $columns, ReportGrade $grade): array {
-                $key = $this->gradeKey($grade);
-                if (isset($columns[$key])) {
-                    return $columns;
-                }
-                $base = trim((string) ($grade->subject_short_name_snapshot ?: $grade->subject_name_snapshot));
-                $base = $base !== '' ? mb_substr($base, 0, 25) : 'MAPEL';
-                $label = $base;
-                $suffix = 2;
-                $labels = array_column($columns, 'label');
-                while (in_array($label, $labels, true)) {
-                    $label = mb_substr($base, 0, 21).' '.($suffix++);
-                }
-                $columns[$key] = ['key' => $key, 'label' => $label, 'name' => $grade->subject_name_snapshot];
-
-                return $columns;
-            }, []);
+            ->each(function (ReportGrade $grade) use ($appendSubject): void {
+                $appendSubject(
+                    $this->gradeKey($grade),
+                    trim((string) ($grade->subject_short_name_snapshot ?: $grade->subject_name_snapshot)),
+                    trim((string) $grade->subject_name_snapshot),
+                );
+            });
         $subjectColumns = array_values($subjectColumns);
         $emptyScoreCount = collect($rows)->sum(function (array $row) use ($subjectColumns): int {
             return collect($subjectColumns)->filter(fn (array $subject): bool => ! is_numeric($row['scores'][$subject['key']] ?? null))->count();

@@ -86,6 +86,11 @@ class LedgerExportServiceTest extends TestCase
             'description' => 'Sangat baik.',
             'status' => 'DRAFT',
         ]);
+        $extraSubject = Subject::query()->create(['institution_id' => $fixture['institution']->id, 'code' => 'IPA', 'name' => 'Ilmu Pengetahuan Alam', 'short_name' => 'IPA']);
+        $this->assignment($fixture['class'], $extraSubject, $fixture['admin'], 'IPA');
+
+        $classData = app(LedgerExportService::class)->classData($fixture['admin'], $fixture['class'], $fixture['semester']);
+        $this->assertContains('IPA', array_column($classData['subjects'], 'label'));
 
         $export = app(LedgerExportService::class)->excel($fixture['admin'], $fixture['semester'], $fixture['class']);
         $zip = new ZipArchive;

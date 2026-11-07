@@ -23,6 +23,7 @@ use App\Models\Student;
 use App\Models\Subject;
 use App\Models\SubjectAssignment;
 use App\Models\User;
+use App\Services\InstitutionFormatSettingsService;
 use App\Services\Reports\ChromePdfEngine;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 use Illuminate\Support\Facades\Route;
@@ -72,6 +73,28 @@ class ReportCardPdfControllerTest extends TestCase
         $response->assertOk()->assertHeader('Content-Type', 'application/pdf');
         $response->assertHeader('Content-Disposition', 'attachment; filename="rapor-2025-2026-ganjil-nipd-001-'.$fixture['reportCard']->id.'.pdf"');
         $this->assertSame('%PDF-1.7 fake', $response->getContent());
+    }
+
+    public function test_preview_uses_pkbm_format_and_all_document_tokens(): void
+    {
+        $fixture = $this->fixture('APPROVED');
+        app(InstitutionFormatSettingsService::class)->updateForInstitution($fixture['institution'], [
+            'student_name_format' => '{student_number} / {full_name}',
+            'document_number_format' => 'RAPOR/{academic_year}/{semester}/{student_number}/{document_number}',
+            'footer_text' => 'Footer rapor PKBM',
+        ]);
+
+        $response = $this->actingAs($fixture['admin'])
+            ->get('/__test/report-cards/'.$fixture['reportCard']->id.'/pdf/preview');
+
+        $response->assertOk();
+        $html = (string) $response->getContent();
+        $this->assertStringContainsString('Pencapaian Kompetensi Peserta Didik', $html);
+        $this->assertStringContainsString('size: 215.9mm 330.2mm', $html);
+        $this->assertStringContainsString('NIPD-001 / Siti Master', $html);
+        $this->assertStringContainsString('RAPOR/2025/2026/Semester Ganjil/NIPD-001/RAPOR-001', $html);
+        $this->assertStringContainsString('Footer rapor PKBM', $html);
+        $this->assertStringNotContainsString('{academic_year}', $html);
     }
 
     public function test_unavailable_pdf_engine_returns_graceful_service_unavailable(): void

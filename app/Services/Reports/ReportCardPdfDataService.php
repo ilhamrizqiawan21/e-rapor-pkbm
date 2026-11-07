@@ -8,6 +8,7 @@ use App\Models\AcademicClass;
 use App\Models\Institution;
 use App\Models\ReportCard;
 use App\Models\Semester;
+use App\Models\Student;
 use App\Services\InstitutionFormatSettingsService;
 use App\Services\ReportCardCompletenessService;
 use App\Services\ReportCardIdentityService;
@@ -53,11 +54,20 @@ final class ReportCardPdfDataService
         $institution = $this->institution($reportCard);
         $settings = $this->formatSettings->forInstitution($institution);
         $identity = $this->identityService->context($reportCard);
+        $student = $reportCard->enrollment?->student;
+        $studentName = $reportCard->status === 'LOCKED'
+            ? (string) ($identity['student']['name'] ?? '')
+            : ($student instanceof Student
+                ? $this->formatSettings->formatStudentName($student, $settings)
+                : (string) ($identity['student']['name'] ?? ''));
+        $semesterName = (string) ($identity['semester']['name'] ?? $identity['semester']['code'] ?? '');
+        $academicYearName = (string) ($identity['academic_year']['name'] ?? '');
         $signatures = $this->signatureRows($reportCard, $settings);
 
         return [
             'reportCard' => $reportCard,
             'identity' => $identity,
+            'studentName' => $studentName,
             'settings' => $settings,
             'grades' => $reportCard->grades,
             'attitudes' => $reportCard->attitudeAssessments->keyBy(fn ($assessment): string => strtoupper($assessment->attitude_type)),
@@ -71,10 +81,18 @@ final class ReportCardPdfDataService
             'documentNumber' => $this->formatSettings->formatDocumentNumber(
                 (string) ($reportCard->document_number ?? ''),
                 $settings,
-                ['student_name' => $identity['student']['name'] ?? ''],
+                [
+                    'student_name' => $studentName,
+                    'full_name' => $identity['student']['name'] ?? '',
+                    'student_number' => $identity['student']['student_number'] ?? '',
+                    'national_student_number' => $identity['student']['nisn'] ?? '',
+                    'academic_year' => $academicYearName,
+                    'semester' => $semesterName,
+                ],
             ),
             'issuedDate' => $this->formatSettings->formatDate($reportCard->issued_date ?? $reportCard->locked_at, $settings),
             'logoDataUri' => $this->logoDataUri($institution, $settings->show_logo),
+            'footerText' => $settings->footer_text ?: trim('RAPOR PKBM '.($identity['institution']['name'] ?? 'PKBM').' / '.$semesterName.' T.A '.$academicYearName),
         ];
     }
 
@@ -234,10 +252,13 @@ final class ReportCardPdfDataService
     /** @return Collection<int, array<string, mixed>> */
     private function emptySignatureSlots(object $settings): Collection
     {
-        return collect([
+        $slots = collect([
+            ['type' => 'PARENT_GUARDIAN', 'label' => 'Orang Tua/Wali', 'name' => null, 'employee_number' => null, 'imageDataUri' => null, 'signed_at' => null],
             ['type' => $settings->signature_left_role, 'label' => $settings->signature_left_label, 'name' => null, 'employee_number' => null, 'imageDataUri' => null, 'signed_at' => null],
             ['type' => $settings->signature_right_role, 'label' => $settings->signature_right_label, 'name' => null, 'employee_number' => null, 'imageDataUri' => null, 'signed_at' => null],
         ]);
+
+        return $slots->unique('type')->values();
     }
 
     private function signatureLabel(string $type): string

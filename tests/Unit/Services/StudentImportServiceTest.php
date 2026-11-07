@@ -28,6 +28,9 @@ class StudentImportServiceTest extends TestCase
         $zip = new ZipArchive;
         $this->assertTrue($zip->open($path) === true);
         $this->assertStringContainsString('NIPD', (string) $zip->getFromName('xl/worksheets/sheet1.xml'));
+        $this->assertStringContainsString('dataValidations', (string) $zip->getFromName('xl/worksheets/sheet1.xml'));
+        $this->assertStringContainsString('NISN disimpan sebagai teks', (string) $zip->getFromName('xl/worksheets/sheet2.xml'));
+        $this->assertNotFalse($zip->getFromName('xl/styles.xml'));
         $zip->close();
         unlink($path);
     }
@@ -55,6 +58,19 @@ class StudentImportServiceTest extends TestCase
         $this->assertSame('XLSX-001', $preview['rows'][0]['values']['student_number']);
     }
 
+    public function test_xlsx_keeps_empty_cells_in_their_original_columns(): void
+    {
+        $institution = Institution::query()->create(['name' => 'PKBM XLSX Empty Cell']);
+        $preview = app(StudentImportService::class)->preview(
+            $this->xlsx('<row r="1"><c r="A1" t="inlineStr"><is><t>NIPD</t></is></c><c r="B1" t="inlineStr"><is><t>NISN</t></is></c><c r="C1" t="inlineStr"><is><t>Nama Lengkap</t></is></c></row><row r="2"><c r="A2" t="inlineStr"><is><t>XLSX-002</t></is></c><c r="C2" t="inlineStr"><is><t>Siswa Tanpa NISN</t></is></c></row>'),
+            $institution,
+        );
+
+        $this->assertSame(1, $preview['valid_count']);
+        $this->assertSame('', $preview['rows'][0]['values']['national_student_number']);
+        $this->assertSame('Siswa Tanpa NISN', $preview['rows'][0]['values']['full_name']);
+    }
+
     public function test_preview_reports_duplicate_and_invalid_rows_then_imports_only_valid_rows(): void
     {
         $institution = Institution::query()->create(['name' => 'PKBM Import']);
@@ -72,9 +88,31 @@ class StudentImportServiceTest extends TestCase
         $this->assertStringContainsString('Jenis kelamin', implode(' ', $preview['rows'][2]['errors']));
 
         $result = app(StudentImportService::class)->import($preview, $institution);
-        $this->assertSame(['imported' => 1, 'skipped' => 2], $result);
+        $this->assertSame(['imported' => 1, 'skipped' => 2, 'conflicted' => 0], $result);
         $this->assertDatabaseHas('students', ['institution_id' => $institution->id, 'student_number' => 'NEW-001', 'gender' => 'P']);
         $this->assertDatabaseCount('students', 2);
+    }
+
+    public function test_import_rechecks_duplicates_when_preview_is_stale(): void
+    {
+        $institution = Institution::query()->create(['name' => 'PKBM Stale Preview']);
+        $preview = app(StudentImportService::class)->preview(
+            $this->csv("NIPD,NISN,Nama Lengkap,Status\nNEW-STALE,1234567899,Siswa Stale,GRADUATED\n"),
+            $institution,
+        );
+
+        Student::query()->create([
+            'institution_id' => $institution->id,
+            'student_number' => 'NEW-STALE',
+            'national_student_number' => '1234567899',
+            'full_name' => 'Masuk Setelah Preview',
+        ]);
+
+        $result = app(StudentImportService::class)->import($preview, $institution);
+
+        $this->assertSame(['imported' => 0, 'skipped' => 1, 'conflicted' => 1], $result);
+        $this->assertDatabaseCount('students', 1);
+        $this->assertSame('GRADUATED', $preview['rows'][0]['values']['status']);
     }
 
     public function test_error_report_is_downloadable_csv(): void
@@ -90,6 +128,7 @@ class StudentImportServiceTest extends TestCase
         $content = ob_get_clean();
 
         $this->assertSame('text/csv; charset=UTF-8', $response->headers->get('Content-Type'));
+        $this->assertStringStartsWith("\xEF\xBB\xBF", $content);
         $this->assertStringContainsString('Kesalahan', $content);
         $this->assertStringContainsString('Jenis kelamin', $content);
     }
