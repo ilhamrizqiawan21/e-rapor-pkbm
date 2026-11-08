@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 
 final class LedgerController extends Controller
 {
@@ -52,6 +53,10 @@ final class LedgerController extends Controller
             ])->deleteFileAfterSend(true);
         } catch (LedgerExportException|PdfEngineUnavailable $exception) {
             return response($this->errorMessage($exception), 422, ['Content-Type' => 'text/plain; charset=UTF-8']);
+        } catch (HttpExceptionInterface $exception) {
+            throw $exception;
+        } catch (\Throwable $exception) {
+            return response($this->errorMessage($exception), 500, ['Content-Type' => 'text/plain; charset=UTF-8']);
         }
     }
 
@@ -65,6 +70,10 @@ final class LedgerController extends Controller
             ])->deleteFileAfterSend(true);
         } catch (LedgerExportException|PdfEngineUnavailable $exception) {
             return response($this->errorMessage($exception), 422, ['Content-Type' => 'text/plain; charset=UTF-8']);
+        } catch (HttpExceptionInterface $exception) {
+            throw $exception;
+        } catch (\Throwable $exception) {
+            return response($this->errorMessage($exception), 500, ['Content-Type' => 'text/plain; charset=UTF-8']);
         }
     }
 
@@ -90,13 +99,17 @@ final class LedgerController extends Controller
             ]);
         } catch (LedgerExportException|PdfEngineUnavailable $exception) {
             return response($this->errorMessage($exception), 422, ['Content-Type' => 'text/plain; charset=UTF-8']);
+        } catch (HttpExceptionInterface $exception) {
+            throw $exception;
+        } catch (\Throwable $exception) {
+            return response($this->errorMessage($exception), 500, ['Content-Type' => 'text/plain; charset=UTF-8']);
         }
     }
 
     private function errorMessage(\Throwable $exception): string
     {
-        return config('app.debug')
-            ? $exception->getMessage()
-            : 'Export belum dapat diproses. Hubungi Admin jika masalah berlanjut.';
+        report($exception);
+
+        return 'Export belum dapat diproses. Hubungi Admin jika masalah berlanjut.';
     }
 }

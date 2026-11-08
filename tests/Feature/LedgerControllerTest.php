@@ -79,7 +79,7 @@ class LedgerControllerTest extends TestCase
 
             public function render(string $html): string
             {
-                return str_contains($html, 'A4 landscape') ? '%PDF-1.7 ledger' : '%PDF-1.7 invalid';
+                return str_contains($html, 'A4 portrait') ? '%PDF-1.7 ledger' : '%PDF-1.7 invalid';
             }
         });
 

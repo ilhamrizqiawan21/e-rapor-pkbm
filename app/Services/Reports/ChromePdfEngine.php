@@ -13,6 +13,16 @@ use Symfony\Component\Process\Process;
  */
 final class ChromePdfEngine implements PdfEngine
 {
+    /** @var list<string> */
+    private const COMMON_BINARIES = [
+        'google-chrome',
+        'google-chrome-stable',
+        'chromium',
+        'chromium-browser',
+        'chrome',
+        'wkhtmltopdf',
+    ];
+
     public function __construct(
         private readonly string $configuredBinary,
         private readonly int $timeoutSeconds = 30,
@@ -46,16 +56,7 @@ final class ChromePdfEngine implements PdfEngine
                 throw new PdfEngineUnavailable('HTML rapor tidak dapat ditulis ke folder sementara.');
             }
 
-            $process = new Process([
-                $binary,
-                '--headless',
-                '--disable-gpu',
-                '--disable-dev-shm-usage',
-                '--no-sandbox',
-                '--no-pdf-header-footer',
-                '--print-to-pdf='.$pdfPath,
-                'file://'.$htmlPath,
-            ]);
+            $process = $this->process($binary, $htmlPath, $pdfPath);
             $process->setTimeout(max(1, $this->timeoutSeconds));
             $process->run();
 
@@ -81,10 +82,55 @@ final class ChromePdfEngine implements PdfEngine
 
     private function binary(): ?string
     {
-        if ($this->configuredBinary === '') {
-            return null;
+        $finder = new ExecutableFinder;
+
+        if ($this->configuredBinary !== '' && strpbrk($this->configuredBinary, '/\\') !== false) {
+            return is_executable($this->configuredBinary) ? $this->configuredBinary : null;
         }
 
-        return (new ExecutableFinder)->find($this->configuredBinary);
+        $binaries = array_values(array_unique(array_filter([
+            $this->configuredBinary,
+            ...self::COMMON_BINARIES,
+        ], static fn (string $binary): bool => $binary !== '')));
+
+        foreach ($binaries as $binary) {
+            $resolvedBinary = $finder->find($binary);
+
+            if ($resolvedBinary !== null) {
+                return $resolvedBinary;
+            }
+        }
+
+        return null;
+    }
+
+    private function process(string $binary, string $htmlPath, string $pdfPath): Process
+    {
+        if (basename($binary) === 'wkhtmltopdf') {
+            return new Process([
+                $binary,
+                '--quiet',
+                '--encoding',
+                'UTF-8',
+                '--enable-local-file-access',
+                '--page-size',
+                'A4',
+                '--orientation',
+                'Portrait',
+                $htmlPath,
+                $pdfPath,
+            ]);
+        }
+
+        return new Process([
+            $binary,
+            '--headless',
+            '--disable-gpu',
+            '--disable-dev-shm-usage',
+            '--no-sandbox',
+            '--no-pdf-header-footer',
+            '--print-to-pdf='.$pdfPath,
+            'file://'.$htmlPath,
+        ]);
     }
 }

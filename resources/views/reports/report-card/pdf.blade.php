@@ -57,6 +57,24 @@
             .section-title { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
             table.data th { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
         }
+
+        @media screen {
+            body { background: #e5e7eb; padding: 24px; }
+            .document {
+                background: #ffffff;
+                box-shadow: 0 10px 25px rgb(15 23 42 / 0.12);
+                margin: 0 auto;
+                min-height: 297mm;
+                padding: {{ max(5, (int) $settings->margin_top_mm) }}mm {{ max(5, (int) $settings->margin_right_mm) }}mm {{ max(5, (int) $settings->margin_bottom_mm) }}mm {{ max(5, (int) $settings->margin_left_mm) }}mm;
+                width: 210mm;
+            }
+
+        }
+
+        @media screen and (max-width: 700px) {
+            body { padding: 8px; }
+            .document { width: 100%; }
+        }
     </style>
 </head>
 <body>

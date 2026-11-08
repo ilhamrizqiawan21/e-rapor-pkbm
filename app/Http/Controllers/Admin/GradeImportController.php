@@ -21,7 +21,8 @@ class GradeImportController extends Controller
         try {
             $context = $service->resolveContext($request->user(), $request->validated());
         } catch (RuntimeException $exception) {
-            abort(403, $exception->getMessage());
+            report($exception);
+            abort(403);
         }
 
         return view('admin.grade-entry.import.create', compact('context'));
@@ -34,7 +35,8 @@ class GradeImportController extends Controller
         try {
             return $service->templateResponse($request->user(), $request->validated());
         } catch (RuntimeException $exception) {
-            abort(403, $exception->getMessage());
+            report($exception);
+            abort(403);
         }
     }
 
@@ -46,7 +48,9 @@ class GradeImportController extends Controller
 
             return view('admin.grade-entry.import.preview', compact('preview', 'batch'));
         } catch (RuntimeException $exception) {
-            return back()->withInput()->withErrors(['file' => $exception->getMessage()]);
+            report($exception);
+
+            return back()->withInput()->withErrors(['file' => 'File impor tidak dapat diproses. Gunakan template resmi dan periksa isinya.']);
         }
     }
 
@@ -60,7 +64,9 @@ class GradeImportController extends Controller
         try {
             $imported = $service->import($request->user(), $batch);
         } catch (RuntimeException $exception) {
-            return back()->withErrors(['file' => $exception->getMessage()]);
+            report($exception);
+
+            return back()->withErrors(['file' => 'Impor tidak dapat diselesaikan. Kembali ke preview dan perbaiki data yang ditandai.']);
         }
 
         return redirect()->route('admin.grade-entry.index', [

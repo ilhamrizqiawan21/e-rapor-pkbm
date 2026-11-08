@@ -15,6 +15,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 
 final class ReportCardPdfController extends Controller
 {
@@ -29,6 +30,10 @@ final class ReportCardPdfController extends Controller
             ]);
         } catch (ReportCardPdfException $exception) {
             return $this->failure($exception, 422);
+        } catch (HttpExceptionInterface $exception) {
+            throw $exception;
+        } catch (\Throwable $exception) {
+            return $this->failure($exception, 500);
         }
     }
 
@@ -89,6 +94,10 @@ final class ReportCardPdfController extends Controller
             return $this->failure($exception, 503);
         } catch (ReportCardPdfException $exception) {
             return $this->failure($exception, 422);
+        } catch (HttpExceptionInterface $exception) {
+            throw $exception;
+        } catch (\Throwable $exception) {
+            return $this->failure($exception, 500);
         }
     }
 
@@ -115,6 +124,8 @@ final class ReportCardPdfController extends Controller
             return $this->failure($exception, 503);
         } catch (ReportCardPdfException $exception) {
             return $this->failure($exception, 422);
+        } catch (\Throwable $exception) {
+            return $this->failure($exception, 500);
         }
     }
 
@@ -143,16 +154,18 @@ final class ReportCardPdfController extends Controller
             return $this->failure($exception, 503);
         } catch (ReportCardPdfException $exception) {
             return $this->failure($exception, 422);
+        } catch (HttpExceptionInterface $exception) {
+            throw $exception;
+        } catch (\Throwable $exception) {
+            return $this->failure($exception, 500);
         }
     }
 
     private function failure(\Throwable $exception, int $status): Response
     {
-        $message = config('app.debug')
-            ? $exception->getMessage()
-            : 'Dokumen rapor belum dapat diproses. Hubungi Admin jika masalah berlanjut.';
+        report($exception);
 
-        return response($message, $status, [
+        return response('Dokumen rapor belum dapat diproses. Hubungi Admin jika masalah berlanjut.', $status, [
             'Content-Type' => 'text/plain; charset=UTF-8',
         ]);
     }

@@ -120,6 +120,7 @@ class ReportCardPdfControllerTest extends TestCase
         $html = (string) $response->getContent();
         $this->assertStringContainsString('Pencapaian Kompetensi Peserta Didik', $html);
         $this->assertStringContainsString('size: A4 portrait', $html);
+        $this->assertStringContainsString('width: 210mm', $html);
         $this->assertStringContainsString('NIPD-001 / Siti Master', $html);
         $this->assertStringContainsString('RAPOR/2025/2026/Semester Ganjil/NIPD-001/RAPOR-001', $html);
         $this->assertStringContainsString('Footer rapor PKBM', $html);
@@ -134,7 +135,9 @@ class ReportCardPdfControllerTest extends TestCase
         $this->actingAs($fixture['admin'])
             ->get('/__test/report-cards/'.$fixture['reportCard']->id.'/pdf/download')
             ->assertStatus(503)
-            ->assertSee('Mesin PDF belum tersedia');
+            ->assertSee('Dokumen rapor belum dapat diproses')
+            ->assertDontSee('Mesin PDF belum tersedia')
+            ->assertDontSee('/definitely/not/a/browser');
     }
 
     public function test_batch_returns_zip_with_deterministic_report_filename(): void

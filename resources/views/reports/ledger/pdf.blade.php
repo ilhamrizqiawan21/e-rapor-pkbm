@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <title>Leger Nilai PKBM</title>
     <style>
-        @page { size: A4 landscape; margin: 9mm 8mm 10mm; }
+        @page { size: A4 portrait; margin: 9mm 8mm 10mm; }
         :root { color: #111827; font-family: Arial, Helvetica, sans-serif; font-size: 7.5pt; }
         * { box-sizing: border-box; }
         body { margin: 0; }
