@@ -8,12 +8,64 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-#[Fillable(['institution_id', 'student_number', 'national_student_number', 'full_name', 'gender', 'birth_place', 'birth_date', 'address', 'guardian_name', 'status'])]
+#[Fillable([
+    'institution_id',
+    'student_number',
+    'national_student_number',
+    'nik',
+    'family_card_number',
+    'full_name',
+    'nickname',
+    'gender',
+    'birth_place',
+    'birth_date',
+    'religion',
+    'citizenship',
+    'birth_order',
+    'siblings_count',
+    'address',
+    'postal_code',
+    'phone_number',
+    'living_with',
+    'transportation_mode',
+    'father_name',
+    'father_nik',
+    'father_birth_place',
+    'father_birth_date',
+    'father_education',
+    'father_occupation',
+    'father_income',
+    'father_phone',
+    'mother_name',
+    'mother_nik',
+    'mother_birth_place',
+    'mother_birth_date',
+    'mother_education',
+    'mother_occupation',
+    'mother_income',
+    'mother_phone',
+    'guardian_name',
+    'guardian_relation',
+    'guardian_occupation',
+    'guardian_phone',
+    'previous_school_name',
+    'previous_diploma_number',
+    'entry_date',
+    'status',
+    'graduation_certificate_number',
+])]
 class Student extends Model
 {
     protected function casts(): array
     {
-        return ['birth_date' => 'date'];
+        return [
+            'birth_date' => 'date',
+            'father_birth_date' => 'date',
+            'mother_birth_date' => 'date',
+            'entry_date' => 'date',
+            'birth_order' => 'integer',
+            'siblings_count' => 'integer',
+        ];
     }
 
     public function institution(): BelongsTo

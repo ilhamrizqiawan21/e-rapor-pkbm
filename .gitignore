@@ -21,6 +21,7 @@
 /public/fonts-manifest.dev.json
 /public/hot
 /public/storage
+/bundles
 /storage/*.key
 /storage/pail
 /database/*.sqlite

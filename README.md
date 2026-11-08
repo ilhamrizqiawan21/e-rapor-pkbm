@@ -25,7 +25,7 @@ Buka `http://127.0.0.1:8000`.
 
 ## Instalasi untuk client
 
-Gunakan [PANDUAN-INSTALASI-CLIENT.md](PANDUAN-INSTALASI-CLIENT.md) untuk memilih instalasi localhost dengan Laragon atau deployment online di VPS/server. Profil siap salin tersedia pada `.env.laragon.example`, `.env.staging.example`, dan `.env.production.example`.
+Gunakan [PANDUAN-INSTALASI-CLIENT.md](PANDUAN-INSTALASI-CLIENT.md) sebagai indeks. Panduan rinci tersedia untuk [Laragon](PANDUAN-LARAGON.md) dan [hosting online](PANDUAN-HOSTING-ONLINE.md). Profil siap salin tersedia pada `.env.laragon.example`, `.env.staging.example`, dan `.env.production.example`.
 
 ## Menjalankan browser test
 

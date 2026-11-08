@@ -5,19 +5,9 @@ use Illuminate\Http\Request;
 
 define('LARAVEL_START', microtime(true));
 
-// Normalize requests when Apache exposes public/ through the application subpath.
-$requestUri = (string) ($_SERVER['REQUEST_URI'] ?? '/');
-$requestPath = parse_url($requestUri, PHP_URL_PATH) ?: '/';
-$queryString = (string) ($_SERVER['QUERY_STRING'] ?? (parse_url($requestUri, PHP_URL_QUERY) ?: ''));
-$subpath = '/e-rapor-pkbm';
+require __DIR__.'/../bootstrap/subpath.php';
 
-if ($requestPath === $subpath || str_starts_with($requestPath, $subpath.'/')) {
-    $_SERVER['ERAPOR_SUBPATH_REQUEST'] = '1';
-    $normalizedPath = substr($requestPath, strlen($subpath)) ?: '/';
-    $_SERVER['REQUEST_URI'] = $normalizedPath.($queryString !== '' ? '?'.$queryString : '');
-    $_SERVER['SCRIPT_NAME'] = '/index.php';
-    $_SERVER['PHP_SELF'] = '/index.php';
-}
+normalizeApplicationSubpathRequest();
 
 // Determine if the application is in maintenance mode...
 if (file_exists($maintenance = __DIR__.'/../storage/framework/maintenance.php')) {

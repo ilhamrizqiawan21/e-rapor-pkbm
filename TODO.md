@@ -1297,7 +1297,7 @@ Sebuah fitur hanya boleh dianggap selesai jika semua hal berikut terpenuhi:
 - [ ] Notifikasi email/WhatsApp.
 - [ ] Sinkronisasi online-localhost.
 - [ ] Grafik perkembangan nilai.
-- [ ] Buku induk.
+- [x] Buku induk.
 - [ ] Transkrip.
 - [ ] Surat keterangan lulus.
 - [ ] Tanda tangan digital.

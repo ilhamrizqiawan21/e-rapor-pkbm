@@ -1,6 +1,12 @@
 Options -Indexes
 DirectoryIndex index.php
 
+# Leave empty when the application is served from a domain or Laragon virtual
+# host root. Set this to the URL prefix when it is served from a subfolder.
+<IfModule mod_env.c>
+    SetEnv ERAPOR_SUBPATH ""
+</IfModule>
+
 <IfModule mod_rewrite.c>
     RewriteEngine On
 
