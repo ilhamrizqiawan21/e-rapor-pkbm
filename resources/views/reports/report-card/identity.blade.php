@@ -21,7 +21,9 @@
         .identity-value { padding-left: 12px; width: 67%; }
         .address { min-height: 48px; white-space: pre-line; }
         .muted { color: #4b5563; font-size: 8.5pt; }
-        .footer { border-top: 1px solid #9ca3af; color: #4b5563; font-size: 8pt; margin-top: 34px; padding-top: 6px; text-align: center; }
+        .footer { border-top: 1px solid #9ca3af; color: #4b5563; display: table; font-size: 8pt; margin-top: 34px; padding-top: 6px; table-layout: fixed; width: 100%; }
+        .footer-meta { display: table-cell; text-align: left; vertical-align: middle; }
+        .footer-title { display: table-cell; text-align: right; vertical-align: middle; width: 40%; }
     </style>
 </head>
 <body>
@@ -52,6 +54,19 @@
 
     <p class="muted" style="margin-top: 8px;">Dokumen ini memuat identitas peserta didik berdasarkan data yang tersimpan pada periode rapor yang dipilih.</p>
 
-    <div class="footer">{{ $footerText }}</div>
+    <footer class="footer">
+        <div class="footer-meta">
+            <span>{{ $studentName ?: '-' }}</span>
+            @if (!empty($studentIdentifier ?? ($identity['student']['student_number'] ?? null)))
+                <span> | {{ $studentIdentifier ?? ($identity['student']['student_number'] ?? '') }}</span>
+            @endif
+            @if (!empty($identity['class']['name']))
+                <span> | {{ $identity['class']['name'] }}</span>
+            @endif
+        </div>
+        @if (!empty($footerText))
+            <div class="footer-title">{{ $footerText }}</div>
+        @endif
+    </footer>
 </body>
 </html>

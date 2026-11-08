@@ -41,15 +41,21 @@
         .two-column > section { display: table-cell; padding-right: 5px; vertical-align: top; width: 50%; }
         .two-column > section:last-child { padding-left: 5px; padding-right: 0; }
         .compact td, .compact th { padding: 4px; }
-        .signatures { break-inside: avoid; display: table; margin-top: 22px; table-layout: fixed; width: 100%; }
-        .signature { display: table-cell; padding: 0 8px; text-align: center; vertical-align: bottom; width: 33.333%; }
-        .signature + .signature { border-left: 0; }
-        .signature-label { min-height: 16px; }
-        .signature-image { height: 38px; margin: 4px auto; object-fit: contain; max-width: 80px; }
-        .signature-space { height: 46px; }
+        .signatures-area { break-inside: avoid; page-break-inside: avoid; margin-top: 24px; width: 100%; }
+        .signatures-top-row { display: table; table-layout: fixed; width: 100%; }
+        .sig-box-left { display: table-cell; padding-left: 8px; text-align: left; vertical-align: top; width: 50%; }
+        .sig-box-right { display: table-cell; padding-left: 70px; text-align: left; vertical-align: top; width: 50%; }
+        .signatures-bottom-row { margin-top: 20px; text-align: center; width: 100%; }
+        .sig-box-center { display: inline-block; min-width: 260px; text-align: center; }
+        .signature-space { height: 48px; }
+        .signature-line { border-bottom: 1.5px solid #111827; display: inline-block; height: 1px; width: 190px; }
+        .signature-image { display: block; height: 40px; margin: 4px 0; max-width: 90px; object-fit: contain; }
+        .sig-box-center .signature-image { margin: 4px auto; }
         .signature-name { font-weight: 700; text-decoration: underline; }
-        .signature-number { font-size: 8.5pt; }
-        .footer { border-top: 1px solid #9ca3af; color: #4b5563; font-size: 8pt; margin-top: 12px; padding-top: 4px; text-align: center; }
+        .signature-number { font-size: 8.5pt; margin-top: 2px; }
+        .footer { border-top: 1px solid #9ca3af; color: #4b5563; display: table; font-size: 8pt; margin-top: 12px; padding-top: 4px; table-layout: fixed; width: 100%; }
+        .footer-meta { display: table-cell; text-align: left; vertical-align: middle; }
+        .footer-title { display: table-cell; text-align: right; vertical-align: middle; width: 40%; }
         .avoid-break { break-inside: avoid; page-break-inside: avoid; }
         thead { display: table-header-group; }
         tr { break-inside: avoid; page-break-inside: avoid; }
@@ -74,6 +80,8 @@
         @media screen and (max-width: 700px) {
             body { padding: 8px; }
             .document { width: 100%; }
+            .sig-box-right { padding-left: 10px; }
+            .footer-meta, .footer-title { display: block; text-align: center; width: 100%; }
         }
     </style>
 </head>
@@ -193,26 +201,99 @@
         <div class="avoid-break" style="margin-top: 10px; border: 1px solid #374151; padding: 7px;"><strong>Keputusan Wali Kelas:</strong> {{ $decisionLabel }}</div>
     @endif
 
-    <div class="signatures">
-        @foreach ($signatureSlots as $signature)
-            <div class="signature">
-                <div class="signature-label">{{ $signature['label'] }}</div>
-                @if ($signature['imageDataUri'])
-                    <img class="signature-image" src="{{ $signature['imageDataUri'] }}" alt="Tanda tangan">
+    @php
+        $parentSignature = $parentSignature ?? (collect($signatureSlots ?? [])->first(function ($s): bool {
+            $type = ($s['type'] ?? null) instanceof \BackedEnum ? $s['type']->value : (string) ($s['type'] ?? '');
+            return $type === 'PARENT_GUARDIAN' || str_contains(strtolower((string) ($s['label'] ?? '')), 'orang tua');
+        }) ?? [
+            'type' => 'PARENT_GUARDIAN',
+            'label' => 'Orang Tua/Wali',
+            'name' => null,
+            'employee_number' => null,
+            'imageDataUri' => null,
+        ]);
+        $homeroomSignature = $homeroomSignature ?? (collect($signatureSlots ?? [])->first(function ($s): bool {
+            $type = ($s['type'] ?? null) instanceof \BackedEnum ? $s['type']->value : (string) ($s['type'] ?? '');
+            return in_array($type, ['HOMEROOM_TEACHER', 'GURU'], true) || str_contains(strtolower((string) ($s['label'] ?? '')), 'wali');
+        }) ?? [
+            'type' => 'HOMEROOM_TEACHER',
+            'label' => 'Wali Kelas',
+            'name' => null,
+            'employee_number' => null,
+            'imageDataUri' => null,
+        ]);
+        $headmasterSignature = $headmasterSignature ?? (collect($signatureSlots ?? [])->first(function ($s): bool {
+            $type = ($s['type'] ?? null) instanceof \BackedEnum ? $s['type']->value : (string) ($s['type'] ?? '');
+            return in_array($type, ['HEAD_OF_PKBM', 'KEPSEK'], true) || str_contains(strtolower((string) ($s['label'] ?? '')), 'kepala');
+        }) ?? [
+            'type' => 'HEAD_OF_PKBM',
+            'label' => 'Kepala PKBM',
+            'name' => null,
+            'employee_number' => null,
+            'imageDataUri' => null,
+        ]);
+    @endphp
+
+    <div class="signatures-area avoid-break">
+        <div class="signatures-top-row">
+            <div class="sig-box-left">
+                <div>Mengetahui,</div>
+                <div>{{ $parentSignature['label'] ?? 'Orang Tua/Wali' }}</div>
+                @if (!empty($parentSignature['imageDataUri']))
+                    <img class="signature-image" src="{{ $parentSignature['imageDataUri'] }}" alt="Tanda tangan">
                 @else
                     <div class="signature-space"></div>
                 @endif
-                @if (($signature['type'] ?? null) !== 'PARENT_GUARDIAN' && filled($signature['name'] ?? null))
-                    <div class="signature-name">{{ $signature['name'] }}</div>
+                @if (filled($parentSignature['name'] ?? null))
+                    <div class="signature-name">{{ $parentSignature['name'] }}</div>
                 @else
-                    <div>(........................................)</div>
+                    <div class="signature-line"></div>
                 @endif
-                @if (($signature['type'] ?? null) !== 'PARENT_GUARDIAN' && $signature['employee_number'])<div class="signature-number">{{ $signature['employee_number'] }}</div>@endif
             </div>
-        @endforeach
+
+            <div class="sig-box-right">
+                <div>{{ filled($issuedPlace ?? null) ? $issuedPlace . ', ' : '' }}{{ $signatureDate ?: ($issuedDate ?: '-') }}</div>
+                <div>{{ $homeroomSignature['label'] ?? 'Wali Kelas' }}</div>
+                @if (!empty($homeroomSignature['imageDataUri']))
+                    <img class="signature-image" src="{{ $homeroomSignature['imageDataUri'] }}" alt="Tanda tangan">
+                @else
+                    <div class="signature-space"></div>
+                @endif
+                <div class="signature-name">{{ $homeroomSignature['name'] ?: '........................................' }}</div>
+                <div class="signature-number">NIP. {{ $homeroomSignature['employee_number'] ?: '-' }}</div>
+            </div>
+        </div>
+
+        <div class="signatures-bottom-row">
+            <div class="sig-box-center">
+                <div>Mengetahui,</div>
+                <div>{{ $headmasterSignature['label'] ?? 'Kepala PKBM' }}</div>
+                <div>{{ preg_replace('/^PKBM\s+/i', '', $identity['institution']['name'] ?? '') ?: ($identity['institution']['name'] ?? 'PKBM') }}</div>
+                @if (!empty($headmasterSignature['imageDataUri']))
+                    <img class="signature-image" src="{{ $headmasterSignature['imageDataUri'] }}" alt="Tanda tangan">
+                @else
+                    <div class="signature-space"></div>
+                @endif
+                <div class="signature-name">{{ $headmasterSignature['name'] ?: '........................................' }}</div>
+                <div class="signature-number">NIP. {{ $headmasterSignature['employee_number'] ?: '-' }}</div>
+            </div>
+        </div>
     </div>
 
-    <footer class="footer">{{ $footerText }}</footer>
+    <footer class="footer">
+        <div class="footer-meta">
+            <span>{{ $studentName ?: '-' }}</span>
+            @if (!empty($studentIdentifier ?? ($identity['student']['student_number'] ?? null)))
+                <span> | {{ $studentIdentifier ?? ($identity['student']['student_number'] ?? '') }}</span>
+            @endif
+            @if (!empty($identity['class']['name']))
+                <span> | {{ $identity['class']['name'] }}</span>
+            @endif
+        </div>
+        @if (!empty($footerText))
+            <div class="footer-title">{{ $footerText }}</div>
+        @endif
+    </footer>
 </main>
 </body>
 </html>

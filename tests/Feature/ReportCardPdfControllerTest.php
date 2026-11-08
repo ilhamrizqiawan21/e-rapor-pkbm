@@ -64,6 +64,44 @@ class ReportCardPdfControllerTest extends TestCase
             ->assertDontSee('PKBM Master Terbaru');
     }
 
+    public function test_preview_renders_two_row_signature_layout(): void
+    {
+        $fixture = $this->fixture('LOCKED');
+
+        $response = $this->actingAs($fixture['admin'])
+            ->get('/__test/report-cards/'.$fixture['reportCard']->id.'/pdf/preview');
+
+        $response->assertOk();
+        $html = (string) $response->getContent();
+
+        $this->assertStringContainsString('signatures-area', $html);
+        $this->assertStringContainsString('signatures-top-row', $html);
+        $this->assertStringContainsString('signatures-bottom-row', $html);
+        $this->assertStringContainsString('Orang Tua/Wali', $html);
+        $this->assertStringContainsString('signature-line', $html);
+        $this->assertStringContainsString('Wali Kelas', $html);
+        $this->assertStringContainsString('Kepala PKBM', $html);
+        $this->assertStringContainsString('NIP.', $html);
+        $this->assertStringContainsString('footer-meta', $html);
+        $this->assertStringContainsString('footer-title', $html);
+        $this->assertStringContainsString('NIPD-SNAPSHOT', $html);
+    }
+
+    public function test_preview_handles_a_partial_locked_signature_snapshot(): void
+    {
+        $fixture = $this->fixture('LOCKED');
+        ReportSignature::query()
+            ->where('report_card_id', $fixture['reportCard']->id)
+            ->where('signer_type', 'HOMEROOM_TEACHER')
+            ->delete();
+
+        $this->actingAs($fixture['admin'])
+            ->get('/__test/report-cards/'.$fixture['reportCard']->id.'/pdf/preview')
+            ->assertOk()
+            ->assertSee('Wali Kelas')
+            ->assertSee('........................................');
+    }
+
     public function test_download_returns_pdf_content_type_and_deterministic_filename(): void
     {
         $fixture = $this->fixture('APPROVED');

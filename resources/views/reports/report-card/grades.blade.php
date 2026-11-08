@@ -24,7 +24,9 @@
         .grades th { background: #f3f4f6; text-align: center; }
         .center { text-align: center; }
         .description { overflow-wrap: anywhere; white-space: pre-line; }
-        .footer { border-top: 1px solid #9ca3af; color: #4b5563; font-size: 8pt; margin-top: 12px; padding-top: 4px; text-align: center; }
+        .footer { border-top: 1px solid #9ca3af; color: #4b5563; display: table; font-size: 8pt; margin-top: 12px; padding-top: 4px; table-layout: fixed; width: 100%; }
+        .footer-meta { display: table-cell; text-align: left; vertical-align: middle; }
+        .footer-title { display: table-cell; text-align: right; vertical-align: middle; width: 40%; }
         thead { display: table-header-group; }
         tr { break-inside: avoid; page-break-inside: avoid; }
     </style>
@@ -56,6 +58,19 @@
     </table>
     </div>
 
-    <div class="footer">{{ $footerText }}</div>
+    <footer class="footer">
+        <div class="footer-meta">
+            <span>{{ $studentName ?: '-' }}</span>
+            @if (!empty($studentIdentifier ?? ($identity['student']['student_number'] ?? null)))
+                <span> | {{ $studentIdentifier ?? ($identity['student']['student_number'] ?? '') }}</span>
+            @endif
+            @if (!empty($identity['class']['name']))
+                <span> | {{ $identity['class']['name'] }}</span>
+            @endif
+        </div>
+        @if (!empty($footerText))
+            <div class="footer-title">{{ $footerText }}</div>
+        @endif
+    </footer>
 </body>
 </html>

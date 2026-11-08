@@ -33,6 +33,17 @@ class AppServiceProvider extends ServiceProvider
             URL::forceScheme('https');
         }
 
+        // Keep generated links on the configured subpath when Apache exposes
+        // this installation below the document root (for example, at
+        // /e-rapor-pkbm). The front controller normalizes incoming requests;
+        // this keeps redirects, forms, assets, and menu links symmetrical.
+        $applicationUrl = rtrim((string) config('app.url'), '/');
+        $applicationPath = parse_url($applicationUrl, PHP_URL_PATH);
+
+        if (! empty($_SERVER['ERAPOR_SUBPATH_REQUEST']) && is_string($applicationPath) && $applicationPath !== '' && $applicationPath !== '/') {
+            URL::forceRootUrl($applicationUrl);
+        }
+
         View::composer('layouts.app', function ($view): void {
             $user = request()->user();
             $period = app(AcademicPeriodContext::class)->forInstitution($user?->institution_id);

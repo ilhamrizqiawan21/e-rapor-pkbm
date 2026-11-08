@@ -250,7 +250,7 @@ class DemoDataSeeder extends Seeder
 
         app(InstitutionFormatSettingsService::class)->updateForInstitution($institution, [
             'header_text' => 'PUSAT KEGIATAN BELAJAR MASYARAKAT (PKBM) CONTOH',
-            'footer_text' => 'Dokumen ini diterbitkan melalui Aplikasi e-Rapor PKBM.',
+            'footer_text' => null,
             'show_logo' => false,
         ]);
 

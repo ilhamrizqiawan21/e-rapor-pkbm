@@ -14,6 +14,7 @@ use App\Services\AcademicDecisionService;
 use App\Services\InstitutionFormatSettingsService;
 use App\Services\ReportCardCompletenessService;
 use App\Services\ReportCardIdentityService;
+use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -73,12 +74,72 @@ final class ReportCardPdfDataService
         $semesterName = (string) ($identity['semester']['name'] ?? $identity['semester']['code'] ?? '');
         $academicYearName = (string) ($identity['academic_year']['name'] ?? '');
         $signatures = $this->signatureRows($reportCard, $settings);
+        $teacher = $reportCard->enrollment?->academicClass?->homeroomTeacher;
+        $headSetting = $institution->signatorySetting;
+        $headIsManual = $headSetting?->headmaster_source?->value === 'MANUAL';
+        $headUser = $headSetting?->headmasterUser;
+        $headName = $headIsManual ? $headSetting?->headmaster_name : $headUser?->name;
+        $headNumber = $headIsManual ? $headSetting?->headmaster_employee_number : $headUser?->staffProfile?->employee_number;
+        $signatureSlots = $archivedOutput['signatureSlots'] ?? ($signatures->isNotEmpty()
+            ? $signatures
+            : $this->emptySignatureSlots($settings, $reportCard, $institution));
+
+        $parentSignature = collect($signatureSlots)->first(function ($s): bool {
+            $type = ($s['type'] ?? null) instanceof \BackedEnum ? $s['type']->value : (string) ($s['type'] ?? '');
+
+            return $type === 'PARENT_GUARDIAN' || str_contains(strtolower((string) ($s['label'] ?? '')), 'orang tua');
+        }) ?? [
+            'type' => 'PARENT_GUARDIAN',
+            'label' => 'Orang Tua/Wali',
+            'name' => $identity['student']['guardian_name'] ?? $student?->guardian_name ?? null,
+            'employee_number' => null,
+            'imageDataUri' => null,
+            'signed_at' => null,
+        ];
+
+        $homeroomSignature = collect($signatureSlots)->first(function ($s): bool {
+            $type = ($s['type'] ?? null) instanceof \BackedEnum ? $s['type']->value : (string) ($s['type'] ?? '');
+
+            return in_array($type, ['HOMEROOM_TEACHER', 'GURU'], true) || str_contains(strtolower((string) ($s['label'] ?? '')), 'wali');
+        }) ?? [
+            'type' => 'HOMEROOM_TEACHER',
+            'label' => $settings->signature_left_label ?: 'Wali Kelas',
+            'name' => $teacher?->name,
+            'employee_number' => $teacher?->staffProfile?->employee_number,
+            'imageDataUri' => null,
+            'signed_at' => null,
+        ];
+
+        $headmasterSignature = collect($signatureSlots)->first(function ($s): bool {
+            $type = ($s['type'] ?? null) instanceof \BackedEnum ? $s['type']->value : (string) ($s['type'] ?? '');
+
+            return in_array($type, ['HEAD_OF_PKBM', 'KEPSEK'], true) || str_contains(strtolower((string) ($s['label'] ?? '')), 'kepala');
+        }) ?? [
+            'type' => 'HEAD_OF_PKBM',
+            'label' => $settings->signature_right_label ?: 'Kepala PKBM',
+            'name' => $headName,
+            'employee_number' => $headNumber,
+            'imageDataUri' => null,
+            'signed_at' => null,
+        ];
+
+        $issuedPlace = $archivedOutput['issuedPlace'] ?? $this->resolveIssuedPlace($institution, $identity);
+        $rawDate = $reportCard->issued_date ?? $reportCard->locked_at;
+        $signatureDate = $archivedOutput['signatureDate'] ?? ($rawDate !== null
+            ? Carbon::parse($rawDate)->locale('id')->translatedFormat('j F Y')
+            : null);
+
+        $studentIdentifier = trim(implode(' / ', array_filter([
+            $identity['student']['student_number'] ?? null,
+            $identity['student']['nisn'] ?? null,
+        ])));
 
         return [
             'reportCard' => $reportCard,
             'decisionLabel' => is_array($archivedOutput) ? ($archivedOutput['decisionLabel'] ?? null) : $this->decisions->forReport($reportCard)?->label_snapshot,
             'identity' => $identity,
             'studentName' => $archivedOutput['studentName'] ?? $studentName,
+            'studentIdentifier' => $studentIdentifier,
             'settings' => $settings,
             'grades' => $reportCard->grades,
             'attitudes' => $reportCard->attitudeAssessments->keyBy(fn ($assessment): string => strtoupper($assessment->attitude_type)),
@@ -86,9 +147,12 @@ final class ReportCardPdfDataService
             'extracurriculars' => $reportCard->extracurriculars,
             'homeroomNote' => $reportCard->homeroomNote,
             'signatures' => $signatures,
-            'signatureSlots' => $archivedOutput['signatureSlots'] ?? ($signatures->isNotEmpty()
-                ? $signatures
-                : $this->emptySignatureSlots($settings, $reportCard, $institution)),
+            'signatureSlots' => $signatureSlots,
+            'parentSignature' => $parentSignature,
+            'homeroomSignature' => $homeroomSignature,
+            'headmasterSignature' => $headmasterSignature,
+            'issuedPlace' => $issuedPlace,
+            'signatureDate' => $signatureDate,
             'documentNumber' => $this->formatSettings->formatDocumentNumber(
                 (string) ($reportCard->document_number ?? ''),
                 $settings,
@@ -103,7 +167,7 @@ final class ReportCardPdfDataService
             ),
             'issuedDate' => $archivedOutput['issuedDate'] ?? $this->formatSettings->formatDate($reportCard->issued_date ?? $reportCard->locked_at, $settings),
             'logoDataUri' => is_array($archivedOutput) ? $archivedOutput['logoDataUri'] : $this->logoDataUri($institution, $settings->show_logo),
-            'footerText' => $archivedOutput['footerText'] ?? ($settings->footer_text ?: trim('RAPOR PKBM '.($identity['institution']['name'] ?? 'PKBM').' / '.$semesterName.' T.A '.$academicYearName)),
+            'footerText' => $archivedOutput['footerText'] ?? ($settings->footer_text ?: ''),
         ];
     }
 
@@ -347,5 +411,42 @@ final class ReportCardPdfDataService
     private function segment(string $value): string
     {
         return Str::slug(str_replace(['/', '\\'], '-', $value));
+    }
+
+    /**
+     * @param  array<string, mixed>  $identity
+     */
+    private function resolveIssuedPlace(Institution $institution, array $identity): ?string
+    {
+        $address = (string) ($identity['institution']['address'] ?? $institution->address ?? '');
+        if (blank($address)) {
+            return null;
+        }
+
+        if (preg_match('/(?:Kecamatan|Kec\.)\s+([^,]+)/i', $address, $matches)) {
+            return trim($matches[1]);
+        }
+
+        if (preg_match('/(?:Kota|Kabupaten|Kab\.)\s+([^,]+)/i', $address, $matches)) {
+            return trim($matches[1]);
+        }
+
+        $segments = array_values(array_filter(array_map('trim', explode(',', $address))));
+        $filtered = array_values(array_filter($segments, fn ($seg) => ! preg_match('/^\d{5}$/', (string) $seg)));
+
+        if (count($filtered) >= 2) {
+            return $filtered[count($filtered) - 2];
+        }
+
+        if (count($filtered) === 1) {
+            $only = $filtered[0];
+            if (preg_match('/^(?:Jl\.|Jalan|Alamat)\b/i', $only)) {
+                return null;
+            }
+
+            return $only;
+        }
+
+        return null;
     }
 }
