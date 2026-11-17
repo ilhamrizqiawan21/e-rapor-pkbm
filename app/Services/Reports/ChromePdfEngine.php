@@ -41,8 +41,9 @@ final class ChromePdfEngine implements PdfEngine
             throw new PdfEngineUnavailable;
         }
 
-        $directory = sys_get_temp_dir().DIRECTORY_SEPARATOR.'erapor-pdf-'.bin2hex(random_bytes(8));
-        if (! mkdir($directory, 0700, true) && ! is_dir($directory)) {
+        $baseTempDir = $this->temporaryBaseDirectory();
+        $directory = $baseTempDir.DIRECTORY_SEPARATOR.'erapor-pdf-'.bin2hex(random_bytes(8));
+        if (! is_dir($directory) && ! @mkdir($directory, 0755, true) && ! is_dir($directory)) {
             throw new PdfEngineUnavailable('Folder sementara untuk PDF tidak dapat dibuat.');
         }
 
@@ -58,10 +59,13 @@ final class ChromePdfEngine implements PdfEngine
 
             $process = $this->process($binary, $htmlPath, $pdfPath);
             $process->setTimeout(max(1, $this->timeoutSeconds));
-            $process->run();
+            if (! is_writable(sys_get_temp_dir())) {
+                $process->disableOutput();
+            }
+            $process->run(null, ['TMP' => $baseTempDir, 'TEMP' => $baseTempDir]);
 
             if (! $process->isSuccessful() || ! is_file($pdfPath) || filesize($pdfPath) === 0) {
-                $details = trim($process->getErrorOutput());
+                $details = $process->isOutputDisabled() ? '' : trim($process->getErrorOutput());
                 throw new PdfEngineUnavailable($details !== ''
                     ? 'Mesin PDF gagal membuat dokumen: '.$details
                     : 'Mesin PDF gagal membuat dokumen.');
@@ -101,6 +105,23 @@ final class ChromePdfEngine implements PdfEngine
             }
         }
 
+        if (PHP_OS_FAMILY === 'Windows') {
+            $windowsPaths = array_filter([
+                'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
+                'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
+                getenv('LOCALAPPDATA') ? getenv('LOCALAPPDATA').'\\Google\\Chrome\\Application\\chrome.exe' : null,
+                'C:\\Program Files\\Microsoft\\Edge\\Application\\msedge.exe',
+                'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe',
+                'C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe',
+            ]);
+
+            foreach ($windowsPaths as $path) {
+                if (is_file($path) && is_executable($path)) {
+                    return $path;
+                }
+            }
+        }
+
         return null;
     }
 
@@ -130,7 +151,19 @@ final class ChromePdfEngine implements PdfEngine
             '--no-sandbox',
             '--no-pdf-header-footer',
             '--print-to-pdf='.$pdfPath,
-            'file://'.$htmlPath,
+            'file:///'.ltrim(str_replace('\\', '/', $htmlPath), '/'),
         ]);
+    }
+
+    private function temporaryBaseDirectory(): string
+    {
+        if (function_exists('storage_path') && function_exists('app') && app()->bound('path.storage')) {
+            $storageTemp = storage_path('app'.DIRECTORY_SEPARATOR.'private'.DIRECTORY_SEPARATOR.'tmp');
+            if (is_dir($storageTemp) || @mkdir($storageTemp, 0755, true)) {
+                return $storageTemp;
+            }
+        }
+
+        return sys_get_temp_dir();
     }
 }
