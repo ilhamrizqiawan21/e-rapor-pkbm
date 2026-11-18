@@ -94,6 +94,7 @@ class InstitutionFormatSettingsTest extends TestCase
         $service->forInstitution($otherInstitution);
         $request = UpdateInstitutionFormatSettingsRequest::create('/admin/settings/format', 'PUT', $this->validPayload([
             'student_name_format' => '{student_number} - {full_name}',
+            'report_date' => '2026-12-20',
             'show_kkm' => 0,
         ]));
         $request->setUserResolver(fn (): User => $admin);
@@ -110,6 +111,7 @@ class InstitutionFormatSettingsTest extends TestCase
             'student_name_format' => '{student_number} - {full_name}',
             'show_kkm' => 0,
         ]);
+        $this->assertSame('2026-12-20', $service->forInstitution($institution)->report_date?->toDateString());
         $this->assertDatabaseHas('institution_format_settings', [
             'institution_id' => $otherInstitution->getKey(),
             'student_name_format' => '{full_name}',
@@ -136,6 +138,7 @@ class InstitutionFormatSettingsTest extends TestCase
         ])->render();
 
         $this->assertStringContainsString('Format nama Peserta Didik', $html);
+        $this->assertStringContainsString('Tanggal rapor', $html);
         $this->assertStringContainsString('Format nomor dokumen', $html);
         $this->assertStringContainsString('Margin atas (mm)', $html);
         $this->assertStringContainsString('Tampilkan KKM / nilai minimum', $html);

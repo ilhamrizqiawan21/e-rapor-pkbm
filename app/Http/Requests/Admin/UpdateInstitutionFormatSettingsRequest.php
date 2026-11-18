@@ -31,6 +31,7 @@ class UpdateInstitutionFormatSettingsRequest extends FormRequest
             'student_name_format' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z0-9_{}.,\-\/\\s]+$/'],
             'document_number_format' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z0-9_{}.,\-\/\\s]+$/'],
             'date_format' => ['required', 'string', 'max:32', 'regex:/^[dDjlNStyFmMnY\-\/.,\s]+$/'],
+            'report_date' => ['nullable', 'date'],
             'signature_left_role' => ['required', Rule::in(['ADMIN', 'GURU', 'KEPSEK'])],
             'signature_left_label' => ['required', 'string', 'max:100'],
             'signature_right_role' => ['required', Rule::in(['ADMIN', 'GURU', 'KEPSEK'])],

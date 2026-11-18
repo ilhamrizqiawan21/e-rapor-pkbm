@@ -204,7 +204,11 @@
     @php
         $parentSignature = $parentSignature ?? (collect($signatureSlots ?? [])->first(function ($s): bool {
             $type = ($s['type'] ?? null) instanceof \BackedEnum ? $s['type']->value : (string) ($s['type'] ?? '');
-            return $type === 'PARENT_GUARDIAN' || str_contains(strtolower((string) ($s['label'] ?? '')), 'orang tua');
+            if ($type !== '') {
+                return $type === 'PARENT_GUARDIAN';
+            }
+
+            return str_contains(strtolower((string) ($s['label'] ?? '')), 'orang tua');
         }) ?? [
             'type' => 'PARENT_GUARDIAN',
             'label' => 'Orang Tua/Wali',
@@ -214,7 +218,11 @@
         ]);
         $homeroomSignature = $homeroomSignature ?? (collect($signatureSlots ?? [])->first(function ($s): bool {
             $type = ($s['type'] ?? null) instanceof \BackedEnum ? $s['type']->value : (string) ($s['type'] ?? '');
-            return in_array($type, ['HOMEROOM_TEACHER', 'GURU'], true) || str_contains(strtolower((string) ($s['label'] ?? '')), 'wali');
+            if ($type !== '') {
+                return in_array($type, ['HOMEROOM_TEACHER', 'GURU'], true);
+            }
+
+            return str_contains(strtolower((string) ($s['label'] ?? '')), 'wali kelas');
         }) ?? [
             'type' => 'HOMEROOM_TEACHER',
             'label' => 'Wali Kelas',
@@ -224,7 +232,11 @@
         ]);
         $headmasterSignature = $headmasterSignature ?? (collect($signatureSlots ?? [])->first(function ($s): bool {
             $type = ($s['type'] ?? null) instanceof \BackedEnum ? $s['type']->value : (string) ($s['type'] ?? '');
-            return in_array($type, ['HEAD_OF_PKBM', 'KEPSEK'], true) || str_contains(strtolower((string) ($s['label'] ?? '')), 'kepala');
+            if ($type !== '') {
+                return in_array($type, ['HEAD_OF_PKBM', 'KEPSEK'], true);
+            }
+
+            return str_contains(strtolower((string) ($s['label'] ?? '')), 'kepala');
         }) ?? [
             'type' => 'HEAD_OF_PKBM',
             'label' => 'Kepala PKBM',

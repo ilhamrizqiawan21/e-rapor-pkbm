@@ -23,6 +23,7 @@
                     <x-input name="student_name_format" label="Format nama Peserta Didik" :value="old('student_name_format', $settings->student_name_format)" :error="$errors->first('student_name_format')" required hint="Token: {full_name}, {student_number}, {national_student_number}" />
                     <x-input name="document_number_format" label="Format nomor dokumen" :value="old('document_number_format', $settings->document_number_format)" :error="$errors->first('document_number_format')" required hint="Token: {document_number}, {academic_year}, {semester}, {student_number}" />
                     <x-input name="date_format" label="Format tanggal" :value="old('date_format', $settings->date_format)" :error="$errors->first('date_format')" required hint="Contoh: d/m/Y atau d F Y" />
+                    <x-input name="report_date" type="date" label="Tanggal rapor" :value="old('report_date', $settings->report_date?->format('Y-m-d'))" :error="$errors->first('report_date')" hint="Opsional. Dipakai sebagai tanggal terbit & tanda tangan rapor jika belum diisi per rapor." />
                 </div>
             </section>
 

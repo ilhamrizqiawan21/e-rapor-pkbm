@@ -84,11 +84,11 @@ final class ReportCardPdfDataService
             ? $signatures
             : $this->emptySignatureSlots($settings, $reportCard, $institution));
 
-        $parentSignature = collect($signatureSlots)->first(function ($s): bool {
-            $type = ($s['type'] ?? null) instanceof \BackedEnum ? $s['type']->value : (string) ($s['type'] ?? '');
-
-            return $type === 'PARENT_GUARDIAN' || str_contains(strtolower((string) ($s['label'] ?? '')), 'orang tua');
-        }) ?? [
+        $parentSignature = $this->findSignatureSlot(
+            $signatureSlots,
+            ['PARENT_GUARDIAN'],
+            static fn (string $label): bool => str_contains($label, 'orang tua'),
+        ) ?? [
             'type' => 'PARENT_GUARDIAN',
             'label' => 'Orang Tua/Wali',
             'name' => $identity['student']['guardian_name'] ?? $student?->guardian_name ?? null,
@@ -97,11 +97,11 @@ final class ReportCardPdfDataService
             'signed_at' => null,
         ];
 
-        $homeroomSignature = collect($signatureSlots)->first(function ($s): bool {
-            $type = ($s['type'] ?? null) instanceof \BackedEnum ? $s['type']->value : (string) ($s['type'] ?? '');
-
-            return in_array($type, ['HOMEROOM_TEACHER', 'GURU'], true) || str_contains(strtolower((string) ($s['label'] ?? '')), 'wali');
-        }) ?? [
+        $homeroomSignature = $this->findSignatureSlot(
+            $signatureSlots,
+            ['HOMEROOM_TEACHER', 'GURU'],
+            static fn (string $label): bool => str_contains($label, 'wali kelas'),
+        ) ?? [
             'type' => 'HOMEROOM_TEACHER',
             'label' => $settings->signature_left_label ?: 'Wali Kelas',
             'name' => $teacher?->name,
@@ -110,11 +110,11 @@ final class ReportCardPdfDataService
             'signed_at' => null,
         ];
 
-        $headmasterSignature = collect($signatureSlots)->first(function ($s): bool {
-            $type = ($s['type'] ?? null) instanceof \BackedEnum ? $s['type']->value : (string) ($s['type'] ?? '');
-
-            return in_array($type, ['HEAD_OF_PKBM', 'KEPSEK'], true) || str_contains(strtolower((string) ($s['label'] ?? '')), 'kepala');
-        }) ?? [
+        $headmasterSignature = $this->findSignatureSlot(
+            $signatureSlots,
+            ['HEAD_OF_PKBM', 'KEPSEK'],
+            static fn (string $label): bool => str_contains($label, 'kepala'),
+        ) ?? [
             'type' => 'HEAD_OF_PKBM',
             'label' => $settings->signature_right_label ?: 'Kepala PKBM',
             'name' => $headName,
@@ -124,7 +124,7 @@ final class ReportCardPdfDataService
         ];
 
         $issuedPlace = $archivedOutput['issuedPlace'] ?? $this->resolveIssuedPlace($institution, $identity);
-        $rawDate = $reportCard->issued_date ?? $reportCard->locked_at;
+        $rawDate = $reportCard->issued_date ?? $settings->report_date ?? $reportCard->locked_at;
         $signatureDate = $archivedOutput['signatureDate'] ?? ($rawDate !== null
             ? Carbon::parse($rawDate)->locale('id')->translatedFormat('j F Y')
             : null);
@@ -165,7 +165,7 @@ final class ReportCardPdfDataService
                     'semester' => $semesterName,
                 ],
             ),
-            'issuedDate' => $archivedOutput['issuedDate'] ?? $this->formatSettings->formatDate($reportCard->issued_date ?? $reportCard->locked_at, $settings),
+            'issuedDate' => $archivedOutput['issuedDate'] ?? $this->formatSettings->formatDate($rawDate, $settings),
             'logoDataUri' => is_array($archivedOutput) ? $archivedOutput['logoDataUri'] : $this->logoDataUri($institution, $settings->show_logo),
             'footerText' => $archivedOutput['footerText'] ?? ($settings->footer_text ?: ''),
         ];
@@ -358,6 +358,39 @@ final class ReportCardPdfDataService
         ]);
 
         return $slots->unique('type')->values();
+    }
+
+    /**
+     * @param  iterable<int, array<string, mixed>>  $slots
+     * @param  array<int, string>  $expectedTypes
+     * @param  callable(string): bool  $labelMatcher
+     * @return array<string, mixed>|null
+     */
+    private function findSignatureSlot(iterable $slots, array $expectedTypes, callable $labelMatcher): ?array
+    {
+        $collection = collect($slots);
+
+        $byType = $collection->first(function ($slot) use ($expectedTypes): bool {
+            $type = ($slot['type'] ?? null) instanceof \BackedEnum ? $slot['type']->value : (string) ($slot['type'] ?? '');
+
+            return $type !== '' && in_array($type, $expectedTypes, true);
+        });
+
+        if (is_array($byType)) {
+            return $byType;
+        }
+
+        $byLabel = $collection->first(function ($slot) use ($labelMatcher): bool {
+            $type = ($slot['type'] ?? null) instanceof \BackedEnum ? $slot['type']->value : (string) ($slot['type'] ?? '');
+
+            if ($type !== '') {
+                return false;
+            }
+
+            return $labelMatcher(strtolower((string) ($slot['label'] ?? '')));
+        });
+
+        return is_array($byLabel) ? $byLabel : null;
     }
 
     private function signatureLabel(string $type): string

@@ -102,6 +102,34 @@ class ReportCardPdfControllerTest extends TestCase
             ->assertSee('........................................');
     }
 
+    public function test_preview_keeps_wali_kelas_on_right_even_when_parent_guardian_slot_comes_first(): void
+    {
+        $draftFixture = $this->fixture('DRAFT');
+
+        $draftHtml = (string) $this->actingAs($draftFixture['admin'])
+            ->get('/__test/report-cards/'.$draftFixture['reportCard']->id.'/pdf/preview')
+            ->assertOk()
+            ->getContent();
+
+        $this->assertSame(1, substr_count($draftHtml, 'Orang Tua/Wali'));
+        $this->assertStringContainsString('Wali Kelas', $draftHtml);
+        $this->assertMatchesRegularExpression('/sig-box-right[^>]*>.*?<div>Wali Kelas<\/div>/s', $draftHtml);
+
+        $lockedFixture = $this->fixture('LOCKED');
+        ReportSignature::query()->where('report_card_id', $lockedFixture['reportCard']->id)->delete();
+        ReportSignature::query()->create(['report_card_id' => $lockedFixture['reportCard']->id, 'signer_type' => 'PARENT_GUARDIAN', 'signer_name_snapshot' => 'Orang Tua Snapshot', 'signer_title_snapshot' => 'Orang Tua/Wali', 'signed_at' => now()]);
+        ReportSignature::query()->create(['report_card_id' => $lockedFixture['reportCard']->id, 'signer_type' => 'HOMEROOM_TEACHER', 'signer_name_snapshot' => 'Wali Snapshot', 'signer_title_snapshot' => 'Wali Kelas', 'signed_at' => now()]);
+        ReportSignature::query()->create(['report_card_id' => $lockedFixture['reportCard']->id, 'signer_type' => 'HEAD_OF_PKBM', 'signer_name_snapshot' => 'Kepala Snapshot', 'signer_title_snapshot' => 'Kepala PKBM', 'signed_at' => now()]);
+
+        $lockedHtml = (string) $this->actingAs($lockedFixture['admin'])
+            ->get('/__test/report-cards/'.$lockedFixture['reportCard']->id.'/pdf/preview')
+            ->assertOk()
+            ->getContent();
+
+        $this->assertSame(1, substr_count($lockedHtml, 'Orang Tua/Wali'));
+        $this->assertMatchesRegularExpression('/sig-box-right[^>]*>.*?<div>Wali Kelas<\/div>.*?Wali Snapshot/s', $lockedHtml);
+    }
+
     public function test_download_returns_pdf_content_type_and_deterministic_filename(): void
     {
         $fixture = $this->fixture('APPROVED');
@@ -163,6 +191,22 @@ class ReportCardPdfControllerTest extends TestCase
         $this->assertStringContainsString('RAPOR/2025/2026/Semester Ganjil/NIPD-001/RAPOR-001', $html);
         $this->assertStringContainsString('Footer rapor PKBM', $html);
         $this->assertStringNotContainsString('{academic_year}', $html);
+    }
+
+    public function test_preview_uses_institution_report_date_when_report_card_issued_date_is_null(): void
+    {
+        $fixture = $this->fixture('APPROVED');
+        app(InstitutionFormatSettingsService::class)->updateForInstitution($fixture['institution'], [
+            'report_date' => '2026-12-20',
+        ]);
+
+        $html = (string) $this->actingAs($fixture['admin'])
+            ->get('/__test/report-cards/'.$fixture['reportCard']->id.'/pdf/preview')
+            ->assertOk()
+            ->getContent();
+
+        $this->assertStringContainsString('20/12/2026', $html);
+        $this->assertStringContainsString('20 Desember 2026', $html);
     }
 
     public function test_unavailable_pdf_engine_returns_graceful_service_unavailable(): void

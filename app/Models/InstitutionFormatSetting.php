@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
     'student_name_format',
     'document_number_format',
     'date_format',
+    'report_date',
     'signature_left_role',
     'signature_left_label',
     'signature_right_role',
@@ -32,6 +33,7 @@ class InstitutionFormatSetting extends Model
     protected function casts(): array
     {
         return [
+            'report_date' => 'date',
             'show_logo' => 'boolean',
             'logo_width_mm' => 'integer',
             'margin_top_mm' => 'integer',

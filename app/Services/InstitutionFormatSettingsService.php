@@ -16,6 +16,7 @@ class InstitutionFormatSettingsService
         'student_name_format' => '{full_name}',
         'document_number_format' => '{document_number}',
         'date_format' => 'd/m/Y',
+        'report_date' => null,
         'signature_left_role' => 'GURU',
         'signature_left_label' => 'Wali Kelas',
         'signature_right_role' => 'KEPSEK',
